@@ -38,15 +38,73 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
 
 public class UpdateTypesClient {
 
-    // Counters for each update type
-    private static int messageChunks = 0;
-    private static int thoughtChunks = 0;
-    private static int toolCalls = 0;
-    private static int toolUpdates = 0;
-    private static int plans = 0;
-    private static int commandUpdates = 0;
-    private static int modeUpdates = 0;
-    private static int otherUpdates = 0;
+    /**
+     * Tracks counts of each update type received during a prompt.
+     * Using a class instead of static fields allows for proper encapsulation
+     * and makes the code reusable in concurrent scenarios.
+     */
+    private static class UpdateStats {
+        int messageChunks = 0;
+        int thoughtChunks = 0;
+        int toolCalls = 0;
+        int toolUpdates = 0;
+        int plans = 0;
+        int commandUpdates = 0;
+        int modeUpdates = 0;
+        int otherUpdates = 0;
+
+        void handleUpdate(Object update) {
+            switch (update) {
+                case AgentMessageChunk msg -> {
+                    messageChunks++;
+                    String text = ((TextContent) msg.content()).text();
+                    // Print message chunks inline (they build up the response)
+                    System.out.print(text);
+                }
+                case AgentThoughtChunk thought -> {
+                    thoughtChunks++;
+                    String text = ((TextContent) thought.content()).text();
+                    System.out.println("[THOUGHT] " + text.trim());
+                }
+                case ToolCall tool -> {
+                    toolCalls++;
+                    System.out.println("[TOOL] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
+                }
+                case ToolCallUpdateNotification toolUpdate -> {
+                    toolUpdates++;
+                    System.out.println("[TOOL_UPDATE] " + toolUpdate.toolCallId() + " -> " + toolUpdate.status());
+                }
+                case Plan plan -> {
+                    plans++;
+                    System.out.println("[PLAN] " + plan.entries().size() + " steps");
+                }
+                case AvailableCommandsUpdate commands -> {
+                    commandUpdates++;
+                    System.out.println("[COMMANDS] " + commands.availableCommands().size() + " available");
+                }
+                case CurrentModeUpdate mode -> {
+                    modeUpdates++;
+                    System.out.println("[MODE] " + mode.currentModeId());
+                }
+                default -> {
+                    otherUpdates++;
+                    System.out.println("[OTHER] " + update.getClass().getSimpleName());
+                }
+            }
+        }
+
+        void printSummary() {
+            System.out.println("Update types received:");
+            System.out.println("  AgentMessageChunk:         " + messageChunks);
+            System.out.println("  AgentThoughtChunk:         " + thoughtChunks);
+            System.out.println("  ToolCall:                  " + toolCalls);
+            System.out.println("  ToolCallUpdateNotification:" + toolUpdates);
+            System.out.println("  Plan:                      " + plans);
+            System.out.println("  AvailableCommandsUpdate:   " + commandUpdates);
+            System.out.println("  CurrentModeUpdate:         " + modeUpdates);
+            System.out.println("  Other:                     " + otherUpdates);
+        }
+    }
 
     public static void main(String[] args) {
         checkGeminiApiKey();
@@ -57,10 +115,13 @@ public class UpdateTypesClient {
 
         var transport = new StdioAcpClientTransport(params);
 
+        // Local state for tracking updates - no static fields needed
+        var stats = new UpdateStats();
+
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
-                    handleUpdate(update);
+                    stats.handleUpdate(update);
                 })
                 .build()) {
 
@@ -84,59 +145,11 @@ public class UpdateTypesClient {
             System.out.println("\n--- Summary ---");
             System.out.println("Stop reason: " + response.stopReason());
             System.out.println();
-            System.out.println("Update types received:");
-            System.out.println("  AgentMessageChunk:         " + messageChunks);
-            System.out.println("  AgentThoughtChunk:         " + thoughtChunks);
-            System.out.println("  ToolCall:                  " + toolCalls);
-            System.out.println("  ToolCallUpdateNotification:" + toolUpdates);
-            System.out.println("  Plan:                      " + plans);
-            System.out.println("  AvailableCommandsUpdate:   " + commandUpdates);
-            System.out.println("  CurrentModeUpdate:         " + modeUpdates);
-            System.out.println("  Other:                     " + otherUpdates);
+            stats.printSummary();
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
-        }
-    }
-
-    private static void handleUpdate(Object update) {
-        switch (update) {
-            case AgentMessageChunk msg -> {
-                messageChunks++;
-                String text = ((TextContent) msg.content()).text();
-                // Print message chunks inline (they build up the response)
-                System.out.print(text);
-            }
-            case AgentThoughtChunk thought -> {
-                thoughtChunks++;
-                String text = ((TextContent) thought.content()).text();
-                System.out.println("[THOUGHT] " + text.trim());
-            }
-            case ToolCall tool -> {
-                toolCalls++;
-                System.out.println("[TOOL] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
-            }
-            case ToolCallUpdateNotification toolUpdate -> {
-                toolUpdates++;
-                System.out.println("[TOOL_UPDATE] " + toolUpdate.toolCallId() + " -> " + toolUpdate.status());
-            }
-            case Plan plan -> {
-                plans++;
-                System.out.println("[PLAN] " + plan.entries().size() + " steps");
-            }
-            case AvailableCommandsUpdate commands -> {
-                commandUpdates++;
-                System.out.println("[COMMANDS] " + commands.availableCommands().size() + " available");
-            }
-            case CurrentModeUpdate mode -> {
-                modeUpdates++;
-                System.out.println("[MODE] " + mode.currentModeId());
-            }
-            default -> {
-                otherUpdates++;
-                System.out.println("[OTHER] " + update.getClass().getSimpleName());
-            }
         }
     }
 

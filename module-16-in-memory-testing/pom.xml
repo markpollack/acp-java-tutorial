@@ -19,6 +19,11 @@
             <groupId>com.agentclientprotocol</groupId>
             <artifactId>acp-core</artifactId>
         </dependency>
+        <!-- SDK test utilities: InMemoryTransportPair, MockAcpAgent, MockAcpClient -->
+        <dependency>
+            <groupId>com.agentclientprotocol</groupId>
+            <artifactId>acp-test</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>

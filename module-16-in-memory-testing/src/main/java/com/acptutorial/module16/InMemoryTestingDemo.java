@@ -4,13 +4,12 @@
  * Demonstrates unit testing ACP agents without real processes or I/O.
  *
  * Key concepts:
- * - InMemoryTransportPair - bidirectional in-memory transport
- * - Testing client and agent together
+ * - InMemoryTransportPair from acp-test - bidirectional in-memory transport
+ * - MockAcpAgent, MockAcpClient - for testing one side in isolation
  * - Fast, deterministic tests
  * - No external dependencies
  *
- * The SDK provides InMemoryTransportPair in test scope. This module
- * demonstrates the pattern and provides a working example.
+ * The SDK provides these utilities in the acp-test module.
  *
  * Build & run:
  *   ./mvnw test -pl module-16-in-memory-testing
@@ -40,6 +39,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
+import com.agentclientprotocol.sdk.test.InMemoryTransportPair;
 import reactor.core.publisher.Mono;
 
 public class InMemoryTestingDemo {
@@ -54,9 +54,9 @@ public class InMemoryTestingDemo {
         System.out.println("  - Test client and agent together");
         System.out.println("  - Perfect for unit tests\n");
 
-        // Create in-memory transport pair
-        System.out.println("Creating InMemoryTransportPair...");
-        var transportPair = SimpleInMemoryTransportPair.create();
+        // Create in-memory transport pair from acp-test module
+        System.out.println("Creating InMemoryTransportPair (from acp-test)...");
+        var transportPair = InMemoryTransportPair.create();
         System.out.println("  Client transport: " + transportPair.clientTransport().getClass().getSimpleName());
         System.out.println("  Agent transport: " + transportPair.agentTransport().getClass().getSimpleName());
         System.out.println();
