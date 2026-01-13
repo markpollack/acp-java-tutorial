@@ -22,3 +22,8 @@ Thumbs.db
 
 # Plans (local planning docs)
 plans/
+
+# Test artifacts
+mystery.txt
+hello.txt
+summary.txt
