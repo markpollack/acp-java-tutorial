@@ -98,6 +98,34 @@ gemini --experimental-acp --version
 | 09-11 | Client Mastery | Resume, cancel, error handling |
 | 17-21 | Advanced | Capabilities, terminal, WebSocket, async |
 
+## Error Handling in Handlers
+
+When implementing file or permission handlers, **throw exceptions for errors**. The SDK automatically converts exceptions to proper JSON-RPC error responses.
+
+```java
+// CORRECT: Throw exceptions - SDK converts to JSON-RPC errors
+.readTextFileHandler(req -> {
+    if (!Files.exists(Path.of(req.path()))) {
+        throw new RuntimeException("File not found: " + req.path());
+    }
+    return new ReadTextFileResponse(Files.readString(Path.of(req.path())));
+})
+
+// WRONG: Don't return error strings as content
+.readTextFileHandler(req -> {
+    if (!Files.exists(Path.of(req.path()))) {
+        return new ReadTextFileResponse("[ERROR: File not found]");  // BAD!
+    }
+    // ...
+})
+```
+
+**Why throw exceptions?**
+- Follows JSON-RPC 2.0 spec (errors belong in `error` field, not `result`)
+- Agents receive proper error codes for programmatic handling
+- Prevents agents from misinterpreting error strings as file content
+- Consistent with Kotlin and Python ACP SDKs
+
 ## Build Commands
 
 ```bash
