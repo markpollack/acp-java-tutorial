@@ -50,13 +50,14 @@ public class FileRequestingAgentDemo {
 
         try (AcpSyncClient client = AcpClient.sync(transport)
                 // Handle agent's file read requests
+                // Error handling: throw exceptions - SDK converts to JSON-RPC errors
                 .readTextFileHandler((ReadTextFileRequest req) -> {
                     System.out.println("[READ] " + req.path());
+                    Path path = Path.of(req.path());
+                    if (!Files.exists(path)) {
+                        throw new RuntimeException("File not found: " + req.path());
+                    }
                     try {
-                        Path path = Path.of(req.path());
-                        if (!Files.exists(path)) {
-                            return new ReadTextFileResponse("[ERROR: File not found]");
-                        }
                         String content = Files.readString(path);
                         // Apply line limit if specified
                         if (req.limit() != null && req.limit() > 0) {
@@ -65,10 +66,11 @@ public class FileRequestingAgentDemo {
                         }
                         return new ReadTextFileResponse(content);
                     } catch (IOException e) {
-                        return new ReadTextFileResponse("[ERROR: " + e.getMessage() + "]");
+                        throw new RuntimeException("Failed to read file: " + e.getMessage(), e);
                     }
                 })
                 // Handle agent's file write requests
+                // Error handling: throw exceptions - SDK converts to JSON-RPC errors
                 .writeTextFileHandler((WriteTextFileRequest req) -> {
                     System.out.println("[WRITE] " + req.path());
                     try {
@@ -76,8 +78,7 @@ public class FileRequestingAgentDemo {
                         return new WriteTextFileResponse();
                     } catch (IOException e) {
                         System.err.println("[WRITE] Error: " + e.getMessage());
-                        // Must return a response - throwing breaks protocol (agent hangs)
-                        return new WriteTextFileResponse();
+                        throw new RuntimeException("Failed to write file: " + e.getMessage(), e);
                     }
                 })
                 // Handle agent's permission requests (auto-approve for demo)

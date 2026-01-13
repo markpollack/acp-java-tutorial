@@ -180,27 +180,33 @@ public class PermissionsClient {
 
     /**
      * Handles file read requests from the agent.
-     * Returns empty content with error indicator if file doesn't exist.
+     *
+     * Error handling: Throws exceptions for errors, which the SDK converts to
+     * JSON-RPC error responses (code -32603). This follows the standard pattern
+     * used by other ACP SDKs (Kotlin, Python).
      */
     private static ReadTextFileResponse handleReadFile(ReadTextFileRequest request) {
         System.out.println("[READ] " + request.path());
         Path path = Path.of(request.path());
+
+        if (!Files.exists(path)) {
+            System.out.println("[READ] File does not exist: " + request.path());
+            throw new RuntimeException("File not found: " + request.path());
+        }
         try {
-            if (!Files.exists(path)) {
-                System.out.println("[READ] File does not exist: " + request.path());
-                // Return indication that file doesn't exist (agent can handle this)
-                return new ReadTextFileResponse("[ERROR: File does not exist: " + request.path() + "]");
-            }
             String content = Files.readString(path);
             return new ReadTextFileResponse(content);
         } catch (IOException e) {
             System.err.println("[READ] Error: " + e.getMessage());
-            return new ReadTextFileResponse("[ERROR: " + e.getMessage() + "]");
+            throw new RuntimeException("Failed to read file: " + e.getMessage(), e);
         }
     }
 
     /**
      * Handles file write requests from the agent.
+     *
+     * Error handling: Throws exceptions for errors, which the SDK converts to
+     * JSON-RPC error responses (code -32603). This is consistent with handleReadFile.
      */
     private static WriteTextFileResponse handleWriteFile(WriteTextFileRequest request) {
         System.out.println("[WRITE] " + request.path() + " (" + request.content().length() + " chars)");
@@ -210,8 +216,7 @@ public class PermissionsClient {
             return new WriteTextFileResponse();
         } catch (IOException e) {
             System.err.println("[WRITE] Error: " + e.getMessage());
-            // Must return a response - throwing breaks protocol (agent hangs)
-            return new WriteTextFileResponse();
+            throw new RuntimeException("Failed to write file: " + e.getMessage(), e);
         }
     }
 

@@ -152,29 +152,36 @@ public class AgentRequestsClient {
 
     /**
      * Handles file read requests from the agent.
-     * Returns error indicator if file doesn't exist (allows agent to handle gracefully).
+     *
+     * Error handling: Throws exceptions for errors, which the SDK converts to
+     * JSON-RPC error responses (code -32603). This follows the standard pattern
+     * used by other ACP SDKs (Kotlin, Python) and ensures the agent receives
+     * proper error responses instead of error strings masquerading as content.
      */
     private static ReadTextFileResponse handleReadFile(ReadTextFileRequest request) {
         System.out.println("[READ] " + request.path());
         Path path = Path.of(request.path());
 
+        if (!Files.exists(path)) {
+            System.out.println("[READ] File does not exist: " + request.path());
+            throw new RuntimeException("File not found: " + request.path());
+        }
         try {
-            if (!Files.exists(path)) {
-                System.out.println("[READ] File does not exist: " + request.path());
-                return new ReadTextFileResponse("[ERROR: File does not exist: " + request.path() + "]");
-            }
             String content = Files.readString(path);
             System.out.println("[READ] Returned " + content.length() + " chars");
             return new ReadTextFileResponse(content);
         } catch (IOException e) {
             System.err.println("[READ] Error: " + e.getMessage());
-            return new ReadTextFileResponse("[ERROR: " + e.getMessage() + "]");
+            throw new RuntimeException("Failed to read file: " + e.getMessage(), e);
         }
     }
 
     /**
      * Handles file write requests from the agent.
-     * Note: Uses typed handler - SDK does unmarshalling automatically!
+     *
+     * Error handling: Throws exceptions for errors, which the SDK converts to
+     * JSON-RPC error responses (code -32603). This is consistent with handleReadFile
+     * and follows the pattern used by other ACP SDKs.
      */
     private static WriteTextFileResponse handleWriteFile(WriteTextFileRequest request) {
         System.out.println("[WRITE] " + request.path() + " (" + request.content().length() + " chars)");
@@ -185,10 +192,7 @@ public class AgentRequestsClient {
             return new WriteTextFileResponse();
         } catch (IOException e) {
             System.err.println("[WRITE] Error: " + e.getMessage());
-            // Must return a response - throwing breaks protocol (agent hangs)
-            // WriteTextFileResponse has no error field, so we return empty response
-            // The agent may not know the write failed, but at least protocol continues
-            return new WriteTextFileResponse();
+            throw new RuntimeException("Failed to write file: " + e.getMessage(), e);
         }
     }
 
