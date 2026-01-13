@@ -1,0 +1,33 @@
+=== Module 15: Agent File Requests Demo ===
+
+Connected with file capabilities!
+
+Session: f1b61621-fada-4ded-91a7-215363859ef0
+
+--- Agent Output ---
+Reading pom.xml from your system...
+[READ] pom.xml
+File content (first 10 lines):
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.agentclientprotocol</groupId>
+    <artifactId>acp-java-tutorial</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+Requesting permission to create summary.txt...
+[PERMISSION] Create summary.txt - auto-approved
+Permission response: PermissionSelected[outcome=null, optionId=allow]
+[WRITE] summary.txt
+Successfully wrote summary.txt!
+--- End ---
+Stop reason: END_TURN
+
+Created summary.txt:
+This file was created by the FileRequestingAgent.
+It demonstrates the writeTextFile API in ACP.
+

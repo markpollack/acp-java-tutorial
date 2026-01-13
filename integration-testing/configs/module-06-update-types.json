@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-06-update-types",
+  "displayName": "Module 06: Update Types",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Comprehensive coverage of all SessionUpdate types in ACP. Log and count different update types received: AgentMessageChunk, AgentThoughtChunk, ToolCall, ToolCallUpdateNotification, Plan, AvailableCommandsUpdate, CurrentModeUpdate. Display summary with counts for each type."
+}

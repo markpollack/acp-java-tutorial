@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-07-agent-requests",
+  "displayName": "Module 07: Agent Requests",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Handle file read/write requests from the agent. Register readTextFileHandler and writeTextFileHandler on the client. Prompt agent to read a file, show the file being read via handler, and display agent's analysis of the content. Demonstrate Java NIO.2 best practices."
+}

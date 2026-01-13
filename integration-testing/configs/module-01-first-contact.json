@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-01-first-contact",
+  "displayName": "Module 01: First Contact",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Connect to Gemini CLI via ACP, send a simple prompt asking what 2+2 is, and receive a response with the answer. Should show module header, session ID, the prompt sent, agent response with the answer, and stop reason END_TURN."
+}

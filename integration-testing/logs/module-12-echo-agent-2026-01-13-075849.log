@@ -1,0 +1,9 @@
+Sending initialize...
+Connected to EchoAgent!
+
+Session: 266f135a-86c9-4ea4-90ef-c999a4d0fb5a
+
+Sending: Hello from the client!
+[Agent] Echo: Hello from the client!
+
+Stop reason: END_TURN

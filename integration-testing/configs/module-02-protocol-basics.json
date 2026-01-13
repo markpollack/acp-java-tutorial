@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-02-protocol-basics",
+  "displayName": "Module 02: Protocol Basics",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Demonstrate the ACP initialize handshake with explicit InitializeRequest showing protocol version and client capabilities. Should display sent request details, received response with protocol version and agent capabilities, and version negotiation explanation."
+}

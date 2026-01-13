@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-14-sending-updates",
+  "displayName": "Module 14: Sending Updates",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Agent sends all SessionUpdate types to client. The UpdateSendingAgent demonstrates AgentThoughtChunk, AgentMessageChunk, Plan, ToolCall, ToolCallUpdateNotification, AvailableCommandsUpdate, and CurrentModeUpdate. Client should receive and display each update type with appropriate labels."
+}

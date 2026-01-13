@@ -48,6 +48,8 @@ public class EchoAgentDemo {
                 })
                 .build()) {
 
+            System.out.println("=== Module 12: Echo Agent Demo ===\n");
+
             // Initialize
             System.out.println("Sending initialize...");
             client.initialize();

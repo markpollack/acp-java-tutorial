@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-12-echo-agent",
+  "displayName": "Module 12: Echo Agent",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Run a minimal ACP agent that echoes back prompts. The demo client launches EchoAgent as a subprocess, sends 'Hello from the client!', and receives 'Echo: Hello from the client!' back. Should show initialize success, session ID, sent prompt, echoed response, and stop reason END_TURN."
+}

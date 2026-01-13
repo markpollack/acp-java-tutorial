@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-05-streaming-updates",
+  "displayName": "Module 05: Streaming Updates",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Receive real-time session updates from Gemini agent during prompt processing. Use sessionUpdateConsumer to handle AgentMessageChunk updates and display the streaming response as it arrives. Should show session ID, streaming text output, and stop reason."
+}

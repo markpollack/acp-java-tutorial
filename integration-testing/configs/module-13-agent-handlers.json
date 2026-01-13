@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-13-agent-handlers",
+  "displayName": "Module 13: Agent Handlers",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrate all ACP agent handler types. The HandlerAgent responds to initialize, newSession, loadSession, prompt, and cancel handlers. Should show protocol version from initializeHandler, session IDs from newSessionHandler, prompt responses describing all handler types, and stop reason END_TURN."
+}

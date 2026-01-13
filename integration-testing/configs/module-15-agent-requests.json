@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-15-agent-requests",
+  "displayName": "Module 15: Agent Requests",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Agent requests files and permissions from client. FileRequestingAgent reads pom.xml via readTextFile, requests permission via requestPermission, and writes summary.txt via writeTextFile. Client handles these requests and displays [READ], [PERMISSION], [WRITE] logs. Should show file content and successful write."
+}

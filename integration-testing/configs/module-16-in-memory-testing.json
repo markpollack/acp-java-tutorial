@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-16-in-memory-testing",
+  "displayName": "Module 16: In-Memory Testing",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": false,
+  "expectedBehavior": "Test ACP client and agent together using in-memory transport (no real processes). Create SimpleInMemoryTransportPair, connect client and agent transports, send prompt and receive echo response. Verify that agent received the prompt and client received the response. Should show 'Test passed: true'."
+}
