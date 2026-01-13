@@ -185,7 +185,10 @@ public class AgentRequestsClient {
             return new WriteTextFileResponse();
         } catch (IOException e) {
             System.err.println("[WRITE] Error: " + e.getMessage());
-            throw new RuntimeException("Cannot write: " + request.path(), e);
+            // Must return a response - throwing breaks protocol (agent hangs)
+            // WriteTextFileResponse has no error field, so we return empty response
+            // The agent may not know the write failed, but at least protocol continues
+            return new WriteTextFileResponse();
         }
     }
 

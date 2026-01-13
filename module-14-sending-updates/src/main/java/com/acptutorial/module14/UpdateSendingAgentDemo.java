@@ -10,6 +10,8 @@
  */
 package com.acptutorial.module14;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
@@ -29,10 +31,13 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
 
 public class UpdateSendingAgentDemo {
 
+    private static final String MODULE_NAME = "module-14-sending-updates";
+    private static final String JAR_NAME = "update-sending-agent.jar";
+
     public static void main(String[] args) {
         var params = AgentParameters.builder("java")
             .arg("-jar")
-            .arg("module-14-sending-updates/target/update-sending-agent.jar")
+            .arg(findAgentJar())
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -91,5 +96,21 @@ public class UpdateSendingAgentDemo {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Find the agent JAR whether running from repo root or module directory.
+     */
+    private static String findAgentJar() {
+        Path fromModule = Path.of("target/" + JAR_NAME);
+        if (Files.exists(fromModule)) {
+            return fromModule.toString();
+        }
+        Path fromRoot = Path.of(MODULE_NAME + "/target/" + JAR_NAME);
+        if (Files.exists(fromRoot)) {
+            return fromRoot.toString();
+        }
+        throw new RuntimeException(
+            "Agent JAR not found. Run: ./mvnw package -pl " + MODULE_NAME);
     }
 }

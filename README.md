@@ -4,87 +4,148 @@ A progressive, hands-on tutorial for learning the **Agent Client Protocol (ACP)*
 
 ## Prerequisites
 
-- Java 17+
-- Maven 3.8+
-- Gemini CLI with ACP support (`gemini --experimental-acp`)
+- Java 21+
+- Maven 3.8+ (or use the included `./mvnw` wrapper)
+- For client modules (01-08): Gemini CLI with ACP support and API key
 
-## Quick Start
+## Getting Started
+
+### Step 1: Build All Modules
 
 ```bash
-# Run Module 01 - First Contact with Gemini CLI
-mvn exec:java -pl module-01-first-contact
+# Clone and build
+git clone https://github.com/markpollack/acp-java-tutorial.git
+cd acp-java-tutorial
+./mvnw compile
 ```
 
-## Tutorial Structure
+### Step 2: Run Local Agent Demos (No API Key Required)
 
-### Part 1: First Steps (Client Basics)
+These modules run entirely locally - no external API needed:
+
+```bash
+# Module 12: Echo Agent - Your first ACP agent
+./mvnw package -pl module-12-echo-agent -q
+./mvnw exec:java -pl module-12-echo-agent
+
+# Module 14: All session update types
+./mvnw package -pl module-14-sending-updates -q
+./mvnw exec:java -pl module-14-sending-updates
+
+# Module 15: Agent requests files from client
+./mvnw package -pl module-15-agent-requests -q
+./mvnw exec:java -pl module-15-agent-requests
+
+# Module 16: In-memory testing (no subprocess)
+./mvnw exec:java -pl module-16-in-memory-testing
+```
+
+### Step 3: Set Up Gemini API Key (For Client Modules)
+
+Client modules (01-08) connect to Gemini CLI, which requires an API key:
+
+```bash
+# Get your API key from https://aistudio.google.com/app/apikey
+export GEMINI_API_KEY=your-api-key-here
+
+# Verify Gemini CLI is installed with ACP support
+gemini --experimental-acp --version
+```
+
+### Step 4: Run Client Modules
+
+```bash
+# Module 01: First Contact - Connect to Gemini
+./mvnw exec:java -pl module-01-first-contact
+
+# Module 05: Streaming Updates
+./mvnw exec:java -pl module-05-streaming-updates
+
+# Module 07: Handle agent file requests
+./mvnw exec:java -pl module-07-agent-requests
+
+# Module 08: Handle permission requests
+./mvnw exec:java -pl module-08-permissions
+```
+
+## Module Categories
+
+### Client Modules (Require GEMINI_API_KEY)
+
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
 | 01 | First Contact | Launch Gemini CLI, get your first response |
-| 02 | Protocol Basics | Initialize handshake, version negotiation |
-| 03 | Sessions | Create sessions, understand session lifecycle |
-| 04 | Prompts | Send prompts, handle responses |
-
-### Part 2: Client Features
-| Module | Title | What You'll Learn |
-|--------|-------|-------------------|
 | 05 | Streaming Updates | Receive real-time updates during prompts |
-| 06 | Update Types | Handle different update types (thoughts, messages, tools) |
 | 07 | Agent Requests | Respond to file read/write requests |
 | 08 | Permissions | Handle permission requests from agents |
 
-### Part 3: Client Mastery
-| Module | Title | What You'll Learn |
-|--------|-------|-------------------|
-| 09 | Session Resume | Load and resume existing sessions |
-| 10 | Cancellation | Cancel in-progress operations |
-| 11 | Error Handling | Handle protocol errors gracefully |
+### Agent Modules (Run Locally, No API Key)
 
-### Part 4: The Agent Side (The Reveal)
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
 | 12 | Echo Agent | Build a minimal ACP agent (~30 lines) |
 | 13 | Agent Handlers | Implement all handler types |
 | 14 | Sending Updates | Stream updates to clients |
 | 15 | Agent Requests | Request files/permissions from clients |
-
-### Part 5: Both Ends Together
-| Module | Title | What You'll Learn |
-|--------|-------|-------------------|
 | 16 | In-Memory Testing | Test client-agent without subprocesses |
-| 17 | Capability Negotiation | Feature detection and graceful degradation |
-| 18 | Terminal Operations | Agent executes commands via client |
 
-### Part 6: Advanced Integration
+### Coming Soon
+
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
-| 19 | MCP Servers | Pass MCP servers to agents |
-| 20 | WebSocket Transport | Network-based ACP communication |
-| 21 | Async Patterns | Reactive programming with Mono/Flux |
+| 02-04 | Protocol Basics | Initialize, sessions, prompts in depth |
+| 06 | Update Types | All SessionUpdate types |
+| 09-11 | Client Mastery | Resume, cancel, error handling |
+| 17-21 | Advanced | Capabilities, terminal, WebSocket, async |
 
-### Capstone: Claude Code Agent
-Build a fully functional ACP agent that wraps the Claude Agent SDK Java.
-
-## Running Individual Modules
-
-Each module is a standalone Maven project:
+## Build Commands
 
 ```bash
-# Run any module
-mvn exec:java -pl module-XX-name
+# Build everything
+./mvnw compile
 
-# Example: Run the Echo Agent
-mvn exec:java -pl module-12-echo-agent
+# Build a specific module
+./mvnw compile -pl module-12-echo-agent
+
+# Package agent modules (required before running)
+./mvnw package -pl module-12-echo-agent -q
+
+# Run tests
+./mvnw test
 ```
 
-## Building
+## Integration Testing
+
+The tutorial includes an automated test suite:
 
 ```bash
-# Build all modules
-mvn compile
+cd integration-testing
 
-# Test all modules
-mvn test
+# Run all local tests (no API key needed)
+./scripts/run-integration-tests.sh --local
+
+# Run a single module test
+jbang RunIntegrationTest.java module-12-echo-agent
+
+# Run all tests (requires GEMINI_API_KEY)
+./scripts/run-integration-tests.sh
+```
+
+## Project Structure
+
+```
+acp-java-tutorial/
+├── module-01-first-contact/     # Client: Connect to Gemini
+├── module-05-streaming-updates/ # Client: Real-time updates
+├── module-07-agent-requests/    # Client: File handlers
+├── module-08-permissions/       # Client: Permission handling
+├── module-12-echo-agent/        # Agent: Minimal echo agent
+├── module-13-agent-handlers/    # Agent: All handler types
+├── module-14-sending-updates/   # Agent: Send all update types
+├── module-15-agent-requests/    # Agent: Request files
+├── module-16-in-memory-testing/ # Testing: No subprocess
+├── integration-testing/         # Automated test suite
+└── plans/                       # Design documentation
 ```
 
 ## Related Projects

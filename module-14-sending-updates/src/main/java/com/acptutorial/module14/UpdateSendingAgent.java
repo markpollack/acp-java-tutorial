@@ -61,16 +61,16 @@ public class UpdateSendingAgent {
             .newSessionHandler(req ->
                 new NewSessionResponse(UUID.randomUUID().toString(), null, null))
 
-            .promptHandler((req, updater) -> {
+            .promptHandler((req, context) -> {
                 String sessionId = req.sessionId();
 
                 // 1. Send thought update - show thinking process
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new AgentThoughtChunk("agent_thought_chunk",
                         new TextContent("Let me analyze this request...")));
 
                 // 2. Send plan update - show what we're going to do
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new Plan("plan", List.of(
                         new PlanEntry("Analyze the prompt", PlanEntryPriority.HIGH, PlanEntryStatus.IN_PROGRESS),
                         new PlanEntry("Generate response", PlanEntryPriority.HIGH, PlanEntryStatus.PENDING),
@@ -78,7 +78,7 @@ public class UpdateSendingAgent {
                     )));
 
                 // 3. Send tool call - show tool execution starting
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new ToolCall("tool_call",
                         "tool-1",
                         "Analyzing prompt",
@@ -88,7 +88,7 @@ public class UpdateSendingAgent {
                         null, null, null, null));
 
                 // 4. Send tool call update - show progress
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new ToolCallUpdateNotification("tool_call_update",
                         "tool-1",
                         "Analyzing prompt",
@@ -98,7 +98,7 @@ public class UpdateSendingAgent {
                         null, null, null, null));
 
                 // 5. Send available commands update
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new AvailableCommandsUpdate("available_commands_update", List.of(
                         new AvailableCommand("help", "Show help",
                             new AvailableCommandInput("topic")),
@@ -106,17 +106,17 @@ public class UpdateSendingAgent {
                     )));
 
                 // 6. Send mode update
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new CurrentModeUpdate("current_mode_update", "default"));
 
                 // 7. Send message chunks - the actual response
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("Here is my response ")));
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("streamed in ")));
-                updater.sendUpdate(sessionId,
+                context.sendUpdate(sessionId,
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("multiple chunks.")));
 

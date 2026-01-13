@@ -37,10 +37,13 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.WriteTextFileResponse;
 
 public class FileRequestingAgentDemo {
 
+    private static final String MODULE_NAME = "module-15-agent-requests";
+    private static final String JAR_NAME = "file-requesting-agent.jar";
+
     public static void main(String[] args) {
         var params = AgentParameters.builder("java")
             .arg("-jar")
-            .arg("module-15-agent-requests/target/file-requesting-agent.jar")
+            .arg(findAgentJar())
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -72,7 +75,9 @@ public class FileRequestingAgentDemo {
                         Files.writeString(Path.of(req.path()), req.content());
                         return new WriteTextFileResponse();
                     } catch (IOException e) {
-                        throw new RuntimeException("Write failed: " + e.getMessage());
+                        System.err.println("[WRITE] Error: " + e.getMessage());
+                        // Must return a response - throwing breaks protocol (agent hangs)
+                        return new WriteTextFileResponse();
                     }
                 })
                 // Handle agent's permission requests (auto-approve for demo)
@@ -123,5 +128,21 @@ public class FileRequestingAgentDemo {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Find the agent JAR whether running from repo root or module directory.
+     */
+    private static String findAgentJar() {
+        Path fromModule = Path.of("target/" + JAR_NAME);
+        if (Files.exists(fromModule)) {
+            return fromModule.toString();
+        }
+        Path fromRoot = Path.of(MODULE_NAME + "/target/" + JAR_NAME);
+        if (Files.exists(fromRoot)) {
+            return fromRoot.toString();
+        }
+        throw new RuntimeException(
+            "Agent JAR not found. Run: ./mvnw package -pl " + MODULE_NAME);
     }
 }

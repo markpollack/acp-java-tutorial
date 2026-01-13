@@ -15,6 +15,8 @@
  */
 package com.acptutorial.module12;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
@@ -28,12 +30,14 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class EchoAgentDemo {
 
+    private static final String MODULE_NAME = "module-12-echo-agent";
+    private static final String JAR_NAME = "echo-agent.jar";
+
     public static void main(String[] args) {
         // Launch the EchoAgent as a subprocess using the packaged JAR
-        // This is clean: just "java -jar" with no Maven at runtime
         var params = AgentParameters.builder("java")
             .arg("-jar")
-            .arg("module-12-echo-agent/target/echo-agent.jar")
+            .arg(findAgentJar())
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -74,5 +78,23 @@ public class EchoAgentDemo {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Find the agent JAR whether running from repo root or module directory.
+     */
+    private static String findAgentJar() {
+        // Try module-relative path first (when running from module dir)
+        Path fromModule = Path.of("target/" + JAR_NAME);
+        if (Files.exists(fromModule)) {
+            return fromModule.toString();
+        }
+        // Try repo-root-relative path
+        Path fromRoot = Path.of(MODULE_NAME + "/target/" + JAR_NAME);
+        if (Files.exists(fromRoot)) {
+            return fromRoot.toString();
+        }
+        throw new RuntimeException(
+            "Agent JAR not found. Run: ./mvnw package -pl " + MODULE_NAME);
     }
 }

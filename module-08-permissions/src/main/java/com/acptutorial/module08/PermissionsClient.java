@@ -210,7 +210,8 @@ public class PermissionsClient {
             return new WriteTextFileResponse();
         } catch (IOException e) {
             System.err.println("[WRITE] Error: " + e.getMessage());
-            throw new RuntimeException("Cannot write: " + request.path(), e);
+            // Must return a response - throwing breaks protocol (agent hangs)
+            return new WriteTextFileResponse();
         }
     }
 

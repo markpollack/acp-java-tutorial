@@ -9,6 +9,8 @@
  */
 package com.acptutorial.module13;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
@@ -22,10 +24,13 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class HandlerAgentDemo {
 
+    private static final String MODULE_NAME = "module-13-agent-handlers";
+    private static final String JAR_NAME = "handler-agent.jar";
+
     public static void main(String[] args) {
         var params = AgentParameters.builder("java")
             .arg("-jar")
-            .arg("module-13-agent-handlers/target/handler-agent.jar")
+            .arg(findAgentJar())
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -86,5 +91,21 @@ public class HandlerAgentDemo {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Find the agent JAR whether running from repo root or module directory.
+     */
+    private static String findAgentJar() {
+        Path fromModule = Path.of("target/" + JAR_NAME);
+        if (Files.exists(fromModule)) {
+            return fromModule.toString();
+        }
+        Path fromRoot = Path.of(MODULE_NAME + "/target/" + JAR_NAME);
+        if (Files.exists(fromRoot)) {
+            return fromRoot.toString();
+        }
+        throw new RuntimeException(
+            "Agent JAR not found. Run: ./mvnw package -pl " + MODULE_NAME);
     }
 }

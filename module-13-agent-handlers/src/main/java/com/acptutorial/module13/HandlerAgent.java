@@ -88,7 +88,7 @@ public class HandlerAgent {
             })
 
             // Handler 4: Prompt - Main conversation handler
-            .promptHandler((req, updater) -> {
+            .promptHandler((req, context) -> {
                 System.err.println("[HandlerAgent] promptHandler called");
                 System.err.println("  Session ID: " + req.sessionId());
                 System.err.println("  Prompt items: " + req.prompt().size());
@@ -102,12 +102,12 @@ public class HandlerAgent {
                 System.err.println("  Prompt text: " + promptText);
 
                 // Send a response
-                updater.sendUpdate(req.sessionId(),
+                context.sendUpdate(req.sessionId(),
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("HandlerAgent received: " + promptText)));
 
                 // Describe our handler types
-                updater.sendUpdate(req.sessionId(),
+                context.sendUpdate(req.sessionId(),
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("\n\nThis agent demonstrates:\n" +
                             "- initializeHandler: " + sessions.size() + " session(s) created\n" +

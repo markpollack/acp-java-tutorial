@@ -70,7 +70,7 @@ public class InMemoryTestingDemo {
                 Mono.just(new InitializeResponse(1, new AgentCapabilities(), List.of())))
             .newSessionHandler(req ->
                 Mono.just(new NewSessionResponse(UUID.randomUUID().toString(), null, null)))
-            .promptHandler((req, updater) -> {
+            .promptHandler((req, context) -> {
                 // Capture the prompt for verification
                 String text = req.prompt().stream()
                     .filter(c -> c instanceof TextContent)
@@ -80,7 +80,7 @@ public class InMemoryTestingDemo {
                 receivedPrompt.set(text);
 
                 // Send response
-                return updater.sendUpdate(req.sessionId(),
+                return context.sendUpdate(req.sessionId(),
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("Echo: " + text)))
                     .then(Mono.just(new PromptResponse(StopReason.END_TURN)));

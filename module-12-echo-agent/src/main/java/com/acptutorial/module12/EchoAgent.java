@@ -14,8 +14,8 @@
  * - agent.run() - starts agent and blocks until client disconnects
  * - SyncInitializeHandler - plain return value (no Mono)
  * - SyncNewSessionHandler - plain return value (no Mono)
- * - SyncPromptHandler - plain return value with SyncSessionUpdateSender
- * - SyncSessionUpdateSender.sendUpdate() - blocking void method
+ * - SyncPromptHandler - plain return value with SyncPromptContext
+ * - SyncPromptContext.sendUpdate() - blocking void method
  *
  * Build & run:
  *   ./mvnw package -pl module-12-echo-agent -q
@@ -54,7 +54,7 @@ public class EchoAgent {
                 new NewSessionResponse(UUID.randomUUID().toString(), null, null))
 
             // Handle prompts - echo back the input
-            .promptHandler((req, updater) -> {
+            .promptHandler((req, context) -> {
                 // Extract text from prompt
                 String text = req.prompt().stream()
                     .filter(c -> c instanceof TextContent)
@@ -63,7 +63,7 @@ public class EchoAgent {
                     .orElse("(no text)");
 
                 // Send the echo as an agent message update (blocking, void return)
-                updater.sendUpdate(req.sessionId(),
+                context.sendUpdate(req.sessionId(),
                     new AgentMessageChunk("agent_message_chunk",
                         new TextContent("Echo: " + text)));
 

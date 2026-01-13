@@ -1,11 +1,18 @@
 /*
  * SimpleInMemoryTransportPair - A minimal in-memory transport for testing.
  *
- * This is a simplified version of the SDK's InMemoryTransportPair,
- * demonstrating the core concepts without the full production features.
+ * WARNING: This is a SIMPLIFIED DEMO implementation for educational purposes only!
+ * It lacks proper error handling, timeout support, and other production features.
  *
- * For production testing, use the SDK's InMemoryTransportPair from
- * the test-jar or copy it into your test sources.
+ * For production testing, use one of these options:
+ * 1. The SDK's InMemoryTransportPair (in acp-core test sources)
+ * 2. MockAcpClient/MockAcpAgent from the SDK
+ * 3. Copy InMemoryTransportPair.java into your test sources
+ *
+ * This demo exists to show the core concepts of in-memory transports:
+ * - Bidirectional Sinks.Many channels for message passing
+ * - Client and agent transports connected through shared sinks
+ * - Basic message handling without network I/O
  */
 package com.acptutorial.module16;
 
@@ -23,6 +30,11 @@ import reactor.core.publisher.Sinks;
 
 /**
  * Creates connected client and agent transports that communicate in-memory.
+ *
+ * <p><b>WARNING:</b> This is a simplified educational demo. Do NOT use in production tests.
+ * Use the SDK's InMemoryTransportPair or MockAcpClient/MockAcpAgent instead.</p>
+ *
+ * @see com.agentclientprotocol.sdk.test.InMemoryTransportPair
  */
 public class SimpleInMemoryTransportPair {
 
