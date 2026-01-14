@@ -1,0 +1,35 @@
+=== Module 19: MCP Servers ===
+
+Connected to McpAgent
+
+Agent MCP capabilities:
+  - HTTP: true
+  - SSE: true
+
+--- Part 1: Session without MCP servers ---
+Session created: 11678bbe-53ba-4bb6-9b0b-07e41cdd7277
+
+No MCP servers configured for this session.
+
+--- Part 2: Session with STDIO MCP server ---
+Session created: 3c0a4d1f-c632-4535-9d5c-171a5a695e56
+
+MCP servers for this session:
+
+1. STDIO[name=filesystem, command=npx, args=[-y, @modelcontextprotocol/server-filesystem, /tmp]]
+
+
+--- Part 3: Session with multiple MCP servers ---
+Session created: d8af870b-b50a-42e7-8093-357a6f79c04c
+
+MCP servers for this session:
+
+1. STDIO[name=git, command=npx, args=[-y, @modelcontextprotocol/server-git]]
+2. HTTP[name=weather-api, url=https://api.weather.example.com/mcp]
+3. SSE[name=live-data, url=https://stream.example.com/mcp/events]
+
+
+=== Demo Complete ===
+
+Note: The agent receives MCP server configs but doesn't connect to them.
+In a real agent, you would use an MCP client library to establish connections.

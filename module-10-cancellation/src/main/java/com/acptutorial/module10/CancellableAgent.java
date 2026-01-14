@@ -15,7 +15,6 @@
  */
 package com.acptutorial.module10;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,13 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class CancellableAgent {
 
@@ -43,7 +38,7 @@ public class CancellableAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[CancellableAgent] Initialize");
-                return new InitializeResponse(1, new AgentCapabilities(), List.of());
+                return InitializeResponse.ok();
             })
 
             .newSessionHandler(req -> {
@@ -74,32 +69,26 @@ public class CancellableAgent {
                     // Check if cancelled before each step
                     if (cancelledSessions.getOrDefault(sessionId, false)) {
                         System.err.println("[CancellableAgent] Cancelled at step " + i);
-                        context.sendUpdate(sessionId,
-                            new AgentMessageChunk("agent_message_chunk",
-                                new TextContent("\n[Operation cancelled at step " + i + "]")));
-                        return new PromptResponse(StopReason.END_TURN);
+                        context.sendMessage("\n[Operation cancelled at step " + i + "]");
+                        return PromptResponse.endTurn();
                     }
 
                     // Send progress update
-                    context.sendUpdate(sessionId,
-                        new AgentMessageChunk("agent_message_chunk",
-                            new TextContent("Step " + i + "/10... ")));
+                    context.sendMessage("Step " + i + "/10... ");
 
                     // Simulate work
                     try {
                         Thread.sleep(500);  // 500ms per step
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        return new PromptResponse(StopReason.END_TURN);
+                        return PromptResponse.endTurn();
                     }
                 }
 
                 // Completed without cancellation
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("\nAll steps completed!")));
+                context.sendMessage("\nAll steps completed!");
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

@@ -17,19 +17,14 @@
  */
 package com.acptutorial.module30;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class VSCodeAgent {
@@ -42,7 +37,7 @@ public class VSCodeAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[VSCodeAgent] Initialize request received");
-                return new InitializeResponse(1, new AgentCapabilities(), List.of());
+                return InitializeResponse.ok();
             })
 
             .newSessionHandler(req -> {
@@ -59,16 +54,12 @@ public class VSCodeAgent {
 
                 System.err.println("[VSCodeAgent] Processing: " + promptText);
 
-                context.sendUpdate(req.sessionId(),
-                    new AgentThoughtChunk("agent_thought_chunk",
-                        new TextContent("Processing in VS Code...")));
-
+                // Using convenience methods
+                context.sendThought("Processing in VS Code...");
                 String response = generateResponse(promptText);
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response)));
+                context.sendMessage(response);
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

@@ -1,0 +1,87 @@
+=== Module 17: Capability Negotiation ===
+
+--- Part 1: Full Capabilities Client ---
+Starting Full capabilities client...
+  Advertised capabilities:
+    - fs.readTextFile: true
+    - fs.writeTextFile: true
+    - terminal: true
+
+  Agent capabilities:
+    - loadSession: true
+    - imageContent: true
+    - audioContent: false
+    - embeddedContext: false
+    - mcpHttp: false
+    - mcpSse: false
+
+  Test: Agent checking our capabilities...
+    Agent: Checking client capabilities:
+  - readTextFile: true
+  - writeTextFile: true
+  - terminal: true
+
+  Test: Agent trying file read...
+    Agent: File read failed: File system read not supported [code=-32601]: Client does not have fs.readTextFile capability
+  Test: Agent trying file write...
+    Agent: File write capability available - would write if path provided
+  Test: Agent trying terminal...
+    Agent: Terminal capability available - would execute command if provided
+
+--- Part 2: Limited Capabilities Client (Read-Only) ---
+Starting Read-only client...
+  Advertised capabilities:
+    - fs.readTextFile: true
+    - fs.writeTextFile: false
+    - terminal: false
+
+  Agent capabilities:
+    - loadSession: true
+    - imageContent: true
+    - audioContent: false
+    - embeddedContext: false
+    - mcpHttp: false
+    - mcpSse: false
+
+  Test: Agent checking our capabilities...
+    Agent: Checking client capabilities:
+  - readTextFile: true
+  - writeTextFile: false
+  - terminal: false
+
+  Test: Agent trying file read...
+    Agent: File read failed: File system read not supported [code=-32601]: Client does not have fs.readTextFile capability
+  Test: Agent trying file write...
+    Agent: Cannot write files - client doesn't support fs.writeTextFile capability
+  Test: Agent trying terminal...
+    Agent: Cannot execute commands - client doesn't support terminal capability
+
+--- Part 3: Minimal Capabilities Client ---
+Starting Minimal client...
+  Advertised capabilities:
+    - fs.readTextFile: false
+    - fs.writeTextFile: false
+    - terminal: false
+
+  Agent capabilities:
+    - loadSession: true
+    - imageContent: true
+    - audioContent: false
+    - embeddedContext: false
+    - mcpHttp: false
+    - mcpSse: false
+
+  Test: Agent checking our capabilities...
+    Agent: Checking client capabilities:
+  - readTextFile: false
+  - writeTextFile: false
+  - terminal: false
+
+  Test: Agent trying file read...
+    Agent: Cannot read files - client doesn't support fs.readTextFile capability
+  Test: Agent trying file write...
+    Agent: Cannot write files - client doesn't support fs.writeTextFile capability
+  Test: Agent trying terminal...
+    Agent: Cannot execute commands - client doesn't support terminal capability
+
+=== Demo Complete ===

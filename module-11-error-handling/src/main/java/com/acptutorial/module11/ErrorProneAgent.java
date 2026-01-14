@@ -14,7 +14,6 @@
  */
 package com.acptutorial.module11;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,12 +23,9 @@ import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.error.AcpErrorCodes;
 import com.agentclientprotocol.sdk.error.AcpProtocolException;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class ErrorProneAgent {
@@ -43,7 +39,7 @@ public class ErrorProneAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[ErrorProneAgent] Initialize");
-                return new InitializeResponse(1, new AgentCapabilities(), List.of());
+                return InitializeResponse.ok();
             })
 
             .newSessionHandler(req -> {
@@ -101,11 +97,9 @@ public class ErrorProneAgent {
                 }
 
                 // Normal response
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Success! Processed: " + text)));
+                context.sendMessage("Success! Processed: " + text);
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

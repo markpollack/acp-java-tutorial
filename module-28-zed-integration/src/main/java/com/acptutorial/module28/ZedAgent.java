@@ -36,19 +36,14 @@
  */
 package com.acptutorial.module28;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class ZedAgent {
@@ -62,21 +57,12 @@ public class ZedAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[ZedAgent] Received initialize request");
-                // Advertise our capabilities
-                return new InitializeResponse(
-                    1,  // protocol version
-                    new AgentCapabilities(),  // default capabilities
-                    List.of()  // no extensions
-                );
+                return InitializeResponse.ok();
             })
 
             .newSessionHandler(req -> {
                 System.err.println("[ZedAgent] Creating session for cwd: " + req.cwd());
-                return new NewSessionResponse(
-                    UUID.randomUUID().toString(),
-                    null,  // no system prompt
-                    null   // no extra config
-                );
+                return new NewSessionResponse(UUID.randomUUID().toString(), null, null);
             })
 
             .promptHandler((req, context) -> {
@@ -89,20 +75,14 @@ public class ZedAgent {
 
                 System.err.println("[ZedAgent] Processing prompt: " + promptText);
 
-                // Send a "thinking" update first
-                context.sendUpdate(req.sessionId(),
-                    new AgentThoughtChunk("agent_thought_chunk",
-                        new TextContent("Processing your request...")));
+                // Send a "thinking" update using convenience method
+                context.sendThought("Processing your request...");
 
-                // Generate a response
+                // Generate and send response using convenience method
                 String response = generateResponse(promptText);
+                context.sendMessage(response);
 
-                // Send the response as a message chunk
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response)));
-
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

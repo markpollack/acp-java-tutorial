@@ -1,0 +1,122 @@
+=== Module 18: Terminal Operations ===
+
+Connected to TerminalAgent
+
+--- Test 1: Run 'echo Hello World' ---
+
+[Client] Creating terminal: bc43fb56-c318-4be7-9e74-924a68ec1661
+[Client] Command: echo Hello World
+[Client] Waiting for terminal exit: bc43fb56-c318-4be7-9e74-924a68ec1661
+[Client] Process exited with code: 0
+[Client] Getting output for: bc43fb56-c318-4be7-9e74-924a68ec1661
+[Client] Releasing terminal: bc43fb56-c318-4be7-9e74-924a68ec1661
+Executing command: echo Hello World
+
+Exit code: 0
+
+Output:
+Hello World
+
+
+Command completed successfully.
+
+--- Test 2: Run 'ls -la' ---
+
+[Client] Creating terminal: 4b4926d5-20ae-4934-9730-a50d75d2d939
+[Client] Command: ls -la
+[Client] Waiting for terminal exit: 4b4926d5-20ae-4934-9730-a50d75d2d939
+[Client] Process exited with code: 0
+[Client] Getting output for: 4b4926d5-20ae-4934-9730-a50d75d2d939
+Executing command: ls -la
+
+Exit code: 0
+
+Output:
+total 176
+drwxrwxr-x 31 mark mark 4096 Jan 14 00:50 .
+drwxrwxr-x 10 mark mark 4096 Jan 13 16:18 ..
+-rw-rw-r--  1 mark mark 4846 Jan 13 12:20 CLAUDE.md
+drwxrwxr-x  8 mark mark 4096 Jan 14 00:54 .git
+-rw-rw-r--  1 mark mark  290 Jan 13 10:40 .gitignore
+drwxrwxr-x  2 mark mark 4096 Jan 13 16:05 .idea
+drwxrwxr-x  7 mark mark 4096 Jan 13 10:51 integration-testing
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-01-first-contact
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-02-protocol-basics
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-03-sessions
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-04-prompts
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-05-streaming-updates
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-06-update-types
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-07-agent-requests
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:41 module-08-permissions
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:32 module-09-session-resume
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:29 module-10-cancellation
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:42 module-11-error-handling
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-12-echo-agent
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-13-agent-handlers
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-14-sending-updates
+drwxrwxr-x  4 mark mark 4096 Jan 13 10:40 module-15-agent-requests
+drwxrwxr-x  4 mark mark 4096 Jan 13 15:55 module-16-in-memory-testing
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:47 module-17-capability-negotiation
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:52 module-18-terminal-operations
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:54 module-19-mcp-servers
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:17 module-21-async-client
+drwxrwxr-x  4 mark mark 4096 Jan 13 17:26 module-22-async-agent
+drwxrwxr-x  4 mark mark 4096 Jan 14 00:02 module-28-zed-integration
+drwxrwxr-x  4 mark mark 4096 Jan 14 00:11 module-29-jetbrains-integration
+drwxrwxr-x  4 mark mark 4096 Jan 14 00:13 module-30-vscode-integration
+drwxrwxr-x  3 mark mark 4096 Jan 13 10:40 .mvn
+-rwxrwxr-x  1 mark mark 9731 Jan 13 10:40 mvnw
+-rw-rw-r--  1 mark mark 6608 Jan 13 10:40 mvnw.cmd
+-rw-rw-r--  1 mark mark 1449 Jan 13 15:14 mystery.txt
+drwxrwxr-x  3 mark mark 4096 Jan 14 00:21 plans
+-rw-rw-r--  1 mark mark 4834 Jan 14 00:13 pom.xml
+-rw-rw-r--  1 mark mark 5663 Jan 13 15:19 README.md
+
+
+Command completed successfully.
+
+--- Test 3: Run 'cat /etc/os-release' ---
+
+[Client] Creating terminal: 793fa5bb-69f5-4fa4-b355-47697beffd9c
+[Client] Command: cat /etc/os-release
+[Client] Waiting for terminal exit: 793fa5bb-69f5-4fa4-b355-47697beffd9c
+[Client] Process exited with code: 0
+[Client] Getting output for: 793fa5bb-69f5-4fa4-b355-47697beffd9c
+[Client] Releasing terminal: 793fa5bb-69f5-4fa4-b355-47697beffd9c
+[acp-client-inbound] ERROR com.agentclientprotocol.sdk.spec.AcpClientSession - Error handling request: JSONRPCError[code=-32603, message=Failed to enqueue message, data=null]
+Error: Failed to enqueue message [code=-32603]
+com.agentclientprotocol.sdk.spec.AcpClientSession$AcpError: Failed to enqueue message [code=-32603]
+	at com.agentclientprotocol.sdk.spec.AcpClientSession.lambda$sendRequest$15(AcpClientSession.java:322)
+	at reactor.core.publisher.FluxHandle$HandleSubscriber.onNext(FluxHandle.java:113)
+	at reactor.core.publisher.SerializedSubscriber.onNext(SerializedSubscriber.java:99)
+	at reactor.core.publisher.FluxTimeout$TimeoutMainSubscriber.onNext(FluxTimeout.java:181)
+	at reactor.core.publisher.MonoCreate$DefaultMonoSink.success(MonoCreate.java:176)
+	at com.agentclientprotocol.sdk.spec.AcpClientSession.handle(AcpClientSession.java:173)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onNext(FluxPeekFuseable.java:489)
+	at reactor.core.publisher.Operators$ScalarSubscription.request(Operators.java:2571)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.request(FluxPeekFuseable.java:437)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.request(FluxContextWrite.java:136)
+	at reactor.core.publisher.FluxFlatMap$FlatMapInner.onSubscribe(FluxFlatMap.java:968)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onSubscribe(FluxContextWrite.java:101)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableConditionalSubscriber.onSubscribe(FluxPeekFuseable.java:471)
+	at reactor.core.publisher.MonoJust.subscribe(MonoJust.java:55)
+	at reactor.core.publisher.Mono.subscribe(Mono.java:4512)
+	at reactor.core.publisher.FluxFlatMap$FlatMapMain.onNext(FluxFlatMap.java:430)
+	at reactor.core.publisher.SinkManyUnicast.drainRegular(SinkManyUnicast.java:283)
+	at reactor.core.publisher.SinkManyUnicast.drain(SinkManyUnicast.java:365)
+	at reactor.core.publisher.SinkManyUnicast.tryEmitNext(SinkManyUnicast.java:238)
+	at reactor.core.publisher.SinkManySerialized.tryEmitNext(SinkManySerialized.java:100)
+	at com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport.lambda$startInboundProcessing$9(StdioAcpClientTransport.java:283)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+	at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: java.lang.Exception: #block terminated with an error
+		at reactor.core.publisher.BlockingSingleSubscriber.blockingGet(BlockingSingleSubscriber.java:103)
+		at reactor.core.publisher.Mono.block(Mono.java:1728)
+		at com.agentclientprotocol.sdk.client.AcpSyncClient.prompt(AcpSyncClient.java:257)
+		at com.acptutorial.module18.TerminalDemo.main(TerminalDemo.java:193)
+		at org.codehaus.mojo.exec.ExecJavaMojo$1.run(ExecJavaMojo.java:279)
+		... 1 more

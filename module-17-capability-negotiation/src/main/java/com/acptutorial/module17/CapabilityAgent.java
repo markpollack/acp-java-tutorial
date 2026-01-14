@@ -22,14 +22,11 @@ import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.capabilities.NegotiatedCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ReadTextFileRequest;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class CapabilityAgent {
@@ -91,9 +88,9 @@ public class CapabilityAgent {
                     // Attempt file read only if capability is supported
                     if (clientCaps.supportsReadTextFile()) {
                         try {
-                            var fileReq = new ReadTextFileRequest(sessionId, "/etc/hostname", null, null);
-                            var fileResp = context.readTextFile(fileReq);
-                            response.append("File read successful! Content: ").append(fileResp.content().trim());
+                            // Using convenience method
+                            String content = context.readFile("/etc/hostname");
+                            response.append("File read successful! Content: ").append(content.trim());
                         } catch (Exception e) {
                             response.append("File read failed: ").append(e.getMessage());
                         }
@@ -122,11 +119,10 @@ public class CapabilityAgent {
                     response.append("'write' (test file write), 'terminal' (test terminal)");
                 }
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response.toString())));
+                // Using convenience method
+                context.sendMessage(response.toString());
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
 
             .loadSessionHandler(req -> {

@@ -18,7 +18,6 @@
  */
 package com.acptutorial.module13;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -26,13 +25,10 @@ import java.util.UUID;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class HandlerAgent {
@@ -51,12 +47,8 @@ public class HandlerAgent {
                 System.err.println("  Protocol version: " + req.protocolVersion());
                 System.err.println("  Client capabilities: " + req.clientCapabilities());
 
-                // Return our capabilities
-                return new InitializeResponse(
-                    1,  // Protocol version
-                    new AgentCapabilities(),  // Our capabilities
-                    List.of()  // Extensions
-                );
+                // Return our capabilities using factory method
+                return InitializeResponse.ok();
             })
 
             // Handler 2: New Session - Creates a new conversation workspace
@@ -101,22 +93,18 @@ public class HandlerAgent {
                     .orElse("(no text)");
                 System.err.println("  Prompt text: " + promptText);
 
-                // Send a response
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("HandlerAgent received: " + promptText)));
+                // Send a response using convenience method
+                context.sendMessage("HandlerAgent received: " + promptText);
 
                 // Describe our handler types
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("\n\nThis agent demonstrates:\n" +
-                            "- initializeHandler: " + sessions.size() + " session(s) created\n" +
-                            "- newSessionHandler: creates unique session IDs\n" +
-                            "- loadSessionHandler: can resume sessions\n" +
-                            "- promptHandler: processes prompts\n" +
-                            "- cancelHandler: handles cancellation (not shown)")));
+                context.sendMessage("\n\nThis agent demonstrates:\n" +
+                    "- initializeHandler: " + sessions.size() + " session(s) created\n" +
+                    "- newSessionHandler: creates unique session IDs\n" +
+                    "- loadSessionHandler: can resume sessions\n" +
+                    "- promptHandler: processes prompts\n" +
+                    "- cancelHandler: handles cancellation (not shown)");
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
 
             // Handler 5: Cancel - Handles cancellation requests

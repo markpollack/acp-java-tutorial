@@ -27,14 +27,12 @@ import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpAsyncAgent;
 import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 import com.agentclientprotocol.sdk.test.InMemoryTransportPair;
@@ -63,8 +61,7 @@ public class InMemoryTestingDemo {
         AtomicReference<String> receivedPrompt = new AtomicReference<>();
 
         AcpAsyncAgent agent = AcpAgent.async(transportPair.agentTransport())
-            .initializeHandler(req ->
-                Mono.just(new InitializeResponse(1, new AgentCapabilities(), List.of())))
+            .initializeHandler(req -> Mono.just(InitializeResponse.ok()))
             .newSessionHandler(req ->
                 Mono.just(new NewSessionResponse(UUID.randomUUID().toString(), null, null)))
             .promptHandler((req, context) -> {
@@ -76,11 +73,9 @@ public class InMemoryTestingDemo {
                     .orElse("");
                 receivedPrompt.set(text);
 
-                // Send response
-                return context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Echo: " + text)))
-                    .then(Mono.just(new PromptResponse(StopReason.END_TURN)));
+                // Send response using convenience method
+                return context.sendMessage("Echo: " + text)
+                    .then(Mono.just(PromptResponse.endTurn()));
             })
             .build();
 

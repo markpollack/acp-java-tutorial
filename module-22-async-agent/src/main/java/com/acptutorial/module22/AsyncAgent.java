@@ -27,18 +27,14 @@
  */
 package com.acptutorial.module22;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpAsyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 import reactor.core.publisher.Mono;
@@ -54,7 +50,7 @@ public class AsyncAgent {
             // Handler returns Mono<InitializeResponse>
             .initializeHandler(req -> {
                 System.err.println("[AsyncAgent] Initialize received");
-                return Mono.just(new InitializeResponse(1, new AgentCapabilities(), List.of()));
+                return Mono.just(InitializeResponse.ok());
             })
 
             // Handler returns Mono<NewSessionResponse>
@@ -65,7 +61,7 @@ public class AsyncAgent {
             })
 
             // Handler returns Mono<PromptResponse>
-            // context.sendUpdate() returns Mono<Void> - must chain with then()
+            // context.sendMessage() returns Mono<Void> - must chain with then()
             .promptHandler((req, context) -> {
                 System.err.println("[AsyncAgent] Prompt received");
 
@@ -76,12 +72,10 @@ public class AsyncAgent {
                     .findFirst()
                     .orElse("(no text)");
 
-                // IMPORTANT: sendUpdate returns Mono<Void>
+                // Using convenience method - returns Mono<Void>
                 // Must chain with then() to ensure it executes before returning response
-                return context.sendUpdate(req.sessionId(),
-                        new AgentMessageChunk("agent_message_chunk",
-                            new TextContent("Async Echo: " + text)))
-                    .then(Mono.just(new PromptResponse(StopReason.END_TURN)));
+                return context.sendMessage("Async Echo: " + text)
+                    .then(Mono.just(PromptResponse.endTurn()));
             })
             .build();
 

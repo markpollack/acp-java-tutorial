@@ -1,0 +1,28 @@
+=== Module 16: In-Memory Testing Demo ===
+
+This module demonstrates testing ACP without real processes.
+
+Key benefits:
+  - No subprocess launching (fast)
+  - No I/O (deterministic)
+  - Test client and agent together
+  - Perfect for unit tests
+
+Creating InMemoryTransportPair (from acp-test)...
+  Client transport: InMemoryClientTransport
+  Agent transport: InMemoryAgentTransport
+
+Starting agent...
+Client connecting...
+
+1. Initialize: OK
+2. New session: e3be150a-ba5c-4acb-9fa2-b609748cf955
+3. Prompt sent: "Hello from in-memory test!"
+4. Stop reason: END_TURN
+
+--- Verification ---
+Agent received: "Hello from in-memory test!"
+Client received: "Echo: Hello from in-memory test!"
+Test passed: true
+
+Transports closed. Demo complete!

@@ -23,13 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class StatefulAgent {
@@ -45,7 +42,7 @@ public class StatefulAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[StatefulAgent] Initialize");
-                return new InitializeResponse(1, new AgentCapabilities(), List.of());
+                return InitializeResponse.ok();
             })
 
             // Create new session with fresh state
@@ -111,11 +108,9 @@ public class StatefulAgent {
                     }
                 }
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response.toString())));
+                context.sendMessage(response.toString());
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

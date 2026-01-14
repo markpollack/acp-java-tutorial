@@ -2,7 +2,7 @@
  * Module 12: Echo Agent - The Reveal
  *
  * This is the "aha moment" - you finally see what's on the other side of ACP.
- * A minimal, protocol-compliant agent in ~30 lines of code.
+ * A minimal, protocol-compliant agent in ~25 lines of code.
  *
  * This agent:
  * 1. Accepts initialization
@@ -12,10 +12,9 @@
  * Key APIs exercised:
  * - AcpAgent.sync() - synchronous agent builder
  * - agent.run() - starts agent and blocks until client disconnects
- * - SyncInitializeHandler - plain return value (no Mono)
- * - SyncNewSessionHandler - plain return value (no Mono)
- * - SyncPromptHandler - plain return value with SyncPromptContext
- * - SyncPromptContext.sendUpdate() - blocking void method
+ * - InitializeResponse.ok() - factory method for successful init
+ * - PromptResponse.endTurn() - factory method for turn completion
+ * - context.sendMessage() - convenience method for sending messages
  *
  * Build & run:
  *   ./mvnw package -pl module-12-echo-agent -q
@@ -23,18 +22,14 @@
  */
 package com.acptutorial.module12;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class EchoAgent {
@@ -46,8 +41,7 @@ public class EchoAgent {
         // Build sync agent - handlers use plain return values (no Mono!)
         AcpSyncAgent agent = AcpAgent.sync(transport)
             // Handle initialization - return our capabilities
-            .initializeHandler(req ->
-                new InitializeResponse(1, new AgentCapabilities(), List.of()))
+            .initializeHandler(req -> InitializeResponse.ok())
 
             // Handle session creation - generate a unique session ID
             .newSessionHandler(req ->
@@ -62,13 +56,11 @@ public class EchoAgent {
                     .findFirst()
                     .orElse("(no text)");
 
-                // Send the echo as an agent message update (blocking, void return)
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Echo: " + text)));
+                // Send the echo using convenience method
+                context.sendMessage("Echo: " + text);
 
-                // Return response directly (no Mono.just!)
-                return new PromptResponse(StopReason.END_TURN);
+                // Return using factory method
+                return PromptResponse.endTurn();
             })
             .build();
 

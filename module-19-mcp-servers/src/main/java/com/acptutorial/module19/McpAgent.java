@@ -24,7 +24,6 @@ import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpServer;
@@ -34,7 +33,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.McpServerStdio;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class McpAgent {
@@ -111,11 +109,9 @@ public class McpAgent {
                     response.append("The agent can then use an MCP client library to connect to them.");
                 }
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response.toString())));
+                context.sendMessage(response.toString());
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
 
             .loadSessionHandler(req -> {

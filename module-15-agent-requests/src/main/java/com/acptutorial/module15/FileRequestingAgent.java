@@ -33,21 +33,15 @@ import java.util.UUID;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionOption;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionOptionKind;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ReadTextFileRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.RequestPermissionRequest;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallStatus;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolKind;
-import com.agentclientprotocol.sdk.spec.AcpSchema.WriteTextFileRequest;
 
 public class FileRequestingAgent {
 
@@ -58,34 +52,28 @@ public class FileRequestingAgent {
         // With PromptContext, no AtomicReference needed - the context provides
         // all agent capabilities directly to the handler!
         AcpSyncAgent agent = AcpAgent.sync(transport)
-            .initializeHandler(req ->
-                new InitializeResponse(1, new AgentCapabilities(), List.of()))
+            .initializeHandler(req -> InitializeResponse.ok())
 
             .newSessionHandler(req ->
                 new NewSessionResponse(UUID.randomUUID().toString(), null, null))
 
             // The context parameter provides access to all agent capabilities:
-            // - sendUpdate() for session updates
-            // - readTextFile(), writeTextFile() for file operations
-            // - requestPermission() for permission requests
-            // - createTerminal() etc for terminal operations
+            // - sendMessage(), sendThought() for simple updates
+            // - readFile(), writeFile() for file operations (convenience)
+            // - askPermission(), askChoice() for permissions (convenience)
+            // - execute() for terminal operations (convenience)
             // - getClientCapabilities() to check what client supports
             .promptHandler((req, context) -> {
-                String sessionId = req.sessionId();
+                String sessionId = context.getSessionId();
 
-                // 1. Read a file from the client
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Reading pom.xml from your system...\n")));
+                // 1. Read a file from the client (convenience method)
+                context.sendMessage("Reading pom.xml from your system...\n");
 
-                var fileResponse = context.readTextFile(
-                    new ReadTextFileRequest(sessionId, "pom.xml", null, 10));
+                String content = context.readFile("pom.xml", 0, 10);
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("File content (first 10 lines):\n" + fileResponse.content() + "\n\n")));
+                context.sendMessage("File content (first 10 lines):\n" + content + "\n\n");
 
-                // 2. Request permission before modifying anything
+                // 2. Request permission before modifying anything (full API for complex permissions)
                 ToolCallUpdate toolCall = new ToolCallUpdate(
                     "tool-write-1",
                     "Create summary.txt",
@@ -100,29 +88,22 @@ public class FileRequestingAgent {
                     new PermissionOption("deny", "Deny", PermissionOptionKind.REJECT_ONCE)
                 );
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Requesting permission to create summary.txt...\n")));
+                context.sendMessage("Requesting permission to create summary.txt...\n");
 
                 var permissionResponse = context.requestPermission(
                     new RequestPermissionRequest(sessionId, toolCall, options));
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Permission response: " + permissionResponse.outcome() + "\n")));
+                context.sendMessage("Permission response: " + permissionResponse.outcome() + "\n");
 
-                // 3. Write a file (in real code, check permission first!)
-                context.writeTextFile(
-                    new WriteTextFileRequest(sessionId, "summary.txt",
-                        "This file was created by the FileRequestingAgent.\n" +
-                        "It demonstrates the writeTextFile API in ACP.\n"));
+                // 3. Write a file (convenience method)
+                context.writeFile("summary.txt",
+                    "This file was created by the FileRequestingAgent.\n" +
+                    "It demonstrates the writeFile API in ACP.\n");
 
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Successfully wrote summary.txt!\n")));
+                context.sendMessage("Successfully wrote summary.txt!\n");
 
                 // 4. Complete the turn
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

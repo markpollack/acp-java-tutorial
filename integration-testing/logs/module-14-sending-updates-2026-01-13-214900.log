@@ -1,0 +1,21 @@
+=== Module 14: Session Update Types Demo ===
+
+Connected to UpdateSendingAgent!
+
+Session: cfb6aa38-086b-44c8-8346-7226bc8a12c7
+
+--- Updates from Agent ---
+[Thought] Let me analyze this request...
+[Plan] 3 steps:
+  - Analyze the prompt [IN_PROGRESS]
+  - Generate response [PENDING]
+  - Format output [PENDING]
+[ToolCall] Analyzing prompt (THINK) - IN_PROGRESS
+[ToolUpdate] Analyzing prompt - COMPLETED
+[Commands] Available:
+  /help - Show help
+  /clear - Clear context
+[Mode] default
+Here is my response streamed in multiple chunks.
+--- End ---
+Stop reason: END_TURN

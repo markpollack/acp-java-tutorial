@@ -27,9 +27,6 @@ import java.util.UUID;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AvailableCommand;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AvailableCommandInput;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AvailableCommandsUpdate;
@@ -41,8 +38,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.PlanEntry;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PlanEntryPriority;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PlanEntryStatus;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCall;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallStatus;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
@@ -55,21 +50,18 @@ public class UpdateSendingAgent {
         var transport = new StdioAcpAgentTransport();
 
         AcpSyncAgent agent = AcpAgent.sync(transport)
-            .initializeHandler(req ->
-                new InitializeResponse(1, new AgentCapabilities(), List.of()))
+            .initializeHandler(req -> InitializeResponse.ok())
 
             .newSessionHandler(req ->
                 new NewSessionResponse(UUID.randomUUID().toString(), null, null))
 
             .promptHandler((req, context) -> {
-                String sessionId = req.sessionId();
+                String sessionId = context.getSessionId();
 
-                // 1. Send thought update - show thinking process
-                context.sendUpdate(sessionId,
-                    new AgentThoughtChunk("agent_thought_chunk",
-                        new TextContent("Let me analyze this request...")));
+                // 1. Send thought update - show thinking process (convenience method)
+                context.sendThought("Let me analyze this request...");
 
-                // 2. Send plan update - show what we're going to do
+                // 2. Send plan update - show what we're going to do (full API for complex types)
                 context.sendUpdate(sessionId,
                     new Plan("plan", List.of(
                         new PlanEntry("Analyze the prompt", PlanEntryPriority.HIGH, PlanEntryStatus.IN_PROGRESS),
@@ -109,19 +101,13 @@ public class UpdateSendingAgent {
                 context.sendUpdate(sessionId,
                     new CurrentModeUpdate("current_mode_update", "default"));
 
-                // 7. Send message chunks - the actual response
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("Here is my response ")));
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("streamed in ")));
-                context.sendUpdate(sessionId,
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent("multiple chunks.")));
+                // 7. Send message chunks - the actual response (convenience method)
+                context.sendMessage("Here is my response ");
+                context.sendMessage("streamed in ");
+                context.sendMessage("multiple chunks.");
 
                 // 8. Complete the turn
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

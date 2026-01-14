@@ -1,0 +1,38 @@
+=== Module 13: Agent Handlers Demo ===
+
+1. Calling initialize()...
+   Protocol version: 1
+
+2. Calling newSession()...
+   Session ID: d057b26a-e6fb-4798-86ce-d7c0d90c57cf
+
+3. Calling prompt()...
+--- Agent Response ---
+HandlerAgent received: Hello, handler agent!
+
+This agent demonstrates:
+- initializeHandler: 1 session(s) created
+- newSessionHandler: creates unique session IDs
+- loadSessionHandler: can resume sessions
+- promptHandler: processes prompts
+- cancelHandler: handles cancellation (not shown)
+--- End ---
+   Stop reason: END_TURN
+
+4. Creating second session...
+   Session 2 ID: 4d775e19-583a-4642-a128-485fe03aeee6
+
+5. Final prompt to show session count...
+--- Agent Response ---
+HandlerAgent received: How many sessions exist?
+
+This agent demonstrates:
+- initializeHandler: 2 session(s) created
+- newSessionHandler: creates unique session IDs
+- loadSessionHandler: can resume sessions
+- promptHandler: processes prompts
+- cancelHandler: handles cancellation (not shown)
+--- End ---
+   Stop reason: END_TURN
+
+All handlers exercised successfully!

@@ -25,19 +25,14 @@
  */
 package com.acptutorial.module29;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class JetBrainsAgent {
@@ -50,7 +45,7 @@ public class JetBrainsAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[JetBrainsAgent] Received initialize request");
-                return new InitializeResponse(1, new AgentCapabilities(), List.of());
+                return InitializeResponse.ok();
             })
 
             .newSessionHandler(req -> {
@@ -67,18 +62,14 @@ public class JetBrainsAgent {
 
                 System.err.println("[JetBrainsAgent] Processing: " + promptText);
 
-                // Send thinking update
-                context.sendUpdate(req.sessionId(),
-                    new AgentThoughtChunk("agent_thought_chunk",
-                        new TextContent("Analyzing your request...")));
+                // Send thinking update using convenience method
+                context.sendThought("Analyzing your request...");
 
-                // Generate and send response
+                // Generate and send response using convenience method
                 String response = generateResponse(promptText);
-                context.sendUpdate(req.sessionId(),
-                    new AgentMessageChunk("agent_message_chunk",
-                        new TextContent(response)));
+                context.sendMessage(response);
 
-                return new PromptResponse(StopReason.END_TURN);
+                return PromptResponse.endTurn();
             })
             .build();
 

@@ -1,0 +1,11 @@
+=== Module 12: Echo Agent Demo ===
+
+Sending initialize...
+Connected to EchoAgent!
+
+Session: 540ad14a-0d6e-45bc-807a-e9d5aec1bd44
+
+Sending: Hello from the client!
+[Agent] Echo: Hello from the client!
+
+Stop reason: END_TURN
