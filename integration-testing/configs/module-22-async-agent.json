@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-22-async-agent",
+  "displayName": "Module 22: Async Agent",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates the async agent API using AcpAgent.async() with reactive Mono patterns. Should connect to the async agent subprocess, create a session, send two prompts, and receive 'Async Echo:' responses for each. Should show stop reason END_TURN for each prompt and print 'Demo complete!' at the end."
+}

@@ -1,0 +1,15 @@
+=== Module 21: Async Client ===
+
+This is the async version of Module 01 (First Contact).
+
+Starting reactive pipeline...
+
+Connected! Protocol version: 1
+Session: 9f297298-8b1a-44d2-b56a-3847df52cb7f
+
+--- Agent Response ---
+4
+--- End Response ---
+Stop reason: END_TURN
+
+Async pipeline complete!

@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-21-async-client",
+  "displayName": "Module 21: Async Client",
+  "timeoutSec": 120,
+  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiresPackage": false,
+  "expectedBehavior": "Demonstrates the async client API using AcpClient.async() with reactive Mono patterns. Should connect to Gemini CLI, show 'Starting reactive pipeline', display protocol version, create session, send prompt asking what 2+2 is, receive agent response with the answer, show stop reason END_TURN, and print 'Async pipeline complete!' at the end."
+}

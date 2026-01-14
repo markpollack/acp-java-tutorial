@@ -1,0 +1,24 @@
+=== Module 10: Cancellation Demo ===
+
+Connected to CancellableAgent
+
+Session: 6a05f0f6-5af3-47fb-99d3-1700049771c5
+
+--- Demo 1: Complete Operation ---
+Starting short operation (will complete)...
+
+Step 1/10... Step 2/10... Step 3/10... Step 4/10... Step 5/10... Step 6/10... Step 7/10... Step 8/10... Step 9/10... Step 10/10... 
+All steps completed!
+Stop reason: END_TURN
+
+--- Demo 2: Cancelled Operation ---
+Starting long operation, will cancel after 1.5 seconds...
+
+Step 1/10... Step 2/10... Step 3/10... 
+[Client] Sending cancel...
+Step 4/10... 
+[Operation cancelled at step 5]
+Stop reason: END_TURN
+
+=== Demo Complete ===
+Cancellation allows graceful interruption of long operations.

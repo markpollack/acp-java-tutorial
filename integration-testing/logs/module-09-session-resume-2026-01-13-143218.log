@@ -1,0 +1,46 @@
+=== Module 09: Session Resume Demo ===
+
+Connected to StatefulAgent
+
+--- Part 1: New Session ---
+Created session: cb8259d0-9b90-4ac3-bd04-5f487c5e4ca7
+
+Sending message 1...
+Session: cb8259d0...
+Message #1
+You said: Hello, this is my first message!
+
+Sending message 2...
+Session: cb8259d0...
+Message #2
+You said: This is my second message.
+
+Previous messages in this session:
+  1. Hello, this is my first message!
+
+--- Part 2: Resume Session ---
+Loading session: cb8259d0-9b90-4ac3-bd04-5f487c5e4ca7
+
+Session loaded successfully!
+
+Sending message 3 (after resume)...
+Session: cb8259d0...
+Message #3
+You said: Third message after resuming!
+
+Previous messages in this session:
+  1. Hello, this is my first message!
+  2. This is my second message.
+
+--- Part 3: Load Unknown Session ---
+Loading unknown session: unknown-session-12345
+
+Agent handled unknown session (created fresh state)
+
+Sending to new session...
+Session: unknown-...
+Message #1
+You said: First message to fresh session
+
+=== Demo Complete ===
+loadSession allows resuming existing conversations.

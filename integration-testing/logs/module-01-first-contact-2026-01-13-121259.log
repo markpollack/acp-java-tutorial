@@ -1,0 +1,5 @@
+Connected to agent!
+Agent capabilities: AgentCapabilities[loadSession=false, mcpCapabilities=null, promptCapabilities=PromptCapabilities[audio=true, embeddedContext=true, image=true], meta=null]
+Session created: 53d1a1ee-c7eb-4500-b25c-7bc2fdffa0e4
+
+Success! Stop reason: END_TURN

@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-11-error-handling",
+  "displayName": "Module 11: Error Handling",
+  "timeoutSec": 30,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates handling protocol errors. Should run 6 tests: (1) normal operation succeeds, (2) catches INVALID_PARAMS error, (3) catches INTERNAL_ERROR, (4) catches PERMISSION_DENIED, (5) catches SESSION_NOT_FOUND when loading unknown session, (6) demonstrates recovery after errors. Each test should show the error code and confirm it matches expected. Should end with 'Demo Complete'."
+}

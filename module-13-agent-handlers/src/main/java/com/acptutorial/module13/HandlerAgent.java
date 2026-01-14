@@ -18,9 +18,9 @@
  */
 package com.acptutorial.module13;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
@@ -37,8 +37,8 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 
 public class HandlerAgent {
 
-    // Track sessions for loadSession demonstration
-    private static final Map<String, String> sessions = new HashMap<>();
+    // Track sessions for loadSession demonstration (ConcurrentHashMap for thread safety)
+    private static final Map<String, String> sessions = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
         System.err.println("[HandlerAgent] Starting...");

@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-18-terminal-operations",
+  "displayName": "Module 18: Terminal Operations",
+  "timeoutSec": 30,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates terminal operations via ACP. Should run 3 tests: (1) 'echo Hello World' - creates terminal, waits for exit, gets output showing 'Hello World', releases terminal, (2) 'ls -la' - shows directory listing, (3) 'cat /etc/os-release' - shows OS info. For each test, the client logs show terminal creation, exit code capture, output retrieval, and terminal release. All commands should succeed with exit code 0. Should end with 'Demo Complete'."
+}

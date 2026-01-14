@@ -21,8 +21,6 @@ package com.acptutorial.module16;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
@@ -63,7 +61,6 @@ public class InMemoryTestingDemo {
 
         // Create agent
         AtomicReference<String> receivedPrompt = new AtomicReference<>();
-        CountDownLatch agentReady = new CountDownLatch(1);
 
         AcpAsyncAgent agent = AcpAgent.async(transportPair.agentTransport())
             .initializeHandler(req ->
@@ -91,11 +88,10 @@ public class InMemoryTestingDemo {
         System.out.println("Starting agent...");
         agent.start().subscribe(
             v -> {},
-            e -> System.err.println("Agent error: " + e),
-            () -> agentReady.countDown()
+            e -> System.err.println("Agent error: " + e)
         );
 
-        // Give agent time to start
+        // Simple delay for demo purposes - in real tests use proper synchronization
         Thread.sleep(100);
 
         // Create client

@@ -1,0 +1,18 @@
+=== Module 22: Async Agent Demo ===
+
+This agent uses AcpAgent.async() with reactive Mono patterns.
+
+Sending initialize...
+Connected to AsyncAgent!
+
+Session: 8fdd933a-e4ad-4ae0-a7e2-3be00d0f1b96
+
+Sending: Hello from async world!
+[Agent] Async Echo: Hello from async world!
+Stop reason: END_TURN
+
+Sending: Reactive programming is fun!
+[Agent] Async Echo: Reactive programming is fun!
+Stop reason: END_TURN
+
+Demo complete!

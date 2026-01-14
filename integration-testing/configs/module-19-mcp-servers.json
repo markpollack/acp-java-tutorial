@@ -1,0 +1,8 @@
+{
+  "moduleId": "module-19-mcp-servers",
+  "displayName": "Module 19: MCP Servers",
+  "timeoutSec": 30,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates passing MCP server configurations to agents. Should show agent MCP capabilities (HTTP: true, SSE: true). Then run 3 scenarios: (1) Session without MCP servers - shows 'No MCP servers configured', (2) Session with STDIO MCP server (filesystem) - shows the STDIO server config, (3) Session with multiple servers (git STDIO, weather HTTP, live-data SSE) - shows all 3 server configs. Should end with 'Demo Complete' and note about MCP client library usage."
+}

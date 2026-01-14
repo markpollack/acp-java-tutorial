@@ -35,14 +35,31 @@
         <module>module-07-agent-requests</module>
         <module>module-08-permissions</module>
 
+        <!-- Part 3: Client Mastery -->
+        <module>module-09-session-resume</module>
+        <module>module-10-cancellation</module>
+        <module>module-11-error-handling</module>
+
         <!-- Part 4: The Agent Side -->
         <module>module-12-echo-agent</module>
         <module>module-13-agent-handlers</module>
         <module>module-14-sending-updates</module>
         <module>module-15-agent-requests</module>
 
-        <!-- Part 5: Testing -->
+        <!-- Part 5: Both Ends Together -->
         <module>module-16-in-memory-testing</module>
+        <module>module-17-capability-negotiation</module>
+        <module>module-18-terminal-operations</module>
+
+        <!-- Part 6: Advanced Integration -->
+        <module>module-19-mcp-servers</module>
+        <module>module-21-async-client</module>
+        <module>module-22-async-agent</module>
+
+        <!-- Part 8: IDE Integration -->
+        <module>module-28-zed-integration</module>
+        <module>module-29-jetbrains-integration</module>
+        <module>module-30-vscode-integration</module>
     </modules>
 
     <dependencyManagement>
