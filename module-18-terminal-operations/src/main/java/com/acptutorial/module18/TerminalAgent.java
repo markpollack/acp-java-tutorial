@@ -5,9 +5,13 @@
  *
  * Key concepts:
  * - context.createTerminal() - request terminal creation
- * - context.terminalOutput() - get command output
+ * - context.getTerminalOutput() - get command output
  * - context.waitForTerminalExit() - wait for command to finish
  * - context.releaseTerminal() - clean up terminal
+ *
+ * Note: This module uses the low-level terminal API to demonstrate
+ * each step of the terminal lifecycle. The SDK also provides
+ * context.execute() as a convenience method.
  *
  * Build & run:
  *   ./mvnw package -pl module-18-terminal-operations -q
@@ -15,18 +19,21 @@
  */
 package com.acptutorial.module18;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
-import com.agentclientprotocol.sdk.agent.Command;
-import com.agentclientprotocol.sdk.agent.CommandResult;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.capabilities.NegotiatedCapabilities;
+import com.agentclientprotocol.sdk.spec.AcpSchema.CreateTerminalRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.ReleaseTerminalRequest;
+import com.agentclientprotocol.sdk.spec.AcpSchema.TerminalOutputRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+import com.agentclientprotocol.sdk.spec.AcpSchema.WaitForTerminalExitRequest;
 
 public class TerminalAgent {
 
@@ -74,18 +81,39 @@ public class TerminalAgent {
                 StringBuilder response = new StringBuilder();
                 response.append("Executing command: ").append(command).append("\n\n");
 
+                String terminalId = null;
                 try {
-                    // Use convenience method - handles create, wait, output, release automatically!
-                    System.err.println("[TerminalAgent] Executing: " + command);
-                    CommandResult result = context.execute(command);
+                    // Step 1: Create terminal
+                    System.err.println("[TerminalAgent] Creating terminal for: " + command);
+                    var createResp = context.createTerminal(
+                        new CreateTerminalRequest(
+                            context.getSessionId(),
+                            "sh",                           // executable
+                            List.of("-c", command),         // args
+                            null,                           // cwd (use client default)
+                            null,                           // env
+                            null                            // outputByteLimit
+                        ));
+                    terminalId = createResp.terminalId();
+                    System.err.println("[TerminalAgent] Terminal created: " + terminalId);
 
-                    response.append("Exit code: ").append(result.exitCode()).append("\n");
-                    if (result.timedOut()) {
-                        response.append("Command timed out!\n");
-                    }
-                    response.append("\nOutput:\n").append(result.output());
+                    // Step 2: Wait for command to finish
+                    System.err.println("[TerminalAgent] Waiting for exit...");
+                    var exitResp = context.waitForTerminalExit(
+                        new WaitForTerminalExitRequest(context.getSessionId(), terminalId));
+                    int exitCode = exitResp.exitCode();
+                    System.err.println("[TerminalAgent] Exit code: " + exitCode);
 
-                    if (result.success()) {
+                    // Step 3: Get output
+                    System.err.println("[TerminalAgent] Getting output...");
+                    var outputResp = context.getTerminalOutput(
+                        new TerminalOutputRequest(context.getSessionId(), terminalId));
+                    String output = outputResp.output();
+
+                    response.append("Exit code: ").append(exitCode).append("\n");
+                    response.append("\nOutput:\n").append(output);
+
+                    if (exitCode == 0) {
                         response.append("\n\nCommand completed successfully.");
                     } else {
                         response.append("\n\nCommand failed.");
@@ -94,6 +122,18 @@ public class TerminalAgent {
                 } catch (Exception e) {
                     response.append("\nError: ").append(e.getMessage());
                     System.err.println("[TerminalAgent] Error: " + e.getMessage());
+                } finally {
+                    // Step 4: Always release the terminal
+                    if (terminalId != null) {
+                        try {
+                            System.err.println("[TerminalAgent] Releasing terminal: " + terminalId);
+                            context.releaseTerminal(
+                                new ReleaseTerminalRequest(context.getSessionId(), terminalId));
+                            System.err.println("[TerminalAgent] Terminal released");
+                        } catch (Exception e) {
+                            System.err.println("[TerminalAgent] Failed to release terminal: " + e.getMessage());
+                        }
+                    }
                 }
 
                 context.sendMessage(response.toString());

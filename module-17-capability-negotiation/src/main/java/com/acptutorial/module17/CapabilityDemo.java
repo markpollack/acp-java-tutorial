@@ -19,6 +19,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.agentclientprotocol.sdk.capabilities.NegotiatedCapabilities;
+import com.agentclientprotocol.sdk.spec.AcpSchema.ReadTextFileResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.WriteTextFileResponse;
 import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
@@ -96,6 +98,23 @@ public class CapabilityDemo {
                     if (update instanceof AgentMessageChunk msg) {
                         String text = ((TextContent) msg.content()).text();
                         System.out.print("    Agent: " + text);
+                    }
+                })
+                // Register handlers if we advertise the capabilities
+                .readTextFileHandler(req -> {
+                    try {
+                        String content = Files.readString(Path.of(req.path()));
+                        return new ReadTextFileResponse(content);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to read file: " + req.path(), e);
+                    }
+                })
+                .writeTextFileHandler(req -> {
+                    try {
+                        Files.writeString(Path.of(req.path()), req.content());
+                        return new WriteTextFileResponse();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to write file: " + req.path(), e);
                     }
                 })
                 .build()) {

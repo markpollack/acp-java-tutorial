@@ -85,11 +85,19 @@ public class TerminalDemo {
                 .createTerminalHandler(req -> {
                     String terminalId = UUID.randomUUID().toString();
                     System.out.println("\n[Client] Creating terminal: " + terminalId);
-                    System.out.println("[Client] Command: " + req.command());
+                    System.out.println("[Client] Command: " + req.command() +
+                        (req.args() != null ? " " + String.join(" ", req.args()) : ""));
 
                     try {
+                        // Build command list from command + args
+                        List<String> commandList = new java.util.ArrayList<>();
+                        commandList.add(req.command());
+                        if (req.args() != null) {
+                            commandList.addAll(req.args());
+                        }
+
                         // Start the process
-                        ProcessBuilder pb = new ProcessBuilder("sh", "-c", req.command());
+                        ProcessBuilder pb = new ProcessBuilder(commandList);
                         pb.redirectErrorStream(true);
                         Process process = pb.start();
 
