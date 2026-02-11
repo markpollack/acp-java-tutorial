@@ -4,5 +4,17 @@
   "timeoutSec": 60,
   "requiredEnv": [],
   "requiresPackage": false,
-  "expectedBehavior": "Test ACP client and agent together using in-memory transport (no real processes). Create SimpleInMemoryTransportPair, connect client and agent transports, send prompt and receive echo response. Verify that agent received the prompt and client received the response. Should show 'Test passed: true'."
+  "expectedBehavior": "Test ACP client and agent together using in-memory transport (no real processes). Create InMemoryTransportPair, connect client and agent, send prompt and receive echo response. Should verify round-trip works and show 'Test passed: true'.",
+  "requiredOutput": [
+    "=== Module 16: In-Memory Testing Demo ===",
+    "Creating InMemoryTransportPair",
+    "1. Initialize: OK",
+    "2. New session:",
+    "3. Prompt sent:",
+    "4. Stop reason: END_TURN",
+    "--- Verification ---",
+    "Agent received:",
+    "Client received:",
+    "Test passed: true"
+  ]
 }

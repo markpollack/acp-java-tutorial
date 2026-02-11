@@ -4,5 +4,13 @@
   "timeoutSec": 60,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Agent requests files and permissions from client. FileRequestingAgent reads pom.xml via readTextFile, requests permission via requestPermission, and writes summary.txt via writeTextFile. Client handles these requests and displays [READ], [PERMISSION], [WRITE] logs. Should show file content and successful write."
+  "expectedBehavior": "Agent requests files and permissions from client. FileRequestingAgent reads pom.xml via readTextFile, requests permission via requestPermission, and writes summary.txt via writeTextFile. Client handles these requests and displays [READ], [PERMISSION], [WRITE] logs.",
+  "requiredOutput": [
+    "=== Module 15: Agent File Requests Demo ===",
+    "Connected with file capabilities!",
+    "[READ] pom.xml",
+    "[PERMISSION]",
+    "[WRITE] summary.txt",
+    "Stop reason: END_TURN"
+  ]
 }

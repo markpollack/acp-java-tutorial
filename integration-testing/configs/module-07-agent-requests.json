@@ -4,5 +4,12 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Handle file read/write requests from the agent. Register readTextFileHandler and writeTextFileHandler on the client. Prompt agent to read a file, show the file being read via handler, and display agent's analysis of the content. Demonstrate Java NIO.2 best practices."
+  "expectedBehavior": "Handle file read/write requests from the agent. Register readTextFileHandler and writeTextFileHandler on the client. Prompt agent to read a file, show the file being read via handler, and display agent's analysis of the content.",
+  "requiredOutput": [
+    "Connected to agent with file system capabilities",
+    "Session:",
+    "=== Asking agent to read mystery.txt",
+    "=== Prompt complete ===",
+    "Stop reason:"
+  ]
 }

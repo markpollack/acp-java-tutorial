@@ -4,5 +4,19 @@
   "timeoutSec": 60,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrate all ACP agent handler types. The HandlerAgent responds to initialize, newSession, loadSession, prompt, and cancel handlers. Should show protocol version from initializeHandler, session IDs from newSessionHandler, prompt responses describing all handler types, and stop reason END_TURN."
+  "expectedBehavior": "Demonstrate all ACP agent handler types. The HandlerAgent responds to initialize, newSession, loadSession, prompt, and cancel handlers. Should show protocol version, session IDs, prompt responses, and stop reason END_TURN.",
+  "requiredOutput": [
+    "=== Module 13: Agent Handlers Demo ===",
+    "1. Calling initialize()...",
+    "Protocol version:",
+    "2. Calling newSession()...",
+    "Session ID:",
+    "3. Calling prompt()...",
+    "HandlerAgent received: Hello, handler agent!",
+    "Stop reason: END_TURN",
+    "4. Creating second session...",
+    "5. Final prompt to show session count...",
+    "HandlerAgent received: How many sessions exist?",
+    "All handlers exercised successfully!"
+  ]
 }

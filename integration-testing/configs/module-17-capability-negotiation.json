@@ -4,5 +4,16 @@
   "timeoutSec": 45,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates capability negotiation between client and agent. Should run 3 scenarios: (1) Full capabilities client - agent sees all capabilities enabled, (2) Limited client (read-only) - agent gracefully handles missing write and terminal capabilities, (3) Minimal client - agent reports no file or terminal capabilities available. For each scenario, the demo should show both client and agent capabilities, then test file read/write/terminal operations with appropriate responses based on available capabilities. Should end with 'Demo Complete'."
+  "expectedBehavior": "Demonstrates capability negotiation between client and agent. Should run 3 scenarios: (1) Full capabilities client, (2) Limited client (read-only), (3) Minimal client. Each scenario shows advertised capabilities and agent responses based on available capabilities. Should end with 'Demo Complete'.",
+  "requiredOutput": [
+    "=== Module 17: Capability Negotiation ===",
+    "--- Part 1: Full Capabilities Client ---",
+    "fs.readTextFile: true",
+    "fs.writeTextFile: true",
+    "--- Part 2: Limited Capabilities Client (Read-Only) ---",
+    "fs.writeTextFile: false",
+    "--- Part 3: Minimal Capabilities Client ---",
+    "fs.readTextFile: false",
+    "=== Demo Complete ==="
+  ]
 }

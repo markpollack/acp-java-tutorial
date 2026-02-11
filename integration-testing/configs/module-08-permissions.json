@@ -4,5 +4,12 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Handle permission requests from the agent using requestPermissionHandler. When agent requests permission for an operation, display the permission options and auto-approve. Show PermissionOption types (ALLOW_ONCE, ALLOW_ALWAYS, REJECT_ONCE) and the selected outcome."
+  "expectedBehavior": "Handle permission requests from the agent using requestPermissionHandler. When agent requests permission for an operation, display the permission options and handle user choice. Show the selected outcome.",
+  "requiredOutput": [
+    "Connected to agent with file system capabilities",
+    "Session:",
+    "=== Sending prompt (will trigger permission request) ===",
+    "=== Prompt complete ===",
+    "Stop reason:"
+  ]
 }

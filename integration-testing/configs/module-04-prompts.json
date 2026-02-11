@@ -4,5 +4,17 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Deep dive into PromptRequest and PromptResponse. Send multiple prompts including simple question, multi-part content, and follow-up. Display StopReason for each response and explain what each StopReason means (END_TURN, MAX_TOKENS, REFUSAL, CANCELLED)."
+  "expectedBehavior": "Deep dive into PromptRequest and PromptResponse. Send multiple prompts including simple question, multi-part content, and follow-up. Display StopReason for each response and explain what each StopReason means.",
+  "requiredOutput": [
+    "=== Module 04: Prompts ===",
+    "--- Prompt 1:",
+    "Stop reason:",
+    "--- Prompt 2:",
+    "--- Prompt 3:",
+    "=== Stop Reason Summary ===",
+    "END_TURN",
+    "MAX_TOKENS",
+    "REFUSAL",
+    "CANCELLED"
+  ]
 }

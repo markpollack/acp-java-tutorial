@@ -4,5 +4,11 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Connect to Gemini CLI via ACP, send a simple prompt asking what 2+2 is, and receive a response with the answer. Should show module header, session ID, the prompt sent, agent response with the answer, and stop reason END_TURN."
+  "expectedBehavior": "Connect to Gemini CLI via ACP, send a simple prompt asking what 2+2 is, and receive a response with the answer. Should show connection confirmation, session ID, the agent's streamed response text, and stop reason.",
+  "requiredOutput": [
+    "Connected to agent!",
+    "Agent capabilities:",
+    "Session created:",
+    "Success! Stop reason:"
+  ]
 }

@@ -23,6 +23,7 @@ import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
+import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
@@ -41,8 +42,14 @@ public class FirstContact {
         // 2. Create transport (launches subprocess when client connects)
         var transport = new StdioAcpClientTransport(params);
 
-        // 3. Build sync client (blocks until responses arrive - simpler for tutorials)
-        try (AcpSyncClient client = AcpClient.sync(transport).build()) {
+        // 3. Build sync client with an update consumer that prints the agent's response
+        try (AcpSyncClient client = AcpClient.sync(transport)
+                .sessionUpdateConsumer(notification -> {
+                    if (notification.update() instanceof AgentMessageChunk msg) {
+                        System.out.print(((TextContent) msg.content()).text());
+                    }
+                })
+                .build()) {
 
             // 4. Initialize - handshake with the agent
             var initResponse = client.initialize();

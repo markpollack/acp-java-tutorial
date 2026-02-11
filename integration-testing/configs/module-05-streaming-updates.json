@@ -4,5 +4,12 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Receive real-time session updates from Gemini agent during prompt processing. Use sessionUpdateConsumer to handle AgentMessageChunk updates and display the streaming response as it arrives. Should show session ID, streaming text output, and stop reason."
+  "expectedBehavior": "Receive real-time session updates from Gemini agent during prompt processing. Use sessionUpdateConsumer to handle AgentMessageChunk updates and display the streaming response as it arrives. Should show session ID, streaming text output, and stop reason.",
+  "requiredOutput": [
+    "Connected to agent",
+    "=== Sending prompt, watching for updates",
+    "=== Prompt complete ===",
+    "Stop reason:",
+    "Total updates received:"
+  ]
 }

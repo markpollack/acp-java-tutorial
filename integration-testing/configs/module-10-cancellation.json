@@ -4,5 +4,16 @@
   "timeoutSec": 30,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates cancelling in-progress operations. Should run two demos: first lets operation complete (shows 'All steps completed'), second cancels mid-operation after 1.5 seconds (shows 'Sending cancel' and 'Operation cancelled at step'). Both should show stop reason END_TURN and end with 'Demo Complete'."
+  "expectedBehavior": "Demonstrates cancelling in-progress operations. Demo 1 lets operation complete (shows 'All steps completed'). Demo 2 cancels mid-operation after 1.5 seconds (shows 'Sending cancel' and 'Operation cancelled at step'). Both should show stop reason and end with 'Demo Complete'.",
+  "requiredOutput": [
+    "=== Module 10: Cancellation Demo ===",
+    "--- Demo 1: Complete Operation ---",
+    "Step 1/10",
+    "All steps completed!",
+    "Stop reason:",
+    "--- Demo 2: Cancelled Operation ---",
+    "[Client] Sending cancel...",
+    "Operation cancelled at step",
+    "=== Demo Complete ==="
+  ]
 }

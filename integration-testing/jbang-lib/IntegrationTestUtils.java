@@ -3,7 +3,7 @@
  * Adapted from claude-agent-sdk-java-tutorial integration testing framework.
  *
  * Key features:
- * - AI-only validation (no regex patterns)
+ * - Two-layer validation: deterministic requiredOutput check + AI behavioral validation
  * - Uses mvn exec:java to run modules
  * - Supports both Gemini CLI modules and local agent modules
  */
@@ -28,11 +28,16 @@ public class IntegrationTestUtils {
         int timeoutSec,
         String[] requiredEnv,
         String expectedBehavior,
-        boolean requiresPackage  // true for agent modules that need JAR built
+        boolean requiresPackage,  // true for agent modules that need JAR built
+        String[] requiredOutput   // exact substrings that MUST appear in stdout
     ) {
         // Provide default for requiresPackage
         public boolean requiresPackage() {
             return requiresPackage;
+        }
+        // Provide default for requiredOutput
+        public String[] requiredOutput() {
+            return requiredOutput != null ? requiredOutput : new String[0];
         }
     }
 
@@ -136,6 +141,17 @@ public class IntegrationTestUtils {
         out.println("---");
     }
 
+    // Check that all required output substrings appear in the actual output
+    public static List<String> checkRequiredOutput(String output, String[] requiredOutput) {
+        List<String> missing = new java.util.ArrayList<>();
+        for (String required : requiredOutput) {
+            if (!output.contains(required)) {
+                missing.add(required);
+            }
+        }
+        return missing;
+    }
+
     // Main test execution flow
     public static void runIntegrationTest(String moduleId) throws Exception {
         out.println("🧪 Integration Test: " + moduleId);
@@ -176,6 +192,23 @@ public class IntegrationTestUtils {
         if (exitCode != 0) {
             err.println("\n❌ Module exited with code: " + exitCode);
             exit(exitCode);
+        }
+
+        // Deterministic output check (hard gate before AI validation)
+        List<String> missingOutput = checkRequiredOutput(output, cfg.requiredOutput());
+        if (!missingOutput.isEmpty()) {
+            err.println("\n❌ FAILED: Required output missing from " + cfg.displayName());
+            err.println("  The following required strings were NOT found in the output:");
+            for (String missing : missingOutput) {
+                err.println("    ✗ \"" + missing + "\"");
+            }
+            err.println("\n  This is a deterministic check — these strings must appear in stdout.");
+            err.println("  Fix the module code to produce the expected output, or update");
+            err.println("  requiredOutput in configs/" + cfg.moduleId() + ".json if the output changed.");
+            exit(1);
+        }
+        if (cfg.requiredOutput().length > 0) {
+            out.println("\n✅ All " + cfg.requiredOutput().length + " required output strings found");
         }
 
         // AI Validation

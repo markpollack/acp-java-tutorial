@@ -4,5 +4,14 @@
   "timeoutSec": 120,
   "requiredEnv": ["GEMINI_API_KEY"],
   "requiresPackage": false,
-  "expectedBehavior": "Create multiple ACP sessions and demonstrate session independence. Should create two sessions with different IDs, send prompts to each, and show that sessions are independent workspaces with their own conversation history."
+  "expectedBehavior": "Create multiple ACP sessions and demonstrate session independence. Should create two sessions with different IDs, send prompts to each, and show that sessions are independent workspaces with their own conversation history.",
+  "requiredOutput": [
+    "=== Module 03: Sessions ===",
+    "Creating Session 1",
+    "Session ID:",
+    "Creating Session 2",
+    "Session independence demo:",
+    "Sessions have different IDs:",
+    "Sessions are independent workspaces!"
+  ]
 }

@@ -4,5 +4,15 @@
   "timeoutSec": 60,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates the async agent API using AcpAgent.async() with reactive Mono patterns. Should connect to the async agent subprocess, create a session, send two prompts, and receive 'Async Echo:' responses for each. Should show stop reason END_TURN for each prompt and print 'Demo complete!' at the end."
+  "expectedBehavior": "Demonstrates the async agent API using AcpAgent.async() with reactive Mono patterns. Should connect to the async agent subprocess, create a session, send two prompts, and receive 'Async Echo:' responses for each. Should show stop reason END_TURN for each prompt and print 'Demo complete!' at the end.",
+  "requiredOutput": [
+    "=== Module 22: Async Agent Demo ===",
+    "Connected to AsyncAgent!",
+    "Sending: Hello from async world!",
+    "Async Echo: Hello from async world!",
+    "Stop reason: END_TURN",
+    "Sending: Reactive programming is fun!",
+    "Async Echo: Reactive programming is fun!",
+    "Demo complete!"
+  ]
 }

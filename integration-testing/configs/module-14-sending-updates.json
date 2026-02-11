@@ -4,5 +4,18 @@
   "timeoutSec": 60,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Agent sends all SessionUpdate types to client. The UpdateSendingAgent demonstrates AgentThoughtChunk, AgentMessageChunk, Plan, ToolCall, ToolCallUpdateNotification, AvailableCommandsUpdate, and CurrentModeUpdate. Client should receive and display each update type with appropriate labels."
+  "expectedBehavior": "Agent sends all SessionUpdate types to client: AgentThoughtChunk, AgentMessageChunk, Plan, ToolCall, ToolCallUpdateNotification, AvailableCommandsUpdate, and CurrentModeUpdate. Client should receive and display each update type.",
+  "requiredOutput": [
+    "=== Module 14: Session Update Types Demo ===",
+    "Connected to UpdateSendingAgent!",
+    "--- Updates from Agent ---",
+    "[Thought]",
+    "[Plan]",
+    "[ToolCall]",
+    "[ToolUpdate]",
+    "[Commands]",
+    "[Mode]",
+    "--- End ---",
+    "Stop reason: END_TURN"
+  ]
 }

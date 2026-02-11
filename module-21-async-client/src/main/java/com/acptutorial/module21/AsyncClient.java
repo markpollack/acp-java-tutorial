@@ -17,7 +17,7 @@
  *
  * When to use async:
  * - High-throughput scenarios
- * - Integration with reactive frameworks (Spring WebFlux)
+ * - Integration with reactive frameworks
  * - When you need non-blocking I/O
  *
  * When to use sync (Module 01):

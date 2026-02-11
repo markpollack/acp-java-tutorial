@@ -89,8 +89,9 @@ public class AIValidator {
             5. Stop reason displayed (END_TURN, etc.)
             6. No fatal errors, stack traces, or exceptions
 
-            Be lenient - the exact wording doesn't matter, only that the functionality was demonstrated.
-            If the output shows the expected behavior, mark it as success.
+            Be precise - verify that the described functionality was actually demonstrated in the output.
+            If the expected behavior says "agent response with the answer", the output must contain an actual answer, not just a stop reason.
+            If the expected behavior says something should be "displayed" or "shown", it must appear in the output.
 
             Respond ONLY with valid JSON (no markdown, no explanation):
             {
