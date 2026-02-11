@@ -1,5 +1,7 @@
 # Module 28: Zed Integration
 
+> Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/28-zed-integration
+
 Connect your Java ACP agent to the [Zed](https://zed.dev) editor.
 
 ## Overview

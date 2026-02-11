@@ -1,5 +1,7 @@
 # Module 29: JetBrains Integration
 
+> Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/29-jetbrains-integration
+
 Connect your Java ACP agent to JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.).
 
 ## Overview

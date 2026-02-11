@@ -1,5 +1,7 @@
 # Module 30: VS Code Integration
 
+> Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/30-vscode-integration
+
 Connect your Java ACP agent to VS Code using the community [vscode-acp](https://marketplace.visualstudio.com/items?itemName=omercnet.vscode-acp) extension.
 
 ## Overview
