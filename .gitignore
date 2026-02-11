@@ -27,3 +27,6 @@ plans/
 mystery.txt
 hello.txt
 summary.txt
+
+# Integration test logs
+integration-testing/logs/
