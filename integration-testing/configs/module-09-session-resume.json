@@ -4,7 +4,7 @@
   "timeoutSec": 30,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates loading and resuming sessions. Should create a new session, send two messages, then load the same session and show that history persists (showing 'Previous messages' with the first two messages). Also tests loading an unknown session which creates fresh state. Should end with 'Demo Complete'.",
+  "expectedBehavior": "Demonstrates loading and resuming sessions. Part 1 creates a new session and sends two messages — 'Previous messages' after each prompt shows only messages sent BEFORE that prompt (so after message 2, history shows only message 1). Part 2 resumes the session via loadSession and sends message 3 — 'Previous messages' should now show both messages 1 and 2. Part 3 loads an unknown session which creates fresh state. Should end with 'Demo Complete'.",
   "requiredOutput": [
     "=== Module 09: Session Resume Demo ===",
     "--- Part 1: New Session ---",
