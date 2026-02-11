@@ -33,7 +33,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class JetBrainsAgent {
 
@@ -54,11 +54,7 @@ public class JetBrainsAgent {
             })
 
             .promptHandler((req, context) -> {
-                String promptText = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String promptText = req.text();
 
                 System.err.println("[JetBrainsAgent] Processing: " + promptText);
 

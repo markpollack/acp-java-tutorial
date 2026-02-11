@@ -30,7 +30,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class EchoAgent {
 
@@ -49,12 +49,7 @@ public class EchoAgent {
 
             // Handle prompts - echo back the input
             .promptHandler((req, context) -> {
-                // Extract text from prompt
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("(no text)");
+                String text = req.text();
 
                 // Send the echo using convenience method
                 context.sendMessage("Echo: " + text);

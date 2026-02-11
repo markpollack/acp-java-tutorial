@@ -27,7 +27,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class StatefulAgent {
 
@@ -78,12 +78,7 @@ public class StatefulAgent {
             .promptHandler((req, context) -> {
                 String sessionId = req.sessionId();
 
-                // Extract prompt text
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("(no text)");
+                String text = req.text();
 
                 // Add to history
                 List<String> history = sessionHistory.get(sessionId);

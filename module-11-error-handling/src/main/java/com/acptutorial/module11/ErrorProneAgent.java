@@ -26,7 +26,7 @@ import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class ErrorProneAgent {
 
@@ -66,11 +66,7 @@ public class ErrorProneAgent {
 
             .promptHandler((req, context) -> {
                 String sessionId = req.sessionId();
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String text = req.text();
 
                 System.err.println("[ErrorProneAgent] Prompt: " + text);
 

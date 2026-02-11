@@ -35,7 +35,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 import reactor.core.publisher.Mono;
 
@@ -65,12 +65,7 @@ public class AsyncAgent {
             .promptHandler((req, context) -> {
                 System.err.println("[AsyncAgent] Prompt received");
 
-                // Extract text from prompt
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("(no text)");
+                String text = req.text();
 
                 // Using convenience method - returns Mono<Void>
                 // Must chain with then() to ensure it executes before returning response

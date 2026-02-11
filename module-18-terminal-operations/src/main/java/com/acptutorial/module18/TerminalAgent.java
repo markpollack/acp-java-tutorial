@@ -32,7 +32,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ReleaseTerminalRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TerminalOutputRequest;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 import com.agentclientprotocol.sdk.spec.AcpSchema.WaitForTerminalExitRequest;
 
 public class TerminalAgent {
@@ -54,11 +54,7 @@ public class TerminalAgent {
             })
 
             .promptHandler((req, context) -> {
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String text = req.text();
 
                 System.err.println("[TerminalAgent] Prompt: " + text);
 

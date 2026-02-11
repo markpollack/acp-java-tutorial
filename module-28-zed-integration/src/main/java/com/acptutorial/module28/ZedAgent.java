@@ -44,7 +44,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class ZedAgent {
 
@@ -66,12 +66,7 @@ public class ZedAgent {
             })
 
             .promptHandler((req, context) -> {
-                // Extract the prompt text
-                String promptText = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String promptText = req.text();
 
                 System.err.println("[ZedAgent] Processing prompt: " + promptText);
 

@@ -33,7 +33,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.McpServerStdio;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class McpAgent {
 
@@ -80,11 +80,7 @@ public class McpAgent {
 
             .promptHandler((req, context) -> {
                 String sessionId = req.sessionId();
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String text = req.text();
 
                 System.err.println("[McpAgent] Prompt: " + text);
 

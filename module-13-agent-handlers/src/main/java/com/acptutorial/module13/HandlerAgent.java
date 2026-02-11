@@ -29,7 +29,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class HandlerAgent {
 
@@ -85,12 +85,7 @@ public class HandlerAgent {
                 System.err.println("  Session ID: " + req.sessionId());
                 System.err.println("  Prompt items: " + req.prompt().size());
 
-                // Extract the prompt text
-                String promptText = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("(no text)");
+                String promptText = req.text();
                 System.err.println("  Prompt text: " + promptText);
 
                 // Send a response using convenience method

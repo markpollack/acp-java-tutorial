@@ -27,7 +27,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
+
 
 public class CapabilityAgent {
 
@@ -66,11 +66,7 @@ public class CapabilityAgent {
 
             .promptHandler((req, context) -> {
                 String sessionId = req.sessionId();
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String text = req.text();
 
                 System.err.println("[CapabilityAgent] Prompt: " + text);
 

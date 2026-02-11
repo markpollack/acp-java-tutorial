@@ -66,11 +66,7 @@ public class InMemoryTestingDemo {
                 Mono.just(new NewSessionResponse(UUID.randomUUID().toString(), null, null)))
             .promptHandler((req, context) -> {
                 // Capture the prompt for verification
-                String text = req.prompt().stream()
-                    .filter(c -> c instanceof TextContent)
-                    .map(c -> ((TextContent) c).text())
-                    .findFirst()
-                    .orElse("");
+                String text = req.text();
                 receivedPrompt.set(text);
 
                 // Send response using convenience method
