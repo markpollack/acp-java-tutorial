@@ -56,7 +56,7 @@ public class McpAgent {
                     new PromptCapabilities()
                 );
 
-                return new InitializeResponse(1, agentCaps, List.of());
+                return InitializeResponse.ok(agentCaps);
             })
 
             .newSessionHandler(req -> {

@@ -54,42 +54,33 @@ public class UpdateTypesClient {
         int otherUpdates = 0;
 
         void handleUpdate(Object update) {
-            switch (update) {
-                case AgentMessageChunk msg -> {
-                    messageChunks++;
-                    String text = ((TextContent) msg.content()).text();
-                    // Print message chunks inline (they build up the response)
-                    System.out.print(text);
-                }
-                case AgentThoughtChunk thought -> {
-                    thoughtChunks++;
-                    String text = ((TextContent) thought.content()).text();
-                    System.out.println("[THOUGHT] " + text.trim());
-                }
-                case ToolCall tool -> {
-                    toolCalls++;
-                    System.out.println("[TOOL] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
-                }
-                case ToolCallUpdateNotification toolUpdate -> {
-                    toolUpdates++;
-                    System.out.println("[TOOL_UPDATE] " + toolUpdate.toolCallId() + " -> " + toolUpdate.status());
-                }
-                case Plan plan -> {
-                    plans++;
-                    System.out.println("[PLAN] " + plan.entries().size() + " steps");
-                }
-                case AvailableCommandsUpdate commands -> {
-                    commandUpdates++;
-                    System.out.println("[COMMANDS] " + commands.availableCommands().size() + " available");
-                }
-                case CurrentModeUpdate mode -> {
-                    modeUpdates++;
-                    System.out.println("[MODE] " + mode.currentModeId());
-                }
-                default -> {
-                    otherUpdates++;
-                    System.out.println("[OTHER] " + update.getClass().getSimpleName());
-                }
+            if (update instanceof AgentMessageChunk msg) {
+                messageChunks++;
+                String text = ((TextContent) msg.content()).text();
+                // Print message chunks inline (they build up the response)
+                System.out.print(text);
+            } else if (update instanceof AgentThoughtChunk thought) {
+                thoughtChunks++;
+                String text = ((TextContent) thought.content()).text();
+                System.out.println("[THOUGHT] " + text.trim());
+            } else if (update instanceof ToolCall tool) {
+                toolCalls++;
+                System.out.println("[TOOL] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
+            } else if (update instanceof ToolCallUpdateNotification toolUpdate) {
+                toolUpdates++;
+                System.out.println("[TOOL_UPDATE] " + toolUpdate.toolCallId() + " -> " + toolUpdate.status());
+            } else if (update instanceof Plan plan) {
+                plans++;
+                System.out.println("[PLAN] " + plan.entries().size() + " steps");
+            } else if (update instanceof AvailableCommandsUpdate commands) {
+                commandUpdates++;
+                System.out.println("[COMMANDS] " + commands.availableCommands().size() + " available");
+            } else if (update instanceof CurrentModeUpdate mode) {
+                modeUpdates++;
+                System.out.println("[MODE] " + mode.currentModeId());
+            } else {
+                otherUpdates++;
+                System.out.println("[OTHER] " + update.getClass().getSimpleName());
             }
         }
 

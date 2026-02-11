@@ -83,21 +83,18 @@ public class PermissionsClient {
                 // Session updates - log agent's progress with readable formatting
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
-                    switch (update) {
-                        case AgentThoughtChunk thought -> {
-                            String text = ((TextContent) thought.content()).text();
-                            System.out.println("[Thinking] " + text.trim());
-                        }
-                        case AgentMessageChunk msg -> {
-                            String text = ((TextContent) msg.content()).text();
-                            System.out.print(text);  // No newline - agent streams chunks
-                        }
-                        case ToolCall tc ->
-                            System.out.println("[ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
-                        case ToolCallUpdateNotification tcUpdate ->
-                            System.out.println("[ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
-                        default ->
-                            System.out.println("[" + update.getClass().getSimpleName() + "]");
+                    if (update instanceof AgentThoughtChunk thought) {
+                        String text = ((TextContent) thought.content()).text();
+                        System.out.println("[Thinking] " + text.trim());
+                    } else if (update instanceof AgentMessageChunk msg) {
+                        String text = ((TextContent) msg.content()).text();
+                        System.out.print(text);  // No newline - agent streams chunks
+                    } else if (update instanceof ToolCall tc) {
+                        System.out.println("[ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
+                    } else if (update instanceof ToolCallUpdateNotification tcUpdate) {
+                        System.out.println("[ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
+                    } else {
+                        System.out.println("[" + update.getClass().getSimpleName() + "]");
                     }
                 })
                 // Permission handler - the focus of this module

@@ -6,7 +6,7 @@ A progressive, hands-on tutorial for learning the **Agent Client Protocol (ACP)*
 
 ## Prerequisites
 
-- Java 21+
+- Java 17+
 - Maven 3.8+ (or use the included `./mvnw` wrapper)
 - For client modules (01-08): Gemini CLI with ACP support and API key
 
@@ -77,38 +77,44 @@ gemini --experimental-acp --version
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
 | 01 | First Contact | Launch Gemini CLI, get your first response |
+| 02 | Protocol Basics | The initialize handshake and capability exchange |
 | 03 | Sessions | Session creation and lifecycle |
 | 04 | Prompts | Prompt requests and response handling |
 | 05 | Streaming Updates | Receive real-time updates during prompts |
 | 06 | Update Types | All SessionUpdate types in depth |
 | 07 | Agent Requests | Respond to file read/write requests |
 | 08 | Permissions | Handle permission requests from agents |
-| 09 | Session Resume | Load and resume existing sessions |
-| 11 | Error Handling | Handle protocol errors from agents |
 
 ### Part 2: Building Agents (Run Locally, No API Key)
 
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
+| 09 | Session Resume | Load and resume existing sessions |
+| 10 | Cancellation | Cancel in-progress operations |
+| 11 | Error Handling | Handle protocol errors |
 | 12 | Echo Agent | Build a minimal ACP agent (~25 lines) |
 | 13 | Agent Handlers | Implement all handler types |
 | 14 | Sending Updates | Stream all update types to clients |
 | 15 | Agent Requests | Request files/permissions from clients |
 | 16 | In-Memory Testing | Test client-agent without subprocesses |
+| 17 | Capability Negotiation | Advertise and check capabilities |
+| 18 | Terminal Operations | Execute commands via terminal API |
+| 19 | MCP Servers | Pass MCP server configs to agents |
 
-### Part 3: IDE Integration
+### Part 3: Async APIs
+
+| Module | Title | What You'll Learn |
+|--------|-------|-------------------|
+| 21 | Async Client | Reactive client with `Mono` patterns |
+| 22 | Async Agent | Build agents with `AcpAgent.async()` |
+
+### Part 4: IDE Integration
 
 | Module | Title | What You'll Learn |
 |--------|-------|-------------------|
 | 28 | Zed Integration | Configure Zed to use your agent |
 | 29 | JetBrains Integration | Configure IntelliJ, PyCharm, etc. |
 | 30 | VS Code Integration | Use the community vscode-acp extension |
-
-### Coming Soon
-
-| Module | Title | What You'll Learn |
-|--------|-------|-------------------|
-| 17-22 | Advanced | Capabilities, terminal, MCP, WebSocket, async |
 
 ## Error Handling in Handlers
 
@@ -176,19 +182,26 @@ jbang RunIntegrationTest.java module-12-echo-agent
 ```
 acp-java-tutorial/
 ├── module-01-first-contact/     # Client: Connect to Gemini
+├── module-02-protocol-basics/   # Client: Initialize handshake
 ├── module-03-sessions/          # Client: Session lifecycle
 ├── module-04-prompts/           # Client: Prompt handling
 ├── module-05-streaming-updates/ # Client: Real-time updates
 ├── module-06-update-types/      # Client: All update types
 ├── module-07-agent-requests/    # Client: File handlers
 ├── module-08-permissions/       # Client: Permission handling
-├── module-09-session-resume/    # Client: Resume sessions
-├── module-11-error-handling/    # Client: Error handling
+├── module-09-session-resume/    # Agent: Resume sessions
+├── module-10-cancellation/      # Agent: Cancel operations
+├── module-11-error-handling/    # Agent: Error handling
 ├── module-12-echo-agent/        # Agent: Minimal echo agent
 ├── module-13-agent-handlers/    # Agent: All handler types
 ├── module-14-sending-updates/   # Agent: Send all update types
 ├── module-15-agent-requests/    # Agent: Request files
 ├── module-16-in-memory-testing/ # Testing: No subprocess
+├── module-17-capability-negotiation/ # Advanced: Capabilities
+├── module-18-terminal-operations/    # Advanced: Terminal API
+├── module-19-mcp-servers/       # Advanced: MCP server configs
+├── module-21-async-client/      # Async: Reactive client
+├── module-22-async-agent/       # Async: Reactive agent
 ├── module-28-zed-integration/   # IDE: Zed editor
 ├── module-29-jetbrains-integration/ # IDE: JetBrains IDEs
 ├── module-30-vscode-integration/    # IDE: VS Code

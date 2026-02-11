@@ -55,7 +55,7 @@ public class CapabilityAgent {
                     new PromptCapabilities(false, false, true)  // only embeddedContext
                 );
 
-                return new InitializeResponse(1, agentCaps, List.of());
+                return InitializeResponse.ok(agentCaps);
             })
 
             .newSessionHandler(req -> {

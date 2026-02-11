@@ -45,33 +45,28 @@ public class UpdateSendingAgentDemo {
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
-                    switch (update) {
-                        case AgentThoughtChunk thought -> {
-                            String text = ((TextContent) thought.content()).text();
-                            System.out.println("[Thought] " + text);
-                        }
-                        case AgentMessageChunk msg -> {
-                            String text = ((TextContent) msg.content()).text();
-                            System.out.print(text);
-                        }
-                        case Plan plan -> {
-                            System.out.println("[Plan] " + plan.entries().size() + " steps:");
-                            plan.entries().forEach(e ->
-                                System.out.println("  - " + e.content() + " [" + e.status() + "]"));
-                        }
-                        case ToolCall tool ->
-                            System.out.println("[ToolCall] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
-                        case ToolCallUpdateNotification toolUpdate ->
-                            System.out.println("[ToolUpdate] " + toolUpdate.title() + " - " + toolUpdate.status());
-                        case AvailableCommandsUpdate commands -> {
-                            System.out.println("[Commands] Available:");
-                            commands.availableCommands().forEach(c ->
-                                System.out.println("  /" + c.name() + " - " + c.description()));
-                        }
-                        case CurrentModeUpdate mode ->
-                            System.out.println("[Mode] " + mode.currentModeId());
-                        default ->
-                            System.out.println("[Update] " + update.getClass().getSimpleName());
+                    if (update instanceof AgentThoughtChunk thought) {
+                        String text = ((TextContent) thought.content()).text();
+                        System.out.println("[Thought] " + text);
+                    } else if (update instanceof AgentMessageChunk msg) {
+                        String text = ((TextContent) msg.content()).text();
+                        System.out.print(text);
+                    } else if (update instanceof Plan plan) {
+                        System.out.println("[Plan] " + plan.entries().size() + " steps:");
+                        plan.entries().forEach(e ->
+                            System.out.println("  - " + e.content() + " [" + e.status() + "]"));
+                    } else if (update instanceof ToolCall tool) {
+                        System.out.println("[ToolCall] " + tool.title() + " (" + tool.kind() + ") - " + tool.status());
+                    } else if (update instanceof ToolCallUpdateNotification toolUpdate) {
+                        System.out.println("[ToolUpdate] " + toolUpdate.title() + " - " + toolUpdate.status());
+                    } else if (update instanceof AvailableCommandsUpdate commands) {
+                        System.out.println("[Commands] Available:");
+                        commands.availableCommands().forEach(c ->
+                            System.out.println("  /" + c.name() + " - " + c.description()));
+                    } else if (update instanceof CurrentModeUpdate mode) {
+                        System.out.println("[Mode] " + mode.currentModeId());
+                    } else {
+                        System.out.println("[Update] " + update.getClass().getSimpleName());
                     }
                 })
                 .build()) {

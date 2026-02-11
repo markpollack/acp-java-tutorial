@@ -3,7 +3,7 @@
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.17.1
 //DEPS org.springaicommunity:claude-code-sdk:1.0.0-SNAPSHOT
 //REPOS mavenlocal,mavencentral,central-snapshots=https://central.sonatype.com/repository/maven-snapshots/
-//JAVA 21
+//JAVA 17
 //SOURCES jbang-lib/IntegrationTestUtils.java
 //SOURCES jbang-lib/AIValidator.java
 

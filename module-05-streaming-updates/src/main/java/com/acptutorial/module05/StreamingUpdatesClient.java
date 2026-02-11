@@ -98,38 +98,29 @@ public class StreamingUpdatesClient {
         SessionUpdate update = notification.update();
 
         // Pattern match on update type with readable formatting
-        switch (update) {
-            case AgentMessageChunk msg -> {
-                String text = ((TextContent) msg.content()).text();
-                System.out.print(text);  // No prefix/newline - streams naturally
-            }
-            case AgentThoughtChunk thought -> {
-                String text = ((TextContent) thought.content()).text();
-                System.out.println("[" + count + "][Thinking] " + text.trim());
-            }
-            case ToolCall tc ->
-                System.out.println("[" + count + "][ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
-
-            case ToolCallUpdateNotification tcUpdate ->
-                System.out.println("[" + count + "][ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
-
-            case Plan plan -> {
-                System.out.println("[" + count + "][Plan] " + plan.entries().size() + " entries:");
-                plan.entries().forEach(entry ->
-                    System.out.println("         - " + entry.content() + " [" + entry.status() + "]"));
-            }
-            case AvailableCommandsUpdate commands ->
-                System.out.println("[" + count + "][Commands] " + commands.availableCommands().size() + " available");
-
-            case CurrentModeUpdate mode ->
-                System.out.println("[" + count + "][Mode] " + mode.currentModeId());
-
-            case UserMessageChunk userMsg -> {
-                String text = ((TextContent) userMsg.content()).text();
-                System.out.println("[" + count + "][UserEcho] " + text);
-            }
-            default ->
-                System.out.println("[" + count + "][" + update.getClass().getSimpleName() + "]");
+        if (update instanceof AgentMessageChunk msg) {
+            String text = ((TextContent) msg.content()).text();
+            System.out.print(text);  // No prefix/newline - streams naturally
+        } else if (update instanceof AgentThoughtChunk thought) {
+            String text = ((TextContent) thought.content()).text();
+            System.out.println("[" + count + "][Thinking] " + text.trim());
+        } else if (update instanceof ToolCall tc) {
+            System.out.println("[" + count + "][ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
+        } else if (update instanceof ToolCallUpdateNotification tcUpdate) {
+            System.out.println("[" + count + "][ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
+        } else if (update instanceof Plan plan) {
+            System.out.println("[" + count + "][Plan] " + plan.entries().size() + " entries:");
+            plan.entries().forEach(entry ->
+                System.out.println("         - " + entry.content() + " [" + entry.status() + "]"));
+        } else if (update instanceof AvailableCommandsUpdate commands) {
+            System.out.println("[" + count + "][Commands] " + commands.availableCommands().size() + " available");
+        } else if (update instanceof CurrentModeUpdate mode) {
+            System.out.println("[" + count + "][Mode] " + mode.currentModeId());
+        } else if (update instanceof UserMessageChunk userMsg) {
+            String text = ((TextContent) userMsg.content()).text();
+            System.out.println("[" + count + "][UserEcho] " + text);
+        } else {
+            System.out.println("[" + count + "][" + update.getClass().getSimpleName() + "]");
         }
     }
 

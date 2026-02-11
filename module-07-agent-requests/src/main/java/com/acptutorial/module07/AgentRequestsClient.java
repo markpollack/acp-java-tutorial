@@ -79,20 +79,16 @@ public class AgentRequestsClient {
                 .writeTextFileHandler(AgentRequestsClient::handleWriteFile)
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
-                    switch (update) {
-                        case AgentThoughtChunk thought -> {
-                            String text = ((TextContent) thought.content()).text();
-                            System.out.println("[Thinking] " + text.trim());
-                        }
-                        case AgentMessageChunk msg -> {
-                            String text = ((TextContent) msg.content()).text();
-                            System.out.print(text);
-                        }
-                        case ToolCall tc ->
-                            System.out.println("[ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
-                        case ToolCallUpdateNotification tcUpdate ->
-                            System.out.println("[ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
-                        default -> { }  // Ignore other update types
+                    if (update instanceof AgentThoughtChunk thought) {
+                        String text = ((TextContent) thought.content()).text();
+                        System.out.println("[Thinking] " + text.trim());
+                    } else if (update instanceof AgentMessageChunk msg) {
+                        String text = ((TextContent) msg.content()).text();
+                        System.out.print(text);
+                    } else if (update instanceof ToolCall tc) {
+                        System.out.println("[ToolCall] " + tc.title() + " | " + tc.kind() + " | " + tc.status());
+                    } else if (update instanceof ToolCallUpdateNotification tcUpdate) {
+                        System.out.println("[ToolUpdate] " + tcUpdate.toolCallId() + " -> " + tcUpdate.status());
                     }
                 })
                 .build()) {

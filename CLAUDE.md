@@ -65,11 +65,11 @@ The ACP Java SDK is at `/home/mark/acp/acp-java`. Key files:
 ### Sync Agent (Recommended)
 ```java
 AcpSyncAgent agent = AcpAgent.sync(transport)
-    .initializeHandler(req -> new InitializeResponse(...))
+    .initializeHandler(req -> InitializeResponse.ok())
     .newSessionHandler(req -> new NewSessionResponse(...))
-    .promptHandler((req, updater) -> {
-        updater.sendUpdate(sessionId, update);  // blocking
-        return new PromptResponse(StopReason.END_TURN);
+    .promptHandler((req, context) -> {
+        context.sendMessage("response text");  // blocking convenience method
+        return PromptResponse.endTurn();
     })
     .build();
 agent.run();  // blocks until client disconnects
