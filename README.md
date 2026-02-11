@@ -1,8 +1,8 @@
 # ACP Java Tutorial
 
-> **Documentation**: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial
+> **Documentation**: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial | [API Reference](https://springaicommunity.mintlify.app/acp-java-sdk/reference/java)
 
-A progressive, hands-on tutorial for learning the **Agent Client Protocol (ACP)** using the Java SDK.
+A progressive, hands-on tutorial for learning the **[Agent Client Protocol (ACP)](https://agentclientprotocol.com/)** using the Java SDK.
 
 ## Prerequisites
 
@@ -110,11 +110,11 @@ gemini --experimental-acp --version
 
 ### Part 4: IDE Integration
 
-| Module | Title | What You'll Learn |
-|--------|-------|-------------------|
-| 28 | Zed Integration | Configure Zed to use your agent |
-| 29 | JetBrains Integration | Configure IntelliJ, PyCharm, etc. |
-| 30 | VS Code Integration | Use the community vscode-acp extension |
+| Module | Title | What You'll Learn | Editor Docs |
+|--------|-------|-------------------|-------------|
+| 28 | Zed Integration | Configure Zed to use your agent | [Zed ACP docs](https://zed.dev/docs/ai/external-agents) |
+| 29 | JetBrains Integration | Configure IntelliJ, PyCharm, etc. | [JetBrains ACP docs](https://www.jetbrains.com/help/ai-assistant/acp.html) |
+| 30 | VS Code Integration | Use the community vscode-acp extension | [VS Code extension](https://github.com/formulahendry/vscode-acp) |
 
 ## Error Handling in Handlers
 
@@ -211,6 +211,8 @@ acp-java-tutorial/
 
 ## Related Projects
 
-- [ACP Java SDK](https://github.com/agentclientprotocol/java-sdk) - The SDK this tutorial teaches
-- [Agent Client Protocol](https://agentclientprotocol.com) - Official ACP specification
-- [ACP Java SDK Documentation](https://springaicommunity.mintlify.app/acp-java-sdk) - Full docs
+- [ACP Java SDK](https://github.com/agentclientprotocol/java-sdk) — The SDK this tutorial teaches
+- [ACP Java SDK Documentation](https://springaicommunity.mintlify.app/acp-java-sdk) — Full docs with API reference
+- [Agent Client Protocol](https://agentclientprotocol.com) — Official specification
+- [ACP Protocol Details](https://agentclientprotocol.com/protocol/overview) — Initialization, sessions, prompt turns
+- **Other ACP SDKs:** [Kotlin](https://github.com/agentclientprotocol/kotlin-sdk) | [Python](https://github.com/agentclientprotocol/python-sdk) | [TypeScript](https://github.com/agentclientprotocol/typescript-sdk) | [Rust](https://github.com/agentclientprotocol/rust-sdk)
