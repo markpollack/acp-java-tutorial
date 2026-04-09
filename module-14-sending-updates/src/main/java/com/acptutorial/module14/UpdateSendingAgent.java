@@ -14,6 +14,7 @@
  *   - Plan - share planned actions
  *   - AvailableCommandsUpdate - advertise commands
  *   - CurrentModeUpdate - report mode changes
+ *   - UsageUpdate - report context window and cost usage (unstable)
  *
  * Build & run:
  *   ./mvnw package -pl module-14-sending-updates -q
@@ -42,6 +43,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCall;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallStatus;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolKind;
+import com.agentclientprotocol.sdk.spec.AcpSchema.UsageUpdate;
 
 public class UpdateSendingAgent {
 
@@ -101,12 +103,16 @@ public class UpdateSendingAgent {
                 context.sendUpdate(sessionId,
                     new CurrentModeUpdate("current_mode_update", "default"));
 
-                // 7. Send message chunks - the actual response (convenience method)
+                // 7. Send usage update - report token usage (unstable)
+                context.sendUpdate(sessionId,
+                    new UsageUpdate("usage_update", 53000L, 200000L));
+
+                // 8. Send message chunks - the actual response (convenience method)
                 context.sendMessage("Here is my response ");
                 context.sendMessage("streamed in ");
                 context.sendMessage("multiple chunks.");
 
-                // 8. Complete the turn
+                // 9. Complete the turn
                 return PromptResponse.endTurn();
             })
             .build();

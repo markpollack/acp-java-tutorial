@@ -14,6 +14,7 @@
  *   - Plan - agent's planned actions
  *   - AvailableCommandsUpdate - available slash commands
  *   - CurrentModeUpdate - mode changes
+ *   - UsageUpdate - context window and cost usage (unstable)
  *
  * Prerequisites:
  * - Gemini CLI installed with --experimental-acp support
@@ -40,6 +41,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.SessionUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCall;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
+import com.agentclientprotocol.sdk.spec.AcpSchema.UsageUpdate;
 import com.agentclientprotocol.sdk.spec.AcpSchema.UserMessageChunk;
 
 public class StreamingUpdatesClient {
@@ -116,6 +118,8 @@ public class StreamingUpdatesClient {
             System.out.println("[" + count + "][Commands] " + commands.availableCommands().size() + " available");
         } else if (update instanceof CurrentModeUpdate mode) {
             System.out.println("[" + count + "][Mode] " + mode.currentModeId());
+        } else if (update instanceof UsageUpdate usage) {
+            System.out.println("[" + count + "][Usage] " + usage.used() + "/" + usage.size() + " tokens");
         } else if (update instanceof UserMessageChunk userMsg) {
             String text = ((TextContent) userMsg.content()).text();
             System.out.println("[" + count + "][UserEcho] " + text);

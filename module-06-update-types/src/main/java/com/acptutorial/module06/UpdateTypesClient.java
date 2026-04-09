@@ -11,6 +11,7 @@
  * - Plan - agent's planned actions
  * - AvailableCommandsUpdate - slash commands
  * - CurrentModeUpdate - mode changes
+ * - UsageUpdate - context window and cost usage (unstable)
  *
  * Understanding update types helps build rich UIs that show agent activity.
  *
@@ -35,6 +36,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCall;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
+import com.agentclientprotocol.sdk.spec.AcpSchema.UsageUpdate;
 
 public class UpdateTypesClient {
 
@@ -51,6 +53,7 @@ public class UpdateTypesClient {
         int plans = 0;
         int commandUpdates = 0;
         int modeUpdates = 0;
+        int usageUpdates = 0;
         int otherUpdates = 0;
 
         void handleUpdate(Object update) {
@@ -78,6 +81,9 @@ public class UpdateTypesClient {
             } else if (update instanceof CurrentModeUpdate mode) {
                 modeUpdates++;
                 System.out.println("[MODE] " + mode.currentModeId());
+            } else if (update instanceof UsageUpdate usage) {
+                usageUpdates++;
+                System.out.println("[USAGE] " + usage.used() + "/" + usage.size() + " tokens");
             } else {
                 otherUpdates++;
                 System.out.println("[OTHER] " + update.getClass().getSimpleName());
@@ -93,6 +99,7 @@ public class UpdateTypesClient {
             System.out.println("  Plan:                      " + plans);
             System.out.println("  AvailableCommandsUpdate:   " + commandUpdates);
             System.out.println("  CurrentModeUpdate:         " + modeUpdates);
+            System.out.println("  UsageUpdate:               " + usageUpdates);
             System.out.println("  Other:                     " + otherUpdates);
         }
     }
