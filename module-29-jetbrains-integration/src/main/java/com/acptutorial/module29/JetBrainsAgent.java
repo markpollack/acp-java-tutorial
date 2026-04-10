@@ -15,10 +15,11 @@
  *
  * Configure JetBrains - create/edit ~/.jetbrains/acp.json:
  *   {
+ *     "default_mcp_settings": {},
  *     "agent_servers": {
  *       "Java Tutorial Agent": {
  *         "command": "java",
- *         "args": ["-jar", "/absolute/path/to/jetbrains-agent.jar"]
+ *         "args": ["-jar", "/absolute/path/to/jetbrains-agent.jar", "acp"]
  *       }
  *     }
  *   }

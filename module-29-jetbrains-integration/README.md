@@ -6,14 +6,14 @@ Connect your Java ACP agent to JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm,
 
 ## Overview
 
-JetBrains joined the ACP initiative in October 2025, collaborating with Zed to create a unified standard rather than competing protocols. ACP support is available in IDE versions 25.3 RC and later.
+JetBrains joined the ACP initiative in October 2025, collaborating with Zed to create a unified standard rather than competing protocols. ACP support is available in IDE versions 2026.1 and later.
 
 **Key insight**: The same agent JAR works in Zed, JetBrains, and VS Code. Only the configuration differs!
 
 ## Prerequisites
 
-1. **JetBrains IDE** version 25.3 RC or later (IntelliJ, PyCharm, WebStorm, etc.)
-2. **JetBrains AI Assistant** plugin enabled
+1. **JetBrains IDE** version 2026.1 or later (IntelliJ, PyCharm, WebStorm, etc.)
+2. **JetBrains AI Assistant** plugin enabled (no AI subscription required)
 3. **Java 17+** installed
 4. **This module built** (see below)
 
@@ -59,10 +59,7 @@ Create or edit `~/.jetbrains/acp.json`:
         "-jar",
         "/absolute/path/to/jetbrains-agent.jar",
         "acp"
-      ],
-      "env": {
-        "API_KEY": "your-api-key-here"
-      }
+      ]
     }
   }
 }
@@ -77,50 +74,25 @@ Create or edit `~/.jetbrains/acp.json`:
 3. Select **"Java Tutorial Agent"**
 4. Start chatting!
 
-## Configuration Options
-
-### Basic Configuration
-
-```json
-{
-  "default_mcp_settings": {},
-  "agent_servers": {
-    "Java Tutorial Agent": {
-      "command": "java",
-      "args": [
-        "-jar",
-        "/absolute/path/to/jetbrains-agent.jar",
-        "acp"
-      ]
-    }
-  }
-}
-```
-
-
 ## Chat with the Agent
 
 1. Open AI Chat (Alt + Shift + C)
 2. Select "Java Tutorial Agent" from the agent dropdown
-3. Try:
-hello
-help
-tell me about jetbrains
+3. Try prompts like `hello`, `help`, or `tell me about jetbrains`
 
 ## Troubleshooting
 
 ### Agent Not Appearing
 
-1. Verify IDE version is 25.3 RC or later
+1. Verify IDE version is 2026.1 or later
 2. Ensure AI Assistant plugin is enabled
 3. Check `acp.json` is valid JSON
 4. Restart the IDE after configuration changes
+5. ACP agents are not supported in WSL
 
 ### Connection Issues
 
-Check the agent logs:
-- Linux/Mac: `~/.cache/JetBrains/<IDE>/log/idea.log`
-- Windows: `%LOCALAPPDATA%\JetBrains\<IDE>\log\idea.log`
+In the AI Chat tool window, click the more options button and select **"Get ACP Logs"** to download agent logs. For detailed diagnostics, enable the `llm.agent.extended.logging` registry key via Navigate > Search Everywhere.
 
 ### Test Agent Manually
 
@@ -134,7 +106,6 @@ java -jar module-29-jetbrains-integration/target/jetbrains-agent.jar
 ## Next Steps
 
 - **Module 30**: Connect to VS Code using the community extension
-- **Module 31**: Build a Claude-powered agent
 
 ## Key Takeaway
 
