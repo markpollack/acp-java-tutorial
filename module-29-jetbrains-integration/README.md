@@ -39,11 +39,11 @@ Example: `/home/user/projects/acp-java-tutorial/module-29-jetbrains-integration/
 
 ### Option A: Using the IDE (Recommended)
 
-1. Open your JetBrains IDE
-2. Open the **AI Chat** tool window (`Alt+Shift+C` or via View → Tool Windows → AI Chat)
-3. Click the **gear icon** ⚙️
-4. Select **Configure ACP Agents**
-5. The `acp.json` file will open
+Follow the official JetBrains ACP documentation for the current UI flow:
+
+https://www.jetbrains.com/help/ai-assistant/acp.html#add-custom-agent
+
+The JetBrains UI may change over time, so this tutorial intentionally avoids listing menu paths that can become outdated.
 
 ### Option B: Edit Manually
 
@@ -51,10 +51,18 @@ Create or edit `~/.jetbrains/acp.json`:
 
 ```json
 {
+  "default_mcp_settings": {},
   "agent_servers": {
     "Java Tutorial Agent": {
       "command": "java",
-      "args": ["-jar", "/absolute/path/to/jetbrains-agent.jar"]
+      "args": [
+        "-jar",
+        "/absolute/path/to/jetbrains-agent.jar",
+        "acp"
+      ],
+      "env": {
+        "API_KEY": "your-api-key-here"
+      }
     }
   }
 }
@@ -75,79 +83,29 @@ Create or edit `~/.jetbrains/acp.json`:
 
 ```json
 {
+  "default_mcp_settings": {},
   "agent_servers": {
     "Java Tutorial Agent": {
       "command": "java",
-      "args": ["-jar", "/path/to/jetbrains-agent.jar"]
+      "args": [
+        "-jar",
+        "/absolute/path/to/jetbrains-agent.jar",
+        "acp"
+      ]
     }
   }
 }
 ```
 
-### With Environment Variables
 
-```json
-{
-  "agent_servers": {
-    "Java Tutorial Agent": {
-      "command": "java",
-      "args": ["-jar", "/path/to/jetbrains-agent.jar"],
-      "env": {
-        "JAVA_OPTS": "-Xmx512m",
-        "MY_API_KEY": "your-key-here"
-      }
-    }
-  }
-}
-```
+## Chat with the Agent
 
-### With IDE MCP Server Access
-
-Let your agent access the IDE's built-in MCP server:
-
-```json
-{
-  "agent_servers": {
-    "Java Tutorial Agent": {
-      "command": "java",
-      "args": ["-jar", "/path/to/jetbrains-agent.jar"],
-      "use_idea_mcp": true,
-      "use_custom_mcp": true
-    }
-  }
-}
-```
-
-### Windows with WSL
-
-```json
-{
-  "agent_servers": {
-    "Java Tutorial Agent": {
-      "command": "java",
-      "args": ["-jar", "/mnt/c/path/to/jetbrains-agent.jar"],
-      "execution_environment": {
-        "type": "wsl",
-        "distribution": "Ubuntu"
-      }
-    }
-  }
-}
-```
-
-## Supported JetBrains IDEs
-
-| IDE | Status |
-|-----|--------|
-| IntelliJ IDEA | ✅ Supported (25.3 RC+) |
-| PyCharm | ✅ Supported (25.3 RC+) |
-| WebStorm | ✅ Supported (25.3 RC+) |
-| GoLand | ✅ Supported (25.3 RC+) |
-| PhpStorm | ✅ Supported (25.3 RC+) |
-| Rider | ✅ Supported (25.3 RC+) |
-| CLion | ✅ Supported (25.3 RC+) |
-| RubyMine | ✅ Supported (25.3 RC+) |
-| DataGrip | ✅ Supported (25.3 RC+) |
+1. Open AI Chat (Alt + Shift + C)
+2. Select "Java Tutorial Agent" from the agent dropdown
+3. Try:
+hello
+help
+tell me about jetbrains
 
 ## Troubleshooting
 
