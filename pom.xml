@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <acp-sdk.version>0.10.0</acp-sdk.version>
         <spring-boot.version>4.0.5</spring-boot.version>
-        <acp-autoconfig.version>0.10.0</acp-autoconfig.version>
+        <acp-autoconfig.version>0.11.0</acp-autoconfig.version>
         <reactor.version>3.6.0</reactor.version>
         <slf4j.version>2.0.9</slf4j.version>
     </properties>
