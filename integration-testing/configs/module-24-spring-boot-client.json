@@ -1,0 +1,15 @@
+{
+  "moduleId": "module-24-spring-boot-client",
+  "displayName": "Module 24: Spring Boot Client",
+  "timeoutSec": 90,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Run an ACP client as a Spring Boot application using autoconfigured AcpSyncClient. The CommandLineRunner injects the client, connects to the module-23 agent via stdio transport configured in application.properties, creates a session, sends a prompt, and displays the stop reason.",
+  "requiredOutput": [
+    "=== Module 24: Spring Boot Client Demo ===",
+    "Connected!",
+    "Session:",
+    "Sending: Hello from Spring Boot client!",
+    "Stop reason: END_TURN"
+  ]
+}

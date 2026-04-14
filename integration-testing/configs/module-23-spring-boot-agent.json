@@ -1,0 +1,15 @@
+{
+  "moduleId": "module-23-spring-boot-agent",
+  "displayName": "Module 23: Spring Boot Agent",
+  "timeoutSec": 90,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Run an ACP agent as a Spring Boot application using @AcpAgent annotations. The demo client launches the Spring Boot agent as a subprocess, sends 'Hello from the client!', and receives 'Echo: Hello from the client!' back. Should show Spring Boot startup, initialize success, session ID, sent prompt, echoed response, and stop reason END_TURN.",
+  "requiredOutput": [
+    "=== Module 23: Spring Boot Agent Demo ===",
+    "Connected to Spring Boot EchoAgent!",
+    "Sending: Hello from the client!",
+    "Echo: Hello from the client!",
+    "Stop reason: END_TURN"
+  ]
+}

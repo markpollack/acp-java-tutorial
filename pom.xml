@@ -18,6 +18,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <acp-sdk.version>0.10.0</acp-sdk.version>
+        <spring-boot.version>4.0.5</spring-boot.version>
+        <acp-autoconfig.version>0.10.0</acp-autoconfig.version>
         <reactor.version>3.6.0</reactor.version>
         <slf4j.version>2.0.9</slf4j.version>
     </properties>
@@ -56,6 +58,10 @@
         <module>module-21-async-client</module>
         <module>module-22-async-agent</module>
 
+        <!-- Part 7: Spring Boot Integration (requires Java 21) -->
+        <module>module-23-spring-boot-agent</module>
+        <module>module-24-spring-boot-client</module>
+
         <!-- Part 8: IDE Integration -->
         <module>module-28-zed-integration</module>
         <module>module-29-jetbrains-integration</module>
@@ -83,6 +89,12 @@
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor.version}</version>
+            </dependency>
+            <!-- ACP Spring Boot Starter -->
+            <dependency>
+                <groupId>org.springaicommunity</groupId>
+                <artifactId>acp-spring-boot-starter</artifactId>
+                <version>${acp-autoconfig.version}</version>
             </dependency>
             <!-- SLF4J simple binding for tutorial logging -->
             <dependency>
