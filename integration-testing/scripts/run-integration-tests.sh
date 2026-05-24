@@ -56,6 +56,7 @@ LOCAL_MODULES=(
     "module-14-sending-updates"
     "module-15-agent-requests"
     "module-16-in-memory-testing"
+    "module-20-session-management"
     "module-23-spring-boot-agent"
     "module-24-spring-boot-client"
 )

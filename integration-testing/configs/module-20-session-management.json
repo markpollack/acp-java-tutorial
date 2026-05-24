@@ -1,0 +1,29 @@
+{
+  "moduleId": "module-20-session-management",
+  "displayName": "Module 20: Session Management",
+  "timeoutSec": 30,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates the full session lifecycle with three new ACP session management APIs. Part 1 creates three sessions (two with the current working directory, one with /tmp). Part 2 lists all sessions (3 total), then filters by cwd showing 2 in the project directory and 1 in /tmp. Part 3 resumes session 1 without replaying conversation history (contrast with loadSession in module-09 which replays). Part 4 closes session 3 and verifies it was removed by listing again (3 to 2). Part 5 closes the remaining sessions and confirms 0 remain.",
+  "requiredOutput": [
+    "=== Module 20: Session Management ===",
+    "Connected to SessionManagerAgent",
+    "--- Part 1: Create Sessions ---",
+    "Created session 1:",
+    "Created session 2:",
+    "Created session 3:",
+    "--- Part 2: List Sessions ---",
+    "All sessions (3):",
+    "Sessions in /tmp: 1",
+    "--- Part 3: Resume Session ---",
+    "Session resumed",
+    "Sending message after resume...",
+    "Message #3",
+    "--- Part 4: Close Session ---",
+    "Session closed.",
+    "Sessions after close: 2 (was 3)",
+    "--- Part 5: Cleanup ---",
+    "Sessions remaining: 0",
+    "=== Demo Complete ==="
+  ]
+}

@@ -17,7 +17,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <acp-sdk.version>0.11.0</acp-sdk.version>
+        <acp-sdk.version>0.12.0-SNAPSHOT</acp-sdk.version>
         <spring-boot.version>4.0.5</spring-boot.version>
         <acp-autoconfig.version>0.11.0</acp-autoconfig.version>
         <reactor.version>3.6.0</reactor.version>
@@ -52,6 +52,9 @@
         <module>module-16-in-memory-testing</module>
         <module>module-17-capability-negotiation</module>
         <module>module-18-terminal-operations</module>
+
+        <!-- Part 5B: Session Management -->
+        <module>module-20-session-management</module>
 
         <!-- Part 6: Advanced Integration -->
         <module>module-19-mcp-servers</module>
