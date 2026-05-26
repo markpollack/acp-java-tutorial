@@ -1,0 +1,27 @@
+{
+  "moduleId": "module-31-elicitation",
+  "displayName": "Module 31: Elicitation",
+  "timeoutSec": 30,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "Demonstrates elicitation — agent-to-client structured user input via forms. Demo 1 sends a simple single-select form (favorite color) and the client auto-picks the first option. Demo 2 sends a full project setup form with text, select, multi-select, integer, and boolean fields. The client auto-fills all fields and the agent confirms the values.",
+  "requiredOutput": [
+    "=== Module 31: Elicitation ===",
+    "Connected to ElicitationAgent",
+    "--- Demo 1: Simple Select ---",
+    "[Elicitation] Agent asks:",
+    "color =",
+    "Accepting with 1 fields",
+    "You chose:",
+    "--- Demo 2: Project Setup Form ---",
+    "[Elicitation] Agent asks: Configure your new project:",
+    "name =",
+    "template =",
+    "features =",
+    "javaVersion =",
+    "gitInit =",
+    "Accepting with 5 fields",
+    "Project configured!",
+    "=== Demo Complete ==="
+  ]
+}
