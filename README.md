@@ -200,11 +200,15 @@ acp-java-tutorial/
 ├── module-17-capability-negotiation/ # Advanced: Capabilities
 ├── module-18-terminal-operations/    # Advanced: Terminal API
 ├── module-19-mcp-servers/       # Advanced: MCP server configs
+├── module-20-session-management/# Session: list, close, resume
 ├── module-21-async-client/      # Async: Reactive client
 ├── module-22-async-agent/       # Async: Reactive agent
+├── module-23-spring-boot-agent/ # Spring Boot: Annotated agent
+├── module-24-spring-boot-client/# Spring Boot: Autoconfigured client
 ├── module-28-zed-integration/   # IDE: Zed editor
 ├── module-29-jetbrains-integration/ # IDE: JetBrains IDEs
 ├── module-30-vscode-integration/    # IDE: VS Code
+├── module-31-elicitation/       # Unstable: Agent-to-client forms
 ├── integration-testing/         # Automated test suite
 └── plans/                       # Design documentation
 ```
