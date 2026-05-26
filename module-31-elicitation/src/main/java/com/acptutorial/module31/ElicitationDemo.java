@@ -4,14 +4,11 @@
  * Demonstrates the elicitation protocol — the agent asks the client
  * for structured user input via form schemas.
  *
- * The client handles elicitation/create requests by rendering each
- * form field to the console and collecting responses. This is a
- * minimal demonstration — real clients (IDEs) would render proper
- * form widgets.
- *
- * Key APIs:
- *   Agent side:  context.createElicitation(request)
- *   Client side: .createElicitationHandler(handler)
+ * Covers:
+ * - Simple single-select (accept)
+ * - Full multi-field form (accept with all field types)
+ * - User declining the form
+ * - User cancelling the form
  *
  * Build & run:
  *   ./mvnw package -pl module-31-elicitation -q
@@ -21,10 +18,10 @@ package com.acptutorial.module31;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
@@ -54,6 +51,9 @@ public class ElicitationDemo {
     private static final String MODULE_NAME = "module-31-elicitation";
     private static final String JAR_NAME = "elicitation-agent.jar";
 
+    // Controls what the client does with the next elicitation
+    private static final AtomicReference<String> nextAction = new AtomicReference<>("accept");
+
     public static void main(String[] args) {
         var params = AgentParameters.builder("java")
             .arg("-jar")
@@ -68,13 +68,11 @@ public class ElicitationDemo {
                         System.out.print(((TextContent) msg.content()).text());
                     }
                 })
-                // Register elicitation handler — renders form fields to console
                 .createElicitationHandler(req -> handleElicitation(req))
                 .build()) {
 
             System.out.println("=== Module 31: Elicitation ===\n");
 
-            // Advertise elicitation capability
             var caps = new ClientCapabilities(
                 new FileSystemCapability(), false,
                 new ElicitationCapabilities(), null);
@@ -85,22 +83,36 @@ public class ElicitationDemo {
             var session = client.newSession(new NewSessionRequest(cwd, List.of()));
             String sessionId = session.sessionId();
 
-            // Demo 1: Simple single-select
-            System.out.println("--- Demo 1: Simple Select ---");
-            System.out.println("Sending 'simple' prompt...\n");
+            // Demo 1: Simple single-select — user accepts
+            System.out.println("--- Demo 1: Simple Select (accept) ---");
+            nextAction.set("accept");
             client.prompt(new PromptRequest(sessionId,
                 List.of(new TextContent("simple"))));
             System.out.println();
 
-            // Demo 2: Full project setup form
-            System.out.println("--- Demo 2: Project Setup Form ---");
-            System.out.println("Sending 'project' prompt...\n");
+            // Demo 2: Full project form — user accepts all fields
+            System.out.println("--- Demo 2: Project Setup (accept) ---");
+            nextAction.set("accept");
             client.prompt(new PromptRequest(sessionId,
                 List.of(new TextContent("project"))));
+            System.out.println();
+
+            // Demo 3: User declines the form
+            System.out.println("--- Demo 3: User Declines ---");
+            nextAction.set("decline");
+            client.prompt(new PromptRequest(sessionId,
+                List.of(new TextContent("simple"))));
+            System.out.println();
+
+            // Demo 4: User cancels the form
+            System.out.println("--- Demo 4: User Cancels ---");
+            nextAction.set("cancel");
+            client.prompt(new PromptRequest(sessionId,
+                List.of(new TextContent("simple"))));
 
             System.out.println("\n=== Demo Complete ===");
             System.out.println("Elicitation lets agents request structured input from users.");
-            System.out.println("Field types: text, select, multi-select, boolean, integer");
+            System.out.println("The agent handles accept, decline, and cancel responses.");
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -108,70 +120,60 @@ public class ElicitationDemo {
         }
     }
 
-    /**
-     * Handles an elicitation request by auto-filling form fields.
-     * A real client would render UI widgets; this demo just picks
-     * sensible defaults and prints what it chose.
-     */
     private static CreateElicitationResponse handleElicitation(
             AcpSchema.CreateElicitationRequest req) {
 
         System.out.println("  [Elicitation] Agent asks: " + req.message());
+        String action = nextAction.get();
+
+        if ("decline".equals(action)) {
+            System.out.println("  [Elicitation] User declines\n");
+            return CreateElicitationResponse.decline();
+        }
+        if ("cancel".equals(action)) {
+            System.out.println("  [Elicitation] User cancels\n");
+            return CreateElicitationResponse.cancel();
+        }
 
         ElicitationSchema schema = req.requestedSchema();
         if (schema == null || schema.properties() == null) {
-            System.out.println("  [Elicitation] No form schema — declining");
+            System.out.println("  [Elicitation] No schema — declining\n");
             return CreateElicitationResponse.decline();
         }
 
         Map<String, Object> values = new HashMap<>();
-
         for (var entry : schema.properties().entrySet()) {
-            String fieldName = entry.getKey();
-            ElicitationPropertySchema field = entry.getValue();
-
-            Object value = autoFillField(fieldName, field);
-            values.put(fieldName, value);
-            System.out.println("  [Elicitation]   " + fieldName + " = " + value);
+            Object value = autoFill(entry.getKey(), entry.getValue());
+            values.put(entry.getKey(), value);
+            System.out.println("  [Elicitation]   " + entry.getKey() + " = " + value);
         }
 
         System.out.println("  [Elicitation] Accepting with " + values.size() + " fields\n");
         return CreateElicitationResponse.accept(values);
     }
 
-    /**
-     * Auto-fills a form field with a sensible value for demonstration.
-     */
-    private static Object autoFillField(String name, ElicitationPropertySchema field) {
+    private static Object autoFill(String name, ElicitationPropertySchema field) {
         if (field instanceof StringPropertySchema str) {
-            // Single-select: pick the first option
             if (str.oneOf() != null && !str.oneOf().isEmpty()) {
                 return str.oneOf().get(0).constValue();
             }
             if (str.enumValues() != null && !str.enumValues().isEmpty()) {
                 return str.enumValues().get(0);
             }
-            // Text: use default or generate
             return str.defaultValue() != null ? str.defaultValue() : "my-" + name;
-
-        } else if (field instanceof IntegerPropertySchema intProp) {
-            return intProp.defaultValue() != null ? intProp.defaultValue() : 17;
-
-        } else if (field instanceof NumberPropertySchema numProp) {
-            return numProp.defaultValue() != null ? numProp.defaultValue() : 0.5;
-
-        } else if (field instanceof BooleanPropertySchema boolProp) {
-            return boolProp.defaultValue() != null ? boolProp.defaultValue() : true;
-
+        } else if (field instanceof IntegerPropertySchema p) {
+            return p.defaultValue() != null ? p.defaultValue() : 17;
+        } else if (field instanceof NumberPropertySchema p) {
+            return p.defaultValue() != null ? p.defaultValue() : 0.5;
+        } else if (field instanceof BooleanPropertySchema p) {
+            return p.defaultValue() != null ? p.defaultValue() : true;
         } else if (field instanceof MultiSelectPropertySchema multi) {
-            // Pick first two items if available
-            if (multi.items() instanceof UntitledMultiSelectItems untitled) {
-                var items = untitled.enumValues();
+            if (multi.items() instanceof UntitledMultiSelectItems u) {
+                var items = u.enumValues();
                 return items.size() > 1 ? List.of(items.get(0), items.get(1)) : items;
             }
             return List.of();
         }
-
         return "unknown";
     }
 
