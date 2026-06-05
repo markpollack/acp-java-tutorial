@@ -78,7 +78,52 @@ Create or edit `~/.jetbrains/acp.json`:
 
 1. Open AI Chat (Alt + Shift + C)
 2. Select "Java Tutorial Agent" from the agent dropdown
-3. Try prompts like `hello`, `help`, or `tell me about jetbrains`
+3. Try prompts like `hello`, `help`, `tour`, or `tell me about jetbrains`
+
+## Follow-Along: Reporting File Locations
+
+ACP has no agent-to-client "open this file" request. Instead, tool call
+updates carry a **`locations`** field, and clients that support follow-along
+navigate to each location as it arrives. The spec calls this
+["Following the Agent"](https://agentclientprotocol.com/protocol/tool-calls#following-the-agent):
+
+> Tool calls can report file locations they're working with, enabling Clients
+> to implement "follow-along" features that track which files the Agent is
+> accessing or modifying in real-time.
+
+Each location is an absolute `path` plus an optional 1-based `line`:
+
+```java
+context.sendUpdate(sessionId, new ToolCall(
+    "tool_call", toolCallId,
+    "Visiting pom.xml",
+    ToolKind.READ, ToolCallStatus.IN_PROGRESS,
+    List.of(),
+    List.of(new ToolCallLocation("/abs/path/to/pom.xml", 1)),
+    null, null, null));
+```
+
+### Try It
+
+Say **`tour`** to the agent. It walks well-known files in the project
+(`pom.xml`, `README.md`, ...), reporting each as a tool call location —
+opening the file at line 1, then scrolling to the middle via a
+`tool_call_update`. See `tourProject()` in `JetBrainsAgent.java`.
+
+Client support differs:
+
+| Client | Behavior |
+|--------|----------|
+| **Zed** | Click the **crosshair icon** at the bottom left of the Agent Panel (or hold `cmd`/`ctrl` when submitting). The editor jumps to every location the agent reports. |
+| **JetBrains** | Locations render on the tool call cards in AI Chat. No auto-follow toggle yet (as of June 2026) — report locations anyway, so your agent is ready when it ships. |
+
+Two things `locations` is **not**:
+
+- Not `fs/read_text_file` / `fs/write_text_file` (`context.readFile()` /
+  `context.writeFile()`) — those are request/response calls that access the
+  editor's buffer state (including unsaved changes); they don't navigate.
+- Not imperative — it's a one-way notification. The editor follows only if
+  the user enabled follow mode; there is no guaranteed "force open" in ACP.
 
 ## Troubleshooting
 
