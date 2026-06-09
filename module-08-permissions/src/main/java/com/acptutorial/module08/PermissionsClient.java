@@ -22,7 +22,7 @@
  *
  * Prerequisites:
  * - Gemini CLI installed with --experimental-acp support
- * - GEMINI_API_KEY environment variable set (get key from https://aistudio.google.com/apikey)
+ * - No API key needed here: the agent CLI you launch handles its own auth.
  */
 package com.acptutorial.module08;
 
@@ -62,8 +62,6 @@ public class PermissionsClient {
     private static Path workDir;
 
     public static void main(String[] args) {
-        // Check for required API key before starting
-        checkGeminiApiKey();
 
         workDir = Path.of(System.getProperty("user.dir"));
 
@@ -217,30 +215,4 @@ public class PermissionsClient {
         }
     }
 
-    /**
-     * Verify GEMINI_API_KEY is set before attempting to connect.
-     */
-    private static void checkGeminiApiKey() {
-        String apiKey = System.getenv("GEMINI_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            System.err.println("""
-                ERROR: GEMINI_API_KEY environment variable is not set.
-
-                To fix this:
-
-                1. Get your API key (or create one at https://aistudio.google.com/apikey)
-                   - Terminal: echo $GEMINI_API_KEY
-
-                2. Add it to IntelliJ (for all Java apps):
-                   - Run > Edit Configurations
-                   - Click "Edit configuration templates..." (bottom-left)
-                   - Select "Application"
-                   - Environment variables > Add: GEMINI_API_KEY=your-key
-                   - Delete existing run configs to pick up the new template
-
-                3. Run this program again.
-                """);
-            System.exit(1);
-        }
-    }
 }

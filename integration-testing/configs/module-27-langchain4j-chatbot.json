@@ -1,0 +1,14 @@
+{
+  "moduleId": "module-27-langchain4j-chatbot",
+  "displayName": "Module 27: LangChain4j Chatbot Agent",
+  "timeoutSec": 150,
+  "requiredEnv": ["ANTHROPIC_API_KEY"],
+  "requiresPackage": true,
+  "expectedBehavior": "Run the chatbot agent built with LangChain4j's ChatModel (AnthropicChatModel) instead of the raw Anthropic SDK. The demo launches the agent as a subprocess and asks what LangChain4j is; the agent should return a genuine, non-echoed AI-generated answer and end with stop reason END_TURN.",
+  "requiredOutput": [
+    "=== Module 27: LangChain4j Chatbot Agent Demo ===",
+    "Connected to LangChain4j ChatbotAgent (powered by Claude)!",
+    "You: In one sentence, what is LangChain4j?",
+    "stop reason: END_TURN"
+  ]
+}

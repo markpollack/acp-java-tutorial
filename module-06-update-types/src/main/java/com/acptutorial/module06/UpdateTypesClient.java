@@ -105,7 +105,6 @@ public class UpdateTypesClient {
     }
 
     public static void main(String[] args) {
-        checkGeminiApiKey();
 
         var params = AgentParameters.builder("gemini")
             .arg("--experimental-acp")
@@ -151,10 +150,4 @@ public class UpdateTypesClient {
         }
     }
 
-    private static void checkGeminiApiKey() {
-        if (System.getenv("GEMINI_API_KEY") == null) {
-            System.err.println("ERROR: GEMINI_API_KEY not set. See module-01 for setup instructions.");
-            System.exit(1);
-        }
-    }
 }

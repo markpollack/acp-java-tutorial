@@ -26,7 +26,7 @@
  * - When blocking is acceptable
  *
  * Prerequisites:
- * - GEMINI_API_KEY environment variable set
+ * - No API key needed here: the agent CLI you launch handles its own auth.
  *
  * Build & run:
  *   ./mvnw compile exec:java -pl module-21-async-client
@@ -52,7 +52,6 @@ import reactor.core.publisher.Mono;
 public class AsyncClient {
 
     public static void main(String[] args) throws InterruptedException {
-        checkGeminiApiKey();
 
         System.out.println("=== Module 21: Async Client ===\n");
         System.out.println("This is the async version of Module 01 (First Contact).\n");
@@ -157,18 +156,4 @@ public class AsyncClient {
         client.closeGracefully().block();
     }
 
-    private static void checkGeminiApiKey() {
-        String apiKey = System.getenv("GEMINI_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            System.err.println("""
-                ERROR: GEMINI_API_KEY environment variable is not set.
-
-                To fix this:
-                1. Get your API key from https://aistudio.google.com/apikey
-                2. Export it: export GEMINI_API_KEY=your-key
-                3. Run this program again.
-                """);
-            System.exit(1);
-        }
-    }
 }

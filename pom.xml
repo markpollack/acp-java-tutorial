@@ -19,7 +19,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <acp-sdk.version>0.12.0</acp-sdk.version>
         <spring-boot.version>4.0.5</spring-boot.version>
-        <acp-autoconfig.version>0.11.0</acp-autoconfig.version>
+        <acp-autoconfig.version>0.11.1-SNAPSHOT</acp-autoconfig.version>
+        <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
         <reactor.version>3.6.0</reactor.version>
         <slf4j.version>2.0.9</slf4j.version>
     </properties>
@@ -44,6 +45,10 @@
 
         <!-- Part 4: The Agent Side -->
         <module>module-12-echo-agent</module>
+        <!-- The "juicier" reveal: same skeleton as the echo agent, but the
+             promptHandler calls a real LLM (Anthropic). First module where you
+             can point at the line of Java that invokes the AI. -->
+        <module>module-25-ai-chatbot-agent</module>
         <module>module-13-agent-handlers</module>
         <module>module-14-sending-updates</module>
         <module>module-15-agent-requests</module>
@@ -67,6 +72,10 @@
         <!-- Part 7: Spring Boot Integration (requires Java 21) -->
         <module>module-23-spring-boot-agent</module>
         <module>module-24-spring-boot-client</module>
+        <!-- Chatbot portability flavor: Spring AI ChatClient on the ACP starter -->
+        <module>module-26-spring-ai-chatbot</module>
+        <!-- Chatbot portability flavor: LangChain4j ChatModel -->
+        <module>module-27-langchain4j-chatbot</module>
 
         <!-- Part 8: IDE Integration -->
         <module>module-28-zed-integration</module>
@@ -95,6 +104,13 @@
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor.version}</version>
+            </dependency>
+            <!-- Anthropic Java SDK (chatbot agent, module 25). Aggregator jar:
+                 pulls in anthropic-java-core + anthropic-java-client-okhttp. -->
+            <dependency>
+                <groupId>com.anthropic</groupId>
+                <artifactId>anthropic-java</artifactId>
+                <version>${anthropic-sdk.version}</version>
             </dependency>
             <!-- ACP Spring Boot Starter -->
             <dependency>

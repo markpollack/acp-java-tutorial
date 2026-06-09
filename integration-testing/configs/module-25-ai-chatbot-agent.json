@@ -1,0 +1,15 @@
+{
+  "moduleId": "module-25-ai-chatbot-agent",
+  "displayName": "Module 25: AI Chatbot Agent",
+  "timeoutSec": 150,
+  "requiredEnv": ["ANTHROPIC_API_KEY"],
+  "requiresPackage": true,
+  "expectedBehavior": "Run an ACP agent whose promptHandler calls Claude (via the Anthropic Java SDK) instead of echoing. The demo client launches the ChatbotAgent as a subprocess, asks it to write a haiku about debugging code, then in the SAME session asks it to turn that haiku into a limerick. The agent should stream a genuine, non-echoed AI-generated response to each prompt, and the limerick should clearly be derived from the haiku (demonstrating per-session conversation memory). Each turn should end with stop reason END_TURN.",
+  "requiredOutput": [
+    "=== Module 25: AI Chatbot Agent Demo ===",
+    "Connected to ChatbotAgent (powered by Claude)!",
+    "You: Write a haiku about debugging code.",
+    "You: Now turn that haiku into a limerick.",
+    "stop reason: END_TURN"
+  ]
+}
