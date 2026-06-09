@@ -65,12 +65,15 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ## Module map
 
+> 🤖 = talks to a real AI. Unmarked modules teach the protocol with an echo agent —
+> in ACP the AI is just one line in the prompt handler.
+
 ### Build an agent — the core path
 
 | Module | Title | What you'll learn |
 |--------|-------|-------------------|
 | 12 | [Echo Agent](module-12-echo-agent/) | A minimal ACP agent (~25 lines) — the reveal |
-| **25** | [**AI Chatbot Agent**](module-25-ai-chatbot-agent/) | **The same agent, but the prompt handler calls Claude and streams** |
+| **25** | 🤖 [**AI Chatbot Agent**](module-25-ai-chatbot-agent/) | **The same agent, but the prompt handler calls Claude and streams** |
 | 14 | [Sending Updates](module-14-sending-updates/) | Stream all update types to clients |
 | 15 | [Agent Requests](module-15-agent-requests/) | Request files / permissions from the client |
 | 18 | [Terminal Operations](module-18-terminal-operations/) | Execute commands via the terminal API |
@@ -79,8 +82,8 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 > **Portability — same chatbot, any provider:** the module-25 agent rebuilt on the
 > two top Java AI frameworks, so the model is a swap-a-dependency choice:
-> [Module 26 — Spring AI `ChatClient`](module-26-spring-ai-chatbot/) ·
-> [Module 27 — LangChain4j `ChatModel`](module-27-langchain4j-chatbot/). The ACP
+> 🤖 [Module 26 — Spring AI `ChatClient`](module-26-spring-ai-chatbot/) ·
+> 🤖 [Module 27 — LangChain4j `ChatModel`](module-27-langchain4j-chatbot/). The ACP
 > agent never changes — only the line that talks to the model does.
 
 ### Run it in your IDE
@@ -93,14 +96,14 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 | Module | Title | What you'll learn |
 |--------|-------|-------------------|
-| 01 | [First Contact](module-01-first-contact/) | Launch an agent CLI, get your first response |
-| 02 | [Protocol Basics](module-02-protocol-basics/) | The `initialize` handshake and capability exchange |
-| 03 | [Sessions](module-03-sessions/) | Session creation and lifecycle |
-| 04 | [Prompts](module-04-prompts/) | Prompt requests and response handling |
-| 05 | [Streaming Updates](module-05-streaming-updates/) | Receive real-time updates during prompts |
-| 06 | [Update Types](module-06-update-types/) | All `SessionUpdate` types in depth |
-| 07 | [Agent Requests](module-07-agent-requests/) | Respond to file read/write requests |
-| 08 | [Permissions](module-08-permissions/) | Handle permission requests from agents |
+| 01 | 🤖 [First Contact](module-01-first-contact/) | Launch an agent CLI, get your first response |
+| 02 | 🤖 [Protocol Basics](module-02-protocol-basics/) | The `initialize` handshake and capability exchange |
+| 03 | 🤖 [Sessions](module-03-sessions/) | Session creation and lifecycle |
+| 04 | 🤖 [Prompts](module-04-prompts/) | Prompt requests and response handling |
+| 05 | 🤖 [Streaming Updates](module-05-streaming-updates/) | Receive real-time updates during prompts |
+| 06 | 🤖 [Update Types](module-06-update-types/) | All `SessionUpdate` types in depth |
+| 07 | 🤖 [Agent Requests](module-07-agent-requests/) | Respond to file read/write requests |
+| 08 | 🤖 [Permissions](module-08-permissions/) | Handle permission requests from agents |
 
 ### Production & advanced
 
@@ -113,7 +116,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | 17 | [Capability Negotiation](module-17-capability-negotiation/) | Advertise and check capabilities |
 | 19 | [MCP Servers](module-19-mcp-servers/) | Pass MCP server configs to agents |
 | 20 | [Session Management](module-20-session-management/) | List, resume, and close sessions |
-| 21 | [Async Client](module-21-async-client/) | Reactive client with `Mono` |
+| 21 | 🤖 [Async Client](module-21-async-client/) | Reactive client with `Mono` |
 | 22 | [Async Agent](module-22-async-agent/) | Build agents with `AcpAgent.async()` |
 | 24 | [Spring Boot Client](module-24-spring-boot-client/) | Autoconfigured `AcpSyncClient` |
 
