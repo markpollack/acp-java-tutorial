@@ -1,8 +1,8 @@
-# Module 29: JetBrains Integration
+# Module 29: Run It in Your IDE (JetBrains, Zed, VS Code)
 
 > Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/29-jetbrains-integration
 
-Connect your Java ACP agent to JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.).
+Connect your Java ACP agent to JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.) — and, with the same JAR, to Zed and VS Code (see [Other ACP editors](#other-acp-editors--same-jar-different-config) below).
 
 ## Overview
 
@@ -148,15 +148,47 @@ java -jar module-29-jetbrains-integration/target/jetbrains-agent.jar
 # [JetBrainsAgent] Ready - waiting for IDE to connect...
 ```
 
-## Next Steps
+## Other ACP editors — same JAR, different config
 
-- **Module 30**: Connect to VS Code using the community extension
+The **same agent JAR** works in any ACP client; only the configuration differs.
+
+### Zed
+
+Zed was the first editor with full ACP support. Open Zed settings (`Cmd/Ctrl+,`) and add:
+
+```json
+{
+  "agent_servers": {
+    "Java Tutorial Agent": {
+      "type": "custom",
+      "command": "java",
+      "args": ["-jar", "/absolute/path/to/jetbrains-agent.jar"]
+    }
+  }
+}
+```
+
+Pick the agent in Zed's Agent Panel. Hold `cmd`/`ctrl` when submitting (or click the
+crosshair icon) to enable follow-along navigation.
+
+### VS Code
+
+VS Code has no native ACP support yet, but the community
+[vscode-acp](https://marketplace.visualstudio.com/items?itemName=omercnet.vscode-acp)
+extension provides it. Install it (`code --install-extension omercnet.vscode-acp`),
+then expose the agent on your `PATH` with a wrapper script — the extension
+auto-detects agents from `PATH`:
+
+```bash
+cat > ~/.local/bin/java-tutorial-agent <<'EOF'
+#!/bin/bash
+exec java -jar /absolute/path/to/jetbrains-agent.jar "$@"
+EOF
+chmod +x ~/.local/bin/java-tutorial-agent
+```
 
 ## Key Takeaway
 
-The **same agent code** works across all ACP-compatible editors. You built one JAR that works in:
-- Zed (Module 28)
-- JetBrains (this module)
-- VS Code (Module 30)
-
-This is the power of ACP!
+The **same agent code** works across every ACP-compatible editor — JetBrains, Zed,
+and VS Code all launch the one JAR you built. Write once, run in any IDE. That's the
+power of ACP.

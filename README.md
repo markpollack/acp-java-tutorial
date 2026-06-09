@@ -21,9 +21,9 @@ watch it grow up.
    This is the first place in the tutorial where you can point at the line of Java
    that invokes the AI.
 3. **[Module 29 — Run it in your IDE](module-29-jetbrains-integration/)** — plug your
-   agent into IntelliJ (or [Zed](module-28-zed-integration/) /
-   [VS Code](module-30-vscode-integration/)) and chat with it inside the editor.
-   The *same JAR* works in all three — only the config differs.
+   agent into IntelliJ (or [Zed / VS Code](module-29-jetbrains-integration/#other-acp-editors--same-jar-different-config))
+   and chat with it inside the editor. The *same JAR* works in all three — only the
+   config differs.
 4. **Make it real:** [14 sending updates](module-14-sending-updates/) ·
    [15 files & permissions](module-15-agent-requests/) ·
    [18 terminal](module-18-terminal-operations/) ·
@@ -85,11 +85,9 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ### Run it in your IDE
 
-| Module | Title | Editor docs |
-|--------|-------|-------------|
-| 29 | [JetBrains Integration](module-29-jetbrains-integration/) | [JetBrains ACP](https://www.jetbrains.com/help/ai-assistant/acp.html) |
-| 28 | [Zed Integration](module-28-zed-integration/) | [Zed ACP](https://zed.dev/docs/ai/external-agents) |
-| 30 | [VS Code Integration](module-30-vscode-integration/) | [vscode-acp](https://github.com/formulahendry/vscode-acp) |
+| Module | Title | What you'll learn |
+|--------|-------|-------------------|
+| 29 | [Run it in your IDE](module-29-jetbrains-integration/) | Plug your agent into JetBrains, Zed, or VS Code — same JAR, different config |
 
 ### Be a client — talk to an existing agent (no API key in the tutorial code)
 

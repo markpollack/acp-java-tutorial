@@ -77,10 +77,8 @@
         <!-- Chatbot portability flavor: LangChain4j ChatModel -->
         <module>module-27-langchain4j-chatbot</module>
 
-        <!-- Part 8: IDE Integration -->
-        <module>module-28-zed-integration</module>
+        <!-- Part 8: IDE Integration (one module covers JetBrains, Zed, VS Code) -->
         <module>module-29-jetbrains-integration</module>
-        <module>module-30-vscode-integration</module>
     </modules>
 
     <dependencyManagement>
