@@ -49,7 +49,6 @@
              promptHandler calls a real LLM (Anthropic). First module where you
              can point at the line of Java that invokes the AI. -->
         <module>module-25-ai-chatbot-agent</module>
-        <module>module-13-agent-handlers</module>
         <module>module-14-sending-updates</module>
         <module>module-15-agent-requests</module>
 

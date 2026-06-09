@@ -11,7 +11,7 @@ acp-java-tutorial/
 ├── module-07-agent-requests/    # Client-side file handlers
 ├── module-08-permissions/       # Permission handling
 ├── module-12-echo-agent/        # Minimal echo agent (the "reveal")
-├── module-13-agent-handlers/    # All handler types
+├── module-25-ai-chatbot-agent/  # Echo agent + a real LLM (the "juicier" reveal)
 ├── module-14-sending-updates/   # Agent sends all update types
 ├── module-15-agent-requests/    # Agent requests files/permissions
 ├── module-16-in-memory-testing/ # In-memory transport testing

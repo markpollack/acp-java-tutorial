@@ -50,7 +50,6 @@ jbang RunIntegrationTest.java --list
 | Module | Description |
 |--------|-------------|
 | module-12-echo-agent | Minimal echo agent |
-| module-13-agent-handlers | All handler types |
 | module-14-sending-updates | Agent sends all update types |
 | module-15-agent-requests | Agent requests files/permissions |
 | module-16-in-memory-testing | In-memory transport testing |

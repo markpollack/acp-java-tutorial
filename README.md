@@ -109,7 +109,6 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | 09 | [Session Resume](module-09-session-resume/) | Load and resume existing sessions |
 | 10 | [Cancellation](module-10-cancellation/) | Cancel in-progress operations |
 | 11 | [Error Handling](module-11-error-handling/) | Handle protocol errors |
-| 13 | [Agent Handlers](module-13-agent-handlers/) | All handler types, in one place |
 | 16 | [In-Memory Testing](module-16-in-memory-testing/) | Test client + agent without subprocesses |
 | 17 | [Capability Negotiation](module-17-capability-negotiation/) | Advertise and check capabilities |
 | 19 | [MCP Servers](module-19-mcp-servers/) | Pass MCP server configs to agents |
