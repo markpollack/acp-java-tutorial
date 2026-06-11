@@ -1,31 +1,48 @@
-# Module 25: AI Chatbot Agent — Give Your Agent a Brain
+# Module 25: AI Chatbot Agent — Give Your Agent a Brain (and switch to annotations)
 
-Module 12's echo agent showed you the *shape* of an ACP agent. It echoed.
-This module keeps that exact shape and gives it a **brain**: the `promptHandler`
-calls Claude and streams a real answer back.
+Module 12's echo agent showed you the *shape* of an ACP agent with the fluent
+builder (`AcpAgent.sync().promptHandler(...)`). This module gives it a **brain** —
+and that's exactly the moment to switch to the **`@AcpAgent` annotation API**.
+Once the prompt handler does real work (call an LLM, stream chunks, keep
+history), a labelled `@Prompt` *method* reads far better than a builder lambda:
+the ACP plumbing disappears and what's left is one method you can point at.
 
-This is the first module in the tutorial where you can **point at the line of
-Java that invokes the AI**:
+This is the first module where you can **point at the line of Java that invokes
+the AI** — now inside a clean `@Prompt` method:
 
 ```java
 anthropic.messages().createStreaming(params.build())
 ```
 
-In the client modules (01–08) the AI lived inside the Gemini subprocess; in the
-other agent modules (12–22) the agent just echoed. Here the LLM call is right in
-front of you — and it's an ordinary method call you can swap for any provider.
+## Two ways to run an annotated agent
+
+The annotations (`@Initialize` / `@NewSession` / `@Prompt`) are identical whether
+or not you use Spring:
+
+- **Module 23** lets **Spring Boot** discover the `@AcpAgent` bean and manage its
+  lifecycle for you.
+- **This module** bootstraps it **by hand, no Spring** — so you can see exactly
+  what the annotations buy you. `AcpAgentSupport` scans the instance and wires
+  each annotated method to the transport:
+
+  ```java
+  AcpAgentSupport.create(new ChatbotAgent())   // scans @Initialize/@NewSession/@Prompt
+      .transport(new StdioAcpAgentTransport())
+      .build()
+      .run();                                  // start, then block until the client leaves
+  ```
 
 ## The one-method diff from the echo agent
 
-`initializeHandler` and `newSessionHandler` are **identical** to module 12.
-Only the `promptHandler` changes:
+`@Initialize` and `@NewSession` are **identical boilerplate** to module 12's
+handlers. Only `@Prompt` does anything interesting:
 
-| | Echo agent (module 12) | Chatbot agent (this module) |
+| | Echo agent (module 12, fluent) | Chatbot agent (this module, annotated) |
 |---|---|---|
-| `promptHandler` | `context.sendMessage("Echo: " + text)` | call Claude, stream the answer back |
+| prompt | `context.sendMessage("Echo: " + text)` | call Claude, stream the answer back |
 
-That's the whole point: *an ACP agent is just three handlers; the value is what
-you put in the prompt handler.*
+That's the whole point: *an ACP agent is just three handlers — fluent lambdas or
+annotated methods — and the value is what you put in the prompt handler.*
 
 ## Prerequisites
 

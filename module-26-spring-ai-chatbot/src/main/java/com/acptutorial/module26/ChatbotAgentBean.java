@@ -32,6 +32,9 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,8 +46,14 @@ public class ChatbotAgentBean {
     // Spring AI autoconfigures a ChatClient.Builder from the model starter on the
     // classpath (here: spring-ai-starter-model-anthropic).
     public ChatbotAgentBean(ChatClient.Builder builder) {
+        // Conversation memory, the Spring AI way. Module 25 kept its own
+        // List<MessageParam> per session by hand; here a sliding window of the last
+        // 20 messages lives in a ChatMemory (in-memory by default), and an advisor
+        // injects it into every call. That's the minimum for a multi-turn chatbot.
+        ChatMemory chatMemory = MessageWindowChatMemory.builder().maxMessages(20).build();
         this.chatClient = builder
             .defaultSystem("You are a concise, friendly assistant running as an ACP agent inside an IDE.")
+            .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
             .build();
     }
 
@@ -60,16 +69,19 @@ public class ChatbotAgentBean {
 
     @Prompt
     public PromptResponse prompt(PromptRequest request, SyncPromptContext context) {
-        // The one line that differs from the echo agent: ask the model.
+        // Ask the model. The CONVERSATION_ID param scopes the memory window to this
+        // ACP session, so each IDE chat keeps its own history and follow-ups have context.
         String answer = chatClient.prompt()
             .user(request.text())
+            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, context.getSessionId()))
             .call()
             .content();
         context.sendMessage(answer);
         return PromptResponse.endTurn();
         // Streaming variant (Spring AI returns a Flux<String>):
-        //   chatClient.prompt().user(request.text()).stream().content()
-        //       .toStream().forEach(context::sendMessage);
+        //   chatClient.prompt().user(request.text())
+        //       .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, context.getSessionId()))
+        //       .stream().content().toStream().forEach(context::sendMessage);
     }
 
 }

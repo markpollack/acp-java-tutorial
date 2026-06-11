@@ -23,6 +23,7 @@
         <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
         <reactor.version>3.6.0</reactor.version>
         <slf4j.version>2.0.9</slf4j.version>
+        <agentworks.version>1.6.0</agentworks.version>
     </properties>
 
     <modules>
@@ -75,6 +76,9 @@
         <module>module-26-spring-ai-chatbot</module>
         <!-- Chatbot portability flavor: LangChain4j ChatModel -->
         <module>module-27-langchain4j-chatbot</module>
+        <!-- Agentic flavor: the @Prompt handler drives a real Claude AGENT (tools,
+             multi-step loop) via agent-client - the bridge between the chatbot and bud. -->
+        <module>module-32-agent-client</module>
 
         <!-- Part 8: IDE Integration (one module covers JetBrains, Zed, VS Code) -->
         <module>module-29-jetbrains-integration</module>
@@ -85,6 +89,19 @@
             <dependency>
                 <groupId>com.agentclientprotocol</groupId>
                 <artifactId>acp-core</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
+            <!-- Pin acp-annotations to the SDK version. acp-core 0.14.0 transitively
+                 declares acp-annotations 0.12.0, which predates @Logout and breaks
+                 AcpAgentSupport's handler discovery; depMgmt forces the matching version. -->
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-annotations</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-agent-support</artifactId>
                 <version>${acp-sdk.version}</version>
             </dependency>
             <dependency>
@@ -108,6 +125,15 @@
                 <groupId>com.anthropic</groupId>
                 <artifactId>anthropic-java</artifactId>
                 <version>${anthropic-sdk.version}</version>
+            </dependency>
+            <!-- agent-client (agentworks): the AgentClient abstraction + Claude model,
+                 for the agentic module (32). Versions managed by the BOM. -->
+            <dependency>
+                <groupId>io.github.markpollack</groupId>
+                <artifactId>agentworks-bom</artifactId>
+                <version>${agentworks.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!-- ACP Spring Boot Starter -->
             <dependency>

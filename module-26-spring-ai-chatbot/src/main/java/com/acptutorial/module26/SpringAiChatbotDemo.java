@@ -60,12 +60,21 @@ public class SpringAiChatbotDemo {
             String cwd = System.getProperty("user.dir");
             var session = client.newSession(new NewSessionRequest(cwd, List.of()));
 
-            String question = "In one sentence, what does Spring AI's ChatClient do?";
+            String question = "Write a haiku about debugging code.";
             System.out.println("You: " + question);
             System.out.print("Claude: ");
             var response = client.prompt(new PromptRequest(
                 session.sessionId(), List.of(new TextContent(question))));
             System.out.println("\n(stop reason: " + response.stopReason() + ")");
+
+            // Same session, follow-up that only works if memory is wired: the model
+            // must recall the haiku it just wrote. (ChatMemory does this for us.)
+            String followUp = "Now turn that haiku into a limerick.";
+            System.out.println("\nYou: " + followUp);
+            System.out.print("Claude: ");
+            var response2 = client.prompt(new PromptRequest(
+                session.sessionId(), List.of(new TextContent(followUp))));
+            System.out.println("\n(stop reason: " + response2.stopReason() + ")");
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
