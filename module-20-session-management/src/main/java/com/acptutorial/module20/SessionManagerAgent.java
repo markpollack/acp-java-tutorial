@@ -86,6 +86,7 @@ public class SessionManagerAgent {
                         state.title() != null ? state.title()
                             : "Session with " + state.messages().size() + " messages",
                         state.createdAt().toString(),
+                        null,
                         null));
                 }
 
