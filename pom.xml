@@ -17,11 +17,10 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <acp-sdk.version>0.15.0</acp-sdk.version>
+        <acp-sdk.version>0.18.0</acp-sdk.version>
         <spring-boot.version>4.1.0</spring-boot.version>
-        <acp-autoconfig.version>0.11.1</acp-autoconfig.version>
+        <acp-autoconfig.version>0.12.0</acp-autoconfig.version>
         <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
-        <reactor.version>3.6.0</reactor.version>
         <slf4j.version>2.0.9</slf4j.version>
         <agentworks.version>1.6.0</agentworks.version>
     </properties>
@@ -99,6 +98,19 @@
                 <artifactId>acp-annotations</artifactId>
                 <version>${acp-sdk.version}</version>
             </dependency>
+            <!-- JSON modules. From 0.18.0, acp-core carries no JSON implementation: a module
+                 that depends on acp-core alone must add one. Plain Java modules use Jackson 2;
+                 the Spring Boot 4 modules get Jackson 3 from the ACP starter. -->
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-json-jackson2</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-json-jackson3</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.agentclientprotocol</groupId>
                 <artifactId>acp-agent-support</artifactId>
@@ -113,11 +125,6 @@
                 <groupId>com.agentclientprotocol</groupId>
                 <artifactId>acp-test</artifactId>
                 <version>${acp-sdk.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>${reactor.version}</version>
             </dependency>
             <!-- Anthropic Java SDK (chatbot agent, module 25). Aggregator jar:
                  pulls in anthropic-java-core + anthropic-java-client-okhttp. -->

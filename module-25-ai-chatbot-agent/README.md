@@ -100,8 +100,8 @@ try (StreamResponse<RawMessageStreamEvent> stream =
 ```
 
 The client coalesces consecutive `agent_message_chunk` updates into one growing
-assistant message. (ACP 0.13+ adds `sendMessage(text, messageId)` for explicit
-grouping; on 0.12 you stream chunk-by-chunk as above.)
+assistant message. (`sendMessage(text, messageId)` groups chunks explicitly by
+message ID; this module streams chunk-by-chunk as above.)
 
 ## Conversation memory
 

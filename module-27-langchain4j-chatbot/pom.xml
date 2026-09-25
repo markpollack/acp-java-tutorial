@@ -23,9 +23,10 @@
             <groupId>com.agentclientprotocol</groupId>
             <artifactId>acp-core</artifactId>
         </dependency>
+        <!-- acp-core has no JSON implementation from 0.18.0; this module uses Jackson 2 -->
         <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
+            <groupId>com.agentclientprotocol</groupId>
+            <artifactId>acp-json-jackson2</artifactId>
         </dependency>
         <!-- The portability layer: LangChain4j. Swap langchain4j-anthropic for
              langchain4j-open-ai / -google-ai-gemini / -ollama to change provider. -->
