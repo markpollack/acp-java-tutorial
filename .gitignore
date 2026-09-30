@@ -27,6 +27,9 @@ plans/
 mystery.txt
 hello.txt
 summary.txt
+# Module 32's agent writes into the project the IDE has open; for this
+# repository, that is the root directory
+haiku.txt
 
 # Integration test logs
 integration-testing/logs/
