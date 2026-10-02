@@ -4,7 +4,8 @@
  * Deep dive into the ACP initialize handshake and version negotiation.
  *
  * Key APIs exercised:
- * - InitializeRequest - protocol version, client capabilities
+ * - AcpClient.sync(...).clientCapabilities(...) - the capabilities the client advertises
+ * - initialize() - sends the protocol version and those capabilities
  * - InitializeResponse - agent capabilities, supported features
  * - Version negotiation semantics
  *
@@ -22,9 +23,9 @@ import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
+import com.agentclientprotocol.sdk.spec.AcpSchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 
 public class ProtocolBasics {
 
@@ -37,7 +38,16 @@ public class ProtocolBasics {
 
         var transport = new StdioAcpClientTransport(params);
 
-        try (AcpSyncClient client = AcpClient.sync(transport).build()) {
+        // The client's capabilities are set on the builder: what the client advertises
+        // in the initialize request is also what its handlers honour.
+        var clientCapabilities = new ClientCapabilities(
+            new FileSystemCapability(true, true),  // We can read/write files
+            false  // No terminal support
+        );
+
+        try (AcpSyncClient client = AcpClient.sync(transport)
+                .clientCapabilities(clientCapabilities)
+                .build()) {
 
             System.out.println("=== Module 02: Protocol Basics ===\n");
 
@@ -45,26 +55,16 @@ public class ProtocolBasics {
             // 1. Protocol version - ensures client and agent speak the same language
             // 2. Capabilities - what features each side supports
 
-            // Create explicit InitializeRequest to show all fields
-            var clientCapabilities = new ClientCapabilities(
-                new FileSystemCapability(true, true),  // We can read/write files
-                false  // No terminal support
-            );
-
-            var initRequest = new InitializeRequest(
-                1,  // Protocol version 1
-                clientCapabilities
-            );
-
             System.out.println("Sending initialize request:");
-            System.out.println("  Protocol version: 1");
+            System.out.println("  Protocol version: " + AcpSchema.LATEST_PROTOCOL_VERSION);
             System.out.println("  Client capabilities:");
             System.out.println("    - FileSystem: read=true, write=true");
             System.out.println("    - Terminal: false");
             System.out.println();
 
-            // Send the initialize request
-            var response = client.initialize(initRequest);
+            // Send the initialize request: the SDK's protocol version plus the
+            // capabilities from the builder
+            var response = client.initialize();
 
             System.out.println("Received initialize response:");
             System.out.println("  Protocol version: " + response.protocolVersion());

@@ -28,7 +28,6 @@ import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
@@ -93,6 +92,7 @@ public class CapabilityDemo {
         var transport = new StdioAcpClientTransport(params);
 
         try (AcpSyncClient client = AcpClient.sync(transport)
+                .clientCapabilities(clientCaps)  // what initialize() advertises
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
@@ -119,8 +119,8 @@ public class CapabilityDemo {
                 })
                 .build()) {
 
-            // Initialize with explicit capabilities (the builder method is buggy, so we use InitializeRequest directly)
-            client.initialize(new InitializeRequest(1, clientCaps));
+            // Initialize: sends the capabilities set on the builder
+            client.initialize();
 
             NegotiatedCapabilities agentCaps = client.getAgentCapabilities();
             System.out.println("\n  Agent capabilities:");

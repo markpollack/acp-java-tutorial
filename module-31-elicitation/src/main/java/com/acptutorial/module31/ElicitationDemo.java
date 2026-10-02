@@ -35,8 +35,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationSchema;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.IntegerPropertySchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.MultiSelectPropertySchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
@@ -62,7 +60,14 @@ public class ElicitationDemo {
 
         var transport = new StdioAcpClientTransport(params);
 
+        // Advertise the elicitation modes this client handles: form only.
+        // The agent may not request a mode the client did not advertise.
+        var caps = ClientCapabilities.builder()
+            .elicitation(ElicitationCapabilities.formOnly())
+            .build();
+
         try (AcpSyncClient client = AcpClient.sync(transport)
+                .clientCapabilities(caps)
                 .sessionUpdateConsumer(notification -> {
                     if (notification.update() instanceof AgentMessageChunk msg) {
                         System.out.print(((TextContent) msg.content()).text());
@@ -73,13 +78,7 @@ public class ElicitationDemo {
 
             System.out.println("=== Module 31: Elicitation ===\n");
 
-            // Advertise the elicitation modes this client handles: form only.
-            // The agent may not request a mode the client did not advertise.
-            var caps = new ClientCapabilities(
-                new FileSystemCapability(), false,
-                null, null,                          // session, auth
-                ElicitationCapabilities.formOnly(), null);
-            client.initialize(new InitializeRequest(1, caps));
+            client.initialize();
             System.out.println("Connected to ElicitationAgent\n");
 
             String cwd = System.getProperty("user.dir");

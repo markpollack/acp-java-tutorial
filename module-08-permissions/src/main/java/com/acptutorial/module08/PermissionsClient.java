@@ -42,7 +42,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionCancelled;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionOption;
@@ -77,8 +76,14 @@ public class PermissionsClient {
         var transport = new StdioAcpClientTransport(params);
         var scanner = new Scanner(System.in);
 
+        // File system capabilities are set on the builder, with the file handlers below
+        var clientCaps = new ClientCapabilities(
+            new FileSystemCapability(true, true),  // read=true, write=true
+            false);
+
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .requestTimeout(Duration.ofMinutes(2))  // User needs time to respond
+                .clientCapabilities(clientCaps)
                 // File handlers - required for agent to actually read/write files
                 .readTextFileHandler(PermissionsClient::handleReadFile)
                 .writeTextFileHandler(PermissionsClient::handleWriteFile)
@@ -146,11 +151,8 @@ public class PermissionsClient {
                 })
                 .build()) {
 
-            // Initialize with file system capabilities
-            var clientCaps = new ClientCapabilities(
-                new FileSystemCapability(true, true),  // read=true, write=true
-                false);
-            client.initialize(new InitializeRequest(1, clientCaps));
+            // Initialize: advertises the file system capabilities set on the builder
+            client.initialize();
             System.out.println("Connected to agent with file system capabilities\n");
 
             // Create session

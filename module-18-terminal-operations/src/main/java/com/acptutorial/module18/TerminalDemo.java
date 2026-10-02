@@ -32,7 +32,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateTerminalResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ReleaseTerminalResponse;
@@ -74,6 +73,7 @@ public class TerminalDemo {
         );
 
         try (AcpSyncClient client = AcpClient.sync(transport)
+                .clientCapabilities(clientCaps)
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
@@ -176,8 +176,8 @@ public class TerminalDemo {
                 })
                 .build()) {
 
-            // Initialize with terminal capability
-            client.initialize(new InitializeRequest(1, clientCaps));
+            // Initialize: advertises the terminal capability set on the builder
+            client.initialize();
             System.out.println("Connected to TerminalAgent\n");
 
             String cwd = System.getProperty("user.dir");

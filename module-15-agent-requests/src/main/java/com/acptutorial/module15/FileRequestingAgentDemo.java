@@ -23,7 +23,6 @@ import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionSelected;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
@@ -48,7 +47,12 @@ public class FileRequestingAgentDemo {
 
         var transport = new StdioAcpClientTransport(params);
 
+        // File system capabilities: set on the builder, advertised by initialize()
+        var caps = new ClientCapabilities(
+            new FileSystemCapability(true, true), false);
+
         try (AcpSyncClient client = AcpClient.sync(transport)
+                .clientCapabilities(caps)
                 // Handle agent's file read requests
                 // Error handling: throw exceptions - SDK converts to JSON-RPC errors
                 .readTextFileHandler((ReadTextFileRequest req) -> {
@@ -99,10 +103,8 @@ public class FileRequestingAgentDemo {
 
             System.out.println("=== Module 15: Agent File Requests Demo ===\n");
 
-            // Initialize with file system capabilities
-            var caps = new ClientCapabilities(
-                new FileSystemCapability(true, true), false);
-            client.initialize(new InitializeRequest(1, caps));
+            // Initialize: advertises the file system capabilities set on the builder
+            client.initialize();
             System.out.println("Connected with file capabilities!\n");
 
             String cwd = System.getProperty("user.dir");

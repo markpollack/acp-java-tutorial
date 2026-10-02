@@ -6,7 +6,7 @@
  * Key APIs exercised:
  * - SyncSpec.readTextFileHandler() - handle file read requests
  * - SyncSpec.writeTextFileHandler() - handle file write requests
- * - ClientCapabilities with FileSystemCapability - advertise capabilities
+ * - SyncSpec.clientCapabilities() with FileSystemCapability - advertise capabilities
  * - ReadTextFileRequest/Response - file read types
  * - WriteTextFileRequest/Response - file write types
  *
@@ -41,7 +41,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ReadTextFileRequest;
@@ -73,9 +72,15 @@ public class AgentRequestsClient {
 
         var transport = new StdioAcpClientTransport(params);
 
+        // Advertise file system capabilities: the builder is where the client sets them
+        var clientCaps = new ClientCapabilities(
+            new FileSystemCapability(true, true),  // read=true, write=true
+            false);
+
         // Build client with file handlers and session updates
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .requestTimeout(java.time.Duration.ofSeconds(60))  // Give agent more time
+                .clientCapabilities(clientCaps)
                 .readTextFileHandler(AgentRequestsClient::handleReadFile)
                 .writeTextFileHandler(AgentRequestsClient::handleWriteFile)
                 .sessionUpdateConsumer(notification -> {
@@ -94,11 +99,7 @@ public class AgentRequestsClient {
                 })
                 .build()) {
 
-            // Advertise file system capabilities
-            var clientCaps = new ClientCapabilities(
-                new FileSystemCapability(true, true),  // read=true, write=true
-                false);
-            client.initialize(new InitializeRequest(1, clientCaps));
+            client.initialize();
             System.out.println("Connected to agent with file system capabilities\n");
 
             var session = client.newSession(new NewSessionRequest(workDir.toString(), List.of()));
