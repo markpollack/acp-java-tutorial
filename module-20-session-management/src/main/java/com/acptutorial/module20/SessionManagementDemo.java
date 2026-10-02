@@ -118,8 +118,10 @@ public class SessionManagementDemo {
             // Compare with loadSession (module 09) which replays previous messages.
             var resumed = client.resumeSession(new ResumeSessionRequest(
                 session1.sessionId(), cwd, List.of()));
+            // A resumed session reports its modes and its config options (model
+            // selection, for one, is a config option with category "model").
             System.out.println("Session resumed (modes: " + resumed.modes() +
-                ", models: " + resumed.models() + ")");
+                ", configOptions: " + resumed.configOptions() + ")");
 
             // Continue the conversation — session state is still there
             System.out.println("\nSending message after resume...");
