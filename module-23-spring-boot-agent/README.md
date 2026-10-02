@@ -30,4 +30,4 @@ Build an ACP agent as a Spring Boot application using `@AcpAgent` annotations an
 
 ## Documentation
 
-See the [tutorial page](https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/23-spring-boot-agent) for the full walkthrough.
+See the [tutorial page](https://lab.pollack.ai/docs/acp-java-sdk/tutorial/23-spring-boot-agent) for the full walkthrough.

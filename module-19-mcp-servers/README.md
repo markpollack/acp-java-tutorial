@@ -4,7 +4,7 @@ Pass MCP server configurations to agents when creating sessions.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/19-mcp-servers
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/19-mcp-servers
 
 ## Running
 

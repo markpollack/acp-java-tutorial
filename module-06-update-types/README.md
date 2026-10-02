@@ -4,7 +4,7 @@ All seven SessionUpdate types and how to handle them.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/06-update-types
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/06-update-types
 
 ## Running
 

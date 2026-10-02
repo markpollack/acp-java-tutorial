@@ -4,7 +4,7 @@ The reactive, non-blocking version of Module 12 (Echo Agent).
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/22-async-agent
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/22-async-agent
 
 ## Running
 

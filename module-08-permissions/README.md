@@ -4,7 +4,7 @@ Handle permission requests from agents on the client side.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/08-permissions
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/08-permissions
 
 ## Running
 

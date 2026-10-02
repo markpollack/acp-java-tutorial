@@ -4,7 +4,7 @@ Client and agent agree on what each supports during initialization.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/17-capability-negotiation
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/17-capability-negotiation
 
 ## Running
 

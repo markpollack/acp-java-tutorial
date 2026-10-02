@@ -4,7 +4,7 @@ Session lifecycle — create, use, and manage sessions.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/03-sessions
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/03-sessions
 
 ## Running
 

@@ -4,7 +4,7 @@ Cancel an in-progress prompt from the client side.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/10-cancellation
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/10-cancellation
 
 ## Running
 

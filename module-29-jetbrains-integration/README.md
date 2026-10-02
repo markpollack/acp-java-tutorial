@@ -1,6 +1,6 @@
 # Module 29: Run It in Your IDE (JetBrains, Zed, VS Code)
 
-> Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/29-jetbrains-integration
+> Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/29-jetbrains-integration
 
 Connect your Java ACP agent to JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.) — and, with the same JAR, to Zed and VS Code (see [Other ACP editors](#other-acp-editors--same-jar-different-config) below).
 

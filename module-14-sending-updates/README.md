@@ -4,7 +4,7 @@ Send all seven SessionUpdate types from an agent to its client.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/14-sending-updates
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/14-sending-updates
 
 ## Running
 

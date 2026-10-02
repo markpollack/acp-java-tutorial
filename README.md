@@ -1,6 +1,6 @@
 # ACP Java Tutorial
 
-> **Documentation**: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial | [API Reference](https://springaicommunity.mintlify.app/acp-java-sdk/reference/java)
+> **Documentation**: https://lab.pollack.ai/docs/acp-java-sdk/tutorial | [API Reference](https://lab.pollack.ai/docs/acp-java-sdk/reference/java)
 
 A progressive, hands-on tutorial for the **[Agent Client Protocol (ACP)](https://agentclientprotocol.com/)** Java SDK.
 
@@ -162,6 +162,6 @@ jbang RunIntegrationTest.java module-25-ai-chatbot-agent   # needs ANTHROPIC_API
 ## Related projects
 
 - [ACP Java SDK](https://github.com/agentclientprotocol/java-sdk) — the SDK this tutorial teaches
-- [ACP Java SDK Documentation](https://springaicommunity.mintlify.app/acp-java-sdk) — full docs + API reference
+- [ACP Java SDK Documentation](https://lab.pollack.ai/docs/acp-java-sdk) — full docs + API reference
 - [Agent Client Protocol](https://agentclientprotocol.com) — the official specification
 - **Other ACP SDKs:** [Kotlin](https://github.com/agentclientprotocol/kotlin-sdk) | [Python](https://github.com/agentclientprotocol/python-sdk) | [TypeScript](https://github.com/agentclientprotocol/typescript-sdk) | [Rust](https://github.com/agentclientprotocol/rust-sdk)

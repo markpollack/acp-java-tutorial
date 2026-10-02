@@ -4,7 +4,7 @@ Receive real-time session updates (messages, thoughts, tool calls, plans) during
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/05-streaming-updates
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/05-streaming-updates
 
 ## Running
 

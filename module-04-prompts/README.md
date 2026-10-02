@@ -4,7 +4,7 @@ Deep dive into prompt requests, responses, and stop reasons.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/04-prompts
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/04-prompts
 
 ## Running
 

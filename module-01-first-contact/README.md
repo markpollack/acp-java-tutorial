@@ -4,7 +4,7 @@ Your first ACP client — connect to the Grok agent and send a prompt.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/01-first-contact
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/01-first-contact
 
 ## Running
 

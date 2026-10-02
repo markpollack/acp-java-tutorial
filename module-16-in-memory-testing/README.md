@@ -4,7 +4,7 @@ Test client-agent communication without subprocesses using `InMemoryTransportPai
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/16-in-memory-testing
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/16-in-memory-testing
 
 ## Running
 

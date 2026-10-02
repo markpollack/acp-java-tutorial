@@ -4,7 +4,7 @@ Build a minimal ACP agent in ~25 lines. No API key required.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/12-echo-agent
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/12-echo-agent
 
 ## Running
 

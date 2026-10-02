@@ -24,4 +24,4 @@ Requires Module 23's agent JAR:
 
 ## Documentation
 
-See the [tutorial page](https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/24-spring-boot-client) for the full walkthrough.
+See the [tutorial page](https://lab.pollack.ai/docs/acp-java-sdk/tutorial/24-spring-boot-client) for the full walkthrough.

@@ -4,7 +4,7 @@ Execute shell commands on the client through the terminal API.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/18-terminal-operations
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/18-terminal-operations
 
 ## Running
 

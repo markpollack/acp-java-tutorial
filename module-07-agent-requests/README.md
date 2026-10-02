@@ -4,7 +4,7 @@ Handle file read/write requests from agents.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/07-agent-requests
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/07-agent-requests
 
 ## Running
 

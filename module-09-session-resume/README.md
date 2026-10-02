@@ -4,7 +4,7 @@ Load and resume existing sessions by ID.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/09-session-resume
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/09-session-resume
 
 ## Running
 

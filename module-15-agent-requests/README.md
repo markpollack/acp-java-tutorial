@@ -4,7 +4,7 @@ Read files, write files, and request permissions from the client.
 
 ## Documentation
 
-Full tutorial: https://springaicommunity.mintlify.app/acp-java-sdk/tutorial/15-agent-requests
+Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/15-agent-requests
 
 ## Running
 
