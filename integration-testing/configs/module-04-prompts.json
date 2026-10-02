@@ -2,7 +2,8 @@
   "moduleId": "module-04-prompts",
   "displayName": "Module 04: Prompts",
   "timeoutSec": 120,
-  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiredEnv": [],
+  "requiredCommands": ["grok"],
   "requiresPackage": false,
   "expectedBehavior": "Deep dive into PromptRequest and PromptResponse. Send multiple prompts including simple question, multi-part content, and follow-up. Display StopReason for each response and explain what each StopReason means.",
   "requiredOutput": [

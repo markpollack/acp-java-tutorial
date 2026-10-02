@@ -12,7 +12,7 @@
 
     <artifactId>module-01-first-contact</artifactId>
     <name>Module 01 - First Contact</name>
-    <description>Your first ACP client - connect to Gemini CLI and get a response</description>
+    <description>Your first ACP client - connect to the Grok CLI and get a response</description>
 
     <dependencies>
         <dependency>

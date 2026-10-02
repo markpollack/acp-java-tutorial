@@ -6,7 +6,7 @@ This is the tutorial repository for the ACP (Agent Client Protocol) Java SDK.
 
 ```
 acp-java-tutorial/
-├── module-01-first-contact/     # Client basics - connect to Gemini CLI
+├── module-01-first-contact/     # Client basics - connect to the Grok CLI
 ├── module-05-streaming-updates/ # Receive session updates
 ├── module-07-agent-requests/    # Client-side file handlers
 ├── module-08-permissions/       # Permission handling
@@ -32,7 +32,7 @@ acp-java-tutorial/
 # Build all modules
 ./mvnw compile
 
-# Run a client module (e.g., first-contact with Gemini)
+# Run a client module (e.g., first-contact with Grok)
 ./mvnw exec:java -pl module-01-first-contact
 
 # Build & run an agent module (requires package first)
@@ -43,7 +43,8 @@ acp-java-tutorial/
 ## Module Categories
 
 ### Client Modules (01-08)
-Connect to Gemini CLI or other ACP agents. Require `GEMINI_API_KEY` environment variable.
+Connect to the Grok CLI (`grok agent stdio`) or other ACP agents. Require the Grok CLI on
+the `PATH`, signed in once with `grok login`; no API key environment variable.
 
 ### Agent Modules (12-15)
 Implement ACP agents. Each has:

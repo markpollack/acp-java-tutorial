@@ -32,8 +32,9 @@ public class PromptsClient {
 
     public static void main(String[] args) {
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -43,7 +44,7 @@ public class PromptsClient {
             System.out.println("=== Module 04: Prompts ===\n");
 
             client.initialize();
-            var session = client.newSession(new NewSessionRequest(".", List.of()));
+            var session = client.newSession(new NewSessionRequest(System.getProperty("user.dir"), List.of()));
             System.out.println("Session: " + session.sessionId() + "\n");
 
             // Prompt 1: Simple question

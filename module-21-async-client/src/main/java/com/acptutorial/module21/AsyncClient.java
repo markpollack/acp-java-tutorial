@@ -57,8 +57,9 @@ public class AsyncClient {
         System.out.println("This is the async version of Module 01 (First Contact).\n");
 
         // 1. Configure agent process (same as sync)
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         // 2. Create transport (same as sync)
@@ -92,7 +93,7 @@ public class AsyncClient {
             })
             .flatMap(init -> {
                 // flatMap chains to the next async operation
-                return client.newSession(new NewSessionRequest(".", List.of()));
+                return client.newSession(new NewSessionRequest(System.getProperty("user.dir"), List.of()));
             })
             .doOnNext(session -> {
                 System.out.println("Session: " + session.sessionId());
@@ -145,7 +146,7 @@ public class AsyncClient {
         var init = client.initialize().block();
         System.out.println("Connected: " + init.protocolVersion());
 
-        var session = client.newSession(new NewSessionRequest(".", List.of())).block();
+        var session = client.newSession(new NewSessionRequest(System.getProperty("user.dir"), List.of())).block();
         System.out.println("Session: " + session.sessionId());
 
         var response = client.prompt(new PromptRequest(

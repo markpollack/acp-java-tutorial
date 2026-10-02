@@ -5,7 +5,7 @@
 # Usage:
 #   ./scripts/run-integration-tests.sh              # Run all tests
 #   ./scripts/run-integration-tests.sh --local      # Run only local agent tests (no API key needed)
-#   ./scripts/run-integration-tests.sh --gemini     # Run only Gemini tests (requires GEMINI_API_KEY)
+#   ./scripts/run-integration-tests.sh --grok       # Run only Grok client tests (requires the grok CLI)
 #
 
 set -e
@@ -26,14 +26,14 @@ SKIPPED=0
 
 # Parse arguments
 RUN_LOCAL=true
-RUN_GEMINI=true
+RUN_GROK=true
 
 if [ "$1" == "--local" ]; then
-    RUN_GEMINI=false
+    RUN_GROK=false
     echo -e "${YELLOW}Running only local agent tests (no API key required)${NC}"
-elif [ "$1" == "--gemini" ]; then
+elif [ "$1" == "--grok" ]; then
     RUN_LOCAL=false
-    echo -e "${YELLOW}Running only Gemini tests (requires GEMINI_API_KEY)${NC}"
+    echo -e "${YELLOW}Running only Grok client tests (requires the grok CLI)${NC}"
 fi
 
 echo "════════════════════════════════════════════════════════════"
@@ -41,12 +41,12 @@ echo "   ACP Java Tutorial - Integration Test Suite"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
-# Check for GEMINI_API_KEY if running Gemini tests
-if [ "$RUN_GEMINI" == "true" ] && [ -z "$GEMINI_API_KEY" ]; then
-    echo -e "${YELLOW}⚠️  GEMINI_API_KEY not set - skipping Gemini tests${NC}"
-    echo "   Set GEMINI_API_KEY to run modules 01-08"
+# Check for the grok CLI if running Grok client tests
+if [ "$RUN_GROK" == "true" ] && ! command -v grok >/dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  grok CLI not on PATH - skipping Grok client tests${NC}"
+    echo "   Install it (curl -fsSL https://x.ai/cli/install.sh | bash) and run 'grok login' to run modules 01-08 and 21"
     echo ""
-    RUN_GEMINI=false
+    RUN_GROK=false
 fi
 
 # Local agent modules (no API key required)
@@ -62,8 +62,8 @@ LOCAL_MODULES=(
     "module-24-spring-boot-client"
 )
 
-# Gemini modules (require GEMINI_API_KEY)
-GEMINI_MODULES=(
+# Grok client modules (launch `grok agent stdio`; require the grok CLI, signed in)
+GROK_MODULES=(
     "module-01-first-contact"
     "module-02-protocol-basics"
     "module-03-sessions"
@@ -72,6 +72,7 @@ GEMINI_MODULES=(
     "module-06-update-types"
     "module-07-agent-requests"
     "module-08-permissions"
+    "module-21-async-client"
 )
 
 run_test() {
@@ -105,12 +106,12 @@ if [ "$RUN_LOCAL" == "true" ]; then
     done
 fi
 
-# Run Gemini tests
-if [ "$RUN_GEMINI" == "true" ]; then
+# Run Grok client tests
+if [ "$RUN_GROK" == "true" ]; then
     echo ""
-    echo "🌐 Gemini Tests (requires GEMINI_API_KEY)"
+    echo "🌐 Grok Client Tests (requires the grok CLI)"
     echo "----------------------------------------"
-    for module in "${GEMINI_MODULES[@]}"; do
+    for module in "${GROK_MODULES[@]}"; do
         if [ -f "configs/${module}.json" ]; then
             run_test "$module"
         else

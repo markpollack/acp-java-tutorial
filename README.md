@@ -36,10 +36,12 @@ watch it grow up.
 - **Maven 3.8+** (or use the included `./mvnw` wrapper)
 - **For the chatbot (module 25):** an `ANTHROPIC_API_KEY` — this key *is actually
   used*. Get one at <https://console.anthropic.com/> and `export ANTHROPIC_API_KEY=...`.
-- **For the client modules (01–08, 21):** an ACP-capable agent CLI on your `PATH`
-  (e.g. `gemini --experimental-acp`, or `claude-code-acp` / `codex-acp`). ACP is
-  model-agnostic — point them at any agentic CLI. **The tutorial code never reads an
-  API key;** the CLI you launch handles its own model and authentication.
+- **For the client modules (01–08, 21):** an ACP-capable agent CLI on your `PATH`.
+  The modules launch the Grok CLI, which speaks ACP natively as `grok agent stdio`:
+  install it with `curl -fsSL https://x.ai/cli/install.sh | bash` and sign in once with
+  `grok login`. ACP is model-agnostic — point the modules at any agentic CLI (e.g.
+  `claude-code-acp` / `codex-acp`) by changing the launch command. **The tutorial code
+  never reads an API key;** the CLI you launch handles its own model and authentication.
 
 ## Getting started
 
@@ -59,7 +61,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 ./mvnw package -pl module-25-ai-chatbot-agent -q
 ./mvnw exec:java -pl module-25-ai-chatbot-agent
 
-# 3) Be the client — connect to an existing agent CLI (e.g. gemini)
+# 3) Be the client — connect to an existing agent CLI (Grok)
 ./mvnw exec:java -pl module-01-first-contact
 ```
 

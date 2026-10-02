@@ -51,8 +51,8 @@ annotated methods — and the value is what you put in the prompt handler.*
   ```bash
   export ANTHROPIC_API_KEY=sk-ant-...
   ```
-  Unlike the Gemini client modules — where the key was checked but **never read**
-  — this key is *actually used*: it's what `AnthropicOkHttpClient.fromEnv()`
+  Unlike the client modules (01–08), which need no key — the agent CLI they launch
+  handles its own authentication — this key is *actually used*: it's what `AnthropicOkHttpClient.fromEnv()`
   authenticates with.
 - Java 17.
 

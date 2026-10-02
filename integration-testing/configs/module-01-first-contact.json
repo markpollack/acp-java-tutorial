@@ -2,9 +2,10 @@
   "moduleId": "module-01-first-contact",
   "displayName": "Module 01: First Contact",
   "timeoutSec": 120,
-  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiredEnv": [],
+  "requiredCommands": ["grok"],
   "requiresPackage": false,
-  "expectedBehavior": "Connect to Gemini CLI via ACP, send a simple prompt asking what 2+2 is, and receive a response with the answer. Should show connection confirmation, session ID, the agent's streamed response text, and stop reason.",
+  "expectedBehavior": "Connect to the Grok CLI (grok agent stdio) via ACP, send a simple prompt asking what 2+2 is, and receive a response with the answer. Should show connection confirmation, session ID, the agent's streamed response text, and stop reason.",
   "requiredOutput": [
     "Connected to agent!",
     "Agent capabilities:",

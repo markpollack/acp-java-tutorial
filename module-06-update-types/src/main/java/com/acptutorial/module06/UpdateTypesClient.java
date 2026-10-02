@@ -106,8 +106,9 @@ public class UpdateTypesClient {
 
     public static void main(String[] args) {
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         var transport = new StdioAcpClientTransport(params);
@@ -126,7 +127,7 @@ public class UpdateTypesClient {
             System.out.println("This module logs all session update types received from the agent.\n");
 
             client.initialize();
-            var session = client.newSession(new NewSessionRequest(".", List.of()));
+            var session = client.newSession(new NewSessionRequest(System.getProperty("user.dir"), List.of()));
             System.out.println("Session: " + session.sessionId() + "\n");
 
             // Send a prompt that triggers various update types

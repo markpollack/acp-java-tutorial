@@ -1,7 +1,7 @@
 /*
  * Module 01: First Contact
  *
- * Your first ACP client - connect to Gemini CLI and get a response.
+ * Your first ACP client - connect to the Grok CLI and get a response.
  *
  * This module demonstrates the minimal code needed to:
  * 1. Create a transport to communicate with an ACP agent
@@ -11,14 +11,14 @@
  * 5. Send a prompt and receive a response
  *
  * Prerequisites:
- * - An ACP-capable agent CLI on your PATH. We launch `gemini --experimental-acp`
+ * - An ACP-capable agent CLI on your PATH. We launch `grok agent stdio`
  *   here, but ACP is model-agnostic: point this at any agentic CLI (e.g.
  *   claude-code-acp, codex-acp) by changing the command below.
  * - ACP Java SDK on classpath
  *
  * Note on API keys: this tutorial code never reads an API key. The agent CLI
- * you launch handles its own model and authentication (Gemini CLI, for example,
- * can use an OAuth login or its own GEMINI_API_KEY). There is nothing to set
+ * you launch handles its own model and authentication (the Grok CLI, for example,
+ * uses the account you signed in with `grok login`). There is nothing to set
  * here for the Java client itself.
  */
 package com.acptutorial.module01;
@@ -38,8 +38,9 @@ public class FirstContact {
 
     public static void main(String[] args) {
         // 1. Configure agent process - tells the transport how to launch the agent
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         // 2. Create transport (launches subprocess when client connects)
@@ -59,9 +60,10 @@ public class FirstContact {
             System.out.println("Connected to agent!");
             System.out.println("Agent capabilities: " + initResponse.agentCapabilities());
 
-            // 5. Create a session - workspace context for conversation
+            // 5. Create a session - workspace context for conversation.
+            //    ACP requires cwd to be an absolute path; agents may reject "."
             var session = client.newSession(
-                new NewSessionRequest(".", List.of()));
+                new NewSessionRequest(System.getProperty("user.dir"), List.of()));
             System.out.println("Session created: " + session.sessionId());
 
             // 6. Send a prompt - the magic moment!

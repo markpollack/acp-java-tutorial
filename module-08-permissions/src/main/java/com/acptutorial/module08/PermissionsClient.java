@@ -21,7 +21,7 @@
  * actually write files after permission is granted.
  *
  * Prerequisites:
- * - Gemini CLI installed with --experimental-acp support
+ * - Grok CLI installed and logged in (`grok login`); we launch it as `grok agent stdio`
  * - No API key needed here: the agent CLI you launch handles its own auth.
  */
 package com.acptutorial.module08;
@@ -65,9 +65,12 @@ public class PermissionsClient {
 
         workDir = Path.of(System.getProperty("user.dir"));
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
-            // Note: NOT using --yolo so agent will ask for permission
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
+            // Note: NOT using --always-approve, so the agent asks for permission.
+            // Grok also reads Claude Code's settings: if ~/.claude/settings.json sets
+            // "defaultMode" to "auto" or "acceptEdits", Grok writes without asking.
             .build();
 
         var transport = new StdioAcpClientTransport(params);

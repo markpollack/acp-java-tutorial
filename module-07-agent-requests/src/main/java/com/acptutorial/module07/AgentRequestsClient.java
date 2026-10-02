@@ -21,7 +21,7 @@
  * - Files.readString() / Files.writeString() for terse file I/O
  *
  * Prerequisites:
- * - Gemini CLI installed with --experimental-acp support
+ * - Grok CLI installed and logged in (`grok login`); we launch it as `grok agent stdio`
  * - No API key needed here: the agent CLI you launch handles its own auth.
  */
 package com.acptutorial.module07;
@@ -64,9 +64,10 @@ public class AgentRequestsClient {
         workDir = Path.of(System.getProperty("user.dir"));
         copyMysteryFileFromClasspath();
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
-            .arg("--yolo")  // Auto-approve file operations
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("--always-approve")  // Auto-approve tool executions (file operations)
+            .arg("stdio")
             .build();
 
         var transport = new StdioAcpClientTransport(params);

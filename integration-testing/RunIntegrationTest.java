@@ -58,7 +58,7 @@ public class RunIntegrationTest {
               ./scripts/run-integration-tests.sh
 
             Module Categories:
-              Gemini Client (01-08): Require GEMINI_API_KEY
+              Grok Client (01-08, 21): Require the grok CLI on PATH (grok login)
               Local Agent (12-15):  Run agent as subprocess
               In-Memory (16):       No external processes
             """);

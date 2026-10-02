@@ -17,7 +17,7 @@
  *   - UsageUpdate - context window and cost usage (unstable)
  *
  * Prerequisites:
- * - Gemini CLI installed with --experimental-acp support
+ * - Grok CLI installed and logged in (`grok login`); we launch it as `grok agent stdio`
  * - No API key needed here: the agent CLI you launch handles its own auth.
  */
 package com.acptutorial.module05;
@@ -48,8 +48,9 @@ public class StreamingUpdatesClient {
 
     public static void main(String[] args) {
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         var transport = new StdioAcpClientTransport(params);

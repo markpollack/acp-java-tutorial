@@ -84,7 +84,7 @@ public class AIValidator {
             Look for:
             1. Module header present (=== Module NN: ===)
             2. Expected functionality demonstrated based on the expected behavior description
-            3. For Gemini modules: responses received from the agent
+            3. For client modules that launch an agent CLI (Grok): responses received from the agent
             4. For local agent modules: agent started and responded correctly
             5. Stop reason displayed (END_TURN, etc.)
             6. No fatal errors, stack traces, or exceptions

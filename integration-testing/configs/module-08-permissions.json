@@ -2,13 +2,17 @@
   "moduleId": "module-08-permissions",
   "displayName": "Module 08: Permissions",
   "timeoutSec": 120,
-  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiredEnv": [],
+  "requiredCommands": ["grok"],
   "requiresPackage": false,
-  "expectedBehavior": "Handle permission requests from the agent using requestPermissionHandler. When agent requests permission for an operation, display the permission options and handle user choice. Show the selected outcome.",
+  "stdin": "1\n",
+  "expectedBehavior": "Handle permission requests from the agent using requestPermissionHandler. The prompt asks the Grok agent to create hello.txt; before writing, the agent sends a permission request, and the client displays the tool and the permission options and reads the user's choice (the harness answers 1 on stdin, the first option). Show the selected outcome, the file write going through the client's write handler, and the stop reason.",
   "requiredOutput": [
     "Connected to agent with file system capabilities",
     "Session:",
     "=== Sending prompt (will trigger permission request) ===",
+    "PERMISSION REQUEST from agent",
+    "Selected:",
     "=== Prompt complete ===",
     "Stop reason:"
   ]

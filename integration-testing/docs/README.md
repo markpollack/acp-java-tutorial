@@ -20,9 +20,10 @@ Automated integration testing using JBang + AI validation.
    npm install -g @anthropic-ai/claude-code
    ```
 
-4. **GEMINI_API_KEY** (optional) - Required for modules 01-08
+4. **Grok CLI** (optional) - Required for modules 01-08 and 21, which launch it as `grok agent stdio`
    ```bash
-   export GEMINI_API_KEY=your-key-here
+   curl -fsSL https://x.ai/cli/install.sh | bash
+   grok login
    ```
 
 ## Quick Start
@@ -36,7 +37,7 @@ jbang RunIntegrationTest.java module-12-echo-agent
 # Run all local tests (no API key needed)
 ./scripts/run-integration-tests.sh --local
 
-# Run all tests (requires GEMINI_API_KEY)
+# Run all tests (the client modules need the grok CLI)
 ./scripts/run-integration-tests.sh
 
 # List available modules
@@ -54,7 +55,7 @@ jbang RunIntegrationTest.java --list
 | module-15-agent-requests | Agent requests files/permissions |
 | module-16-in-memory-testing | In-memory transport testing |
 
-### Gemini Modules (Require GEMINI_API_KEY)
+### Grok Client Modules (Require the grok CLI)
 
 | Module | Description |
 |--------|-------------|
@@ -66,6 +67,7 @@ jbang RunIntegrationTest.java --list
 | module-06-update-types | All SessionUpdate types |
 | module-07-agent-requests | Client file handlers |
 | module-08-permissions | Permission handling |
+| module-21-async-client | Async (reactive) client |
 
 ## How It Works
 
@@ -82,8 +84,10 @@ jbang RunIntegrationTest.java --list
   "moduleId": "module-XX-name",
   "displayName": "Module XX: Title",
   "timeoutSec": 120,
-  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiredEnv": [],
+  "requiredCommands": ["grok"],
   "requiresPackage": false,
+  "stdin": "1\n",
   "expectedBehavior": "Description of what the module should demonstrate..."
 }
 ```
@@ -92,7 +96,9 @@ jbang RunIntegrationTest.java --list
 - `displayName` - Human-readable name
 - `timeoutSec` - Max execution time
 - `requiredEnv` - Required environment variables
+- `requiredCommands` - Executables that must be on the `PATH` (optional)
 - `requiresPackage` - If true, runs `mvn package` instead of `mvn compile`
+- `stdin` - Text fed to the module's standard input, for interactive modules (optional)
 - `expectedBehavior` - Description for AI validation
 
 ## AI Validation
@@ -113,8 +119,13 @@ Test output is saved to `logs/<module>-<timestamp>.log`
 ### "Config not found"
 Make sure you're in the `integration-testing` directory.
 
-### "GEMINI_API_KEY not set"
-Export the environment variable or use `--local` flag to skip Gemini tests.
+### "Required command not found on PATH: grok"
+Install the Grok CLI and run `grok login`, or use the `--local` flag to skip the Grok client tests.
+
+### Module 08 shows no permission request
+Grok reads Claude Code's settings. If `~/.claude/settings.json` sets `"defaultMode"` to
+`"auto"` or `"acceptEdits"`, Grok writes `hello.txt` without asking, and the test fails on the
+missing `PERMISSION REQUEST from agent` line.
 
 ### "Build failed"
 Run `./mvnw compile -pl module-XX-name` from repo root to see build errors.

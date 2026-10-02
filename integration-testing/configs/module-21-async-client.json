@@ -2,9 +2,10 @@
   "moduleId": "module-21-async-client",
   "displayName": "Module 21: Async Client",
   "timeoutSec": 120,
-  "requiredEnv": ["GEMINI_API_KEY"],
+  "requiredEnv": [],
+  "requiredCommands": ["grok"],
   "requiresPackage": false,
-  "expectedBehavior": "Demonstrates the async client API using AcpClient.async() with reactive Mono patterns. Should connect to Gemini CLI, show reactive pipeline stages, display protocol version, create session, send prompt, receive agent response, show stop reason, and print 'Async pipeline complete!' at the end.",
+  "expectedBehavior": "Demonstrates the async client API using AcpClient.async() with reactive Mono patterns. Should connect to the Grok CLI (grok agent stdio), show reactive pipeline stages, display protocol version, create session, send prompt, receive agent response, show stop reason, and print 'Async pipeline complete!' at the end.",
   "requiredOutput": [
     "=== Module 21: Async Client ===",
     "Starting reactive pipeline...",

@@ -33,8 +33,9 @@ public class SessionsClient {
 
     public static void main(String[] args) {
 
-        var params = AgentParameters.builder("gemini")
-            .arg("--experimental-acp")
+        var params = AgentParameters.builder("grok")
+            .arg("agent")
+            .arg("stdio")
             .build();
 
         var transport = new StdioAcpClientTransport(params);
