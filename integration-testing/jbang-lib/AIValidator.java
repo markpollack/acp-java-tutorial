@@ -86,7 +86,7 @@ public class AIValidator {
             2. Expected functionality demonstrated based on the expected behavior description
             3. For client modules that launch an agent CLI (Grok): responses received from the agent
             4. For local agent modules: agent started and responded correctly
-            5. Stop reason displayed (END_TURN, etc.)
+            5. Stop reason displayed (the wire value, e.g. end_turn)
             6. No fatal errors, stack traces, or exceptions
 
             Be precise - verify that the described functionality was actually demonstrated in the output.
