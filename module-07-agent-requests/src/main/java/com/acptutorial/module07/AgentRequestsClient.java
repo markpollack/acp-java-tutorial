@@ -59,6 +59,7 @@ public class AgentRequestsClient {
     private static Path workDir;
 
     public static void main(String[] args) {
+        System.out.println("=== Module 07: Agent Requests ===\n");
 
         // Setup working directory and copy mystery.txt from classpath resources
         workDir = Path.of(System.getProperty("user.dir"));

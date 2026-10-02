@@ -37,6 +37,8 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
 public class FirstContact {
 
     public static void main(String[] args) {
+        System.out.println("=== Module 01: First Contact ===\n");
+
         // 1. Configure agent process - tells the transport how to launch the agent
         var params = AgentParameters.builder("grok")
             .arg("agent")

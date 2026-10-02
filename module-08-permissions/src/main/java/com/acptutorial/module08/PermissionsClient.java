@@ -62,6 +62,7 @@ public class PermissionsClient {
     private static Path workDir;
 
     public static void main(String[] args) {
+        System.out.println("=== Module 08: Permissions ===\n");
 
         workDir = Path.of(System.getProperty("user.dir"));
 

@@ -47,6 +47,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.UserMessageChunk;
 public class StreamingUpdatesClient {
 
     public static void main(String[] args) {
+        System.out.println("=== Module 05: Streaming Updates ===\n");
 
         var params = AgentParameters.builder("grok")
             .arg("agent")
