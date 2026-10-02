@@ -65,7 +65,7 @@ public class UpdateSendingAgent {
 
                 // 2. Send plan update - show what we're going to do (full API for complex types)
                 context.sendUpdate(sessionId,
-                    new Plan("plan", List.of(
+                    new Plan(List.of(
                         new PlanEntry("Analyze the prompt", PlanEntryPriority.HIGH, PlanEntryStatus.IN_PROGRESS),
                         new PlanEntry("Generate response", PlanEntryPriority.HIGH, PlanEntryStatus.PENDING),
                         new PlanEntry("Format output", PlanEntryPriority.MEDIUM, PlanEntryStatus.PENDING)
@@ -95,7 +95,7 @@ public class UpdateSendingAgent {
 
                 // 5. Send available commands update
                 context.sendUpdate(sessionId,
-                    new AvailableCommandsUpdate("available_commands_update", List.of(
+                    new AvailableCommandsUpdate(List.of(
                         new AvailableCommand("help", "Show help",
                             new AvailableCommandInput("topic")),
                         new AvailableCommand("clear", "Clear context", null)
@@ -103,11 +103,11 @@ public class UpdateSendingAgent {
 
                 // 6. Send mode update
                 context.sendUpdate(sessionId,
-                    new CurrentModeUpdate("current_mode_update", "default"));
+                    new CurrentModeUpdate("default"));
 
                 // 7. Send usage update - report token usage (unstable)
                 context.sendUpdate(sessionId,
-                    new UsageUpdate("usage_update", 53000L, 200000L));
+                    new UsageUpdate(53000L, 200000L));
 
                 // 8. Send message chunks - the actual response (convenience method)
                 context.sendMessage("Here is my response ");
