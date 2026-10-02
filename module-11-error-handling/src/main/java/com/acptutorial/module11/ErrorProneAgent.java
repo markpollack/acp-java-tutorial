@@ -5,7 +5,7 @@
  *
  * Key concepts:
  * - Throwing AcpProtocolException from handlers
- * - Standard error codes (AcpErrorCodes)
+ * - Standard error codes (AcpErrorCodes): only the codes the ACP v1 schema defines
  * - Error propagation to client
  *
  * Build & run:
@@ -53,11 +53,12 @@ public class ErrorProneAgent {
                 String sessionId = req.sessionId();
                 System.err.println("[ErrorProneAgent] Load session: " + sessionId);
 
-                // Demonstrate SESSION_NOT_FOUND error
+                // Demonstrate RESOURCE_NOT_FOUND (-32002), the ACP code for a missing
+                // session, file or other resource
                 if (!sessions.containsKey(sessionId)) {
-                    System.err.println("[ErrorProneAgent] Throwing SESSION_NOT_FOUND");
+                    System.err.println("[ErrorProneAgent] Throwing RESOURCE_NOT_FOUND");
                     throw new AcpProtocolException(
-                        AcpErrorCodes.SESSION_NOT_FOUND,
+                        AcpErrorCodes.RESOURCE_NOT_FOUND,
                         "Session not found: " + sessionId);
                 }
 
@@ -85,11 +86,13 @@ public class ErrorProneAgent {
                         "Simulated internal error");
                 }
 
-                if (text.contains("permission")) {
-                    System.err.println("[ErrorProneAgent] Throwing PERMISSION_DENIED");
+                // AUTHENTICATION_REQUIRED (-32000): the client must authenticate
+                // (session/authenticate) before the agent will do this work
+                if (text.contains("authenticate")) {
+                    System.err.println("[ErrorProneAgent] Throwing AUTHENTICATION_REQUIRED");
                     throw new AcpProtocolException(
-                        AcpErrorCodes.PERMISSION_DENIED,
-                        "Permission denied for this operation");
+                        AcpErrorCodes.AUTHENTICATION_REQUIRED,
+                        "Authentication required for this operation");
                 }
 
                 // Normal response

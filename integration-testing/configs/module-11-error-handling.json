@@ -4,7 +4,7 @@
   "timeoutSec": 30,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates handling protocol errors. Should run 6 tests: normal operation, INVALID_PARAMS, INTERNAL_ERROR, PERMISSION_DENIED, SESSION_NOT_FOUND, and error recovery. Each error test catches the expected error. Should end with 'Demo Complete'.",
+  "expectedBehavior": "Demonstrates handling protocol errors. Should run 6 tests: normal operation, INVALID_PARAMS, INTERNAL_ERROR, AUTHENTICATION_REQUIRED (-32000), RESOURCE_NOT_FOUND (-32002) for an unknown session, and error recovery. Each error test catches the expected error. Should end with 'Demo Complete'.",
   "requiredOutput": [
     "=== Module 11: Error Handling ===",
     "--- Test 1: Normal Operation ---",
@@ -13,7 +13,7 @@
     "Caught expected error!",
     "--- Test 3: Internal Error ---",
     "Caught expected error!",
-    "--- Test 4: Permission Denied Error ---",
+    "--- Test 4: Authentication Required Error ---",
     "Caught expected error!",
     "--- Test 5: Session Not Found Error ---",
     "Caught expected error!",
