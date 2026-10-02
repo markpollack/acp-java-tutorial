@@ -143,7 +143,7 @@ public class JetBrainsAgent {
             // Tool call start: location at line 1 - the editor opens the file
             context.sendUpdate(sessionId, new ToolCall(
                 "tool_call", toolCallId,
-                "Visiting " + stop.getFileName(),
+                "Visiting " + stop.getFileName(), "read_file",
                 ToolKind.READ, ToolCallStatus.IN_PROGRESS,
                 List.of(),
                 List.of(new ToolCallLocation(absolutePath, 1)),
@@ -155,7 +155,7 @@ public class JetBrainsAgent {
             // editor scrolls there, demonstrating line-level following
             context.sendUpdate(sessionId, new ToolCallUpdateNotification(
                 "tool_call_update", toolCallId,
-                "Visited " + stop.getFileName(),
+                "Visited " + stop.getFileName(), "read_file",
                 ToolKind.READ, ToolCallStatus.COMPLETED,
                 List.of(),
                 List.of(new ToolCallLocation(absolutePath, middleLine(stop))),

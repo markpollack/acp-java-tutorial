@@ -75,7 +75,8 @@ public class UpdateSendingAgent {
                 context.sendUpdate(sessionId,
                     new ToolCall("tool_call",
                         "tool-1",
-                        "Analyzing prompt",
+                        "Analyzing prompt",     // title: what the user sees
+                        "analyze_prompt",       // name: the tool's own identifier (may be null)
                         ToolKind.THINK,
                         ToolCallStatus.IN_PROGRESS,
                         List.of(),
@@ -86,6 +87,7 @@ public class UpdateSendingAgent {
                     new ToolCallUpdateNotification("tool_call_update",
                         "tool-1",
                         "Analyzing prompt",
+                        "analyze_prompt",
                         ToolKind.THINK,
                         ToolCallStatus.COMPLETED,
                         List.of(),

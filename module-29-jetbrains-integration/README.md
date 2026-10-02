@@ -96,7 +96,7 @@ Each location is an absolute `path` plus an optional 1-based `line`:
 ```java
 context.sendUpdate(sessionId, new ToolCall(
     "tool_call", toolCallId,
-    "Visiting pom.xml",
+    "Visiting pom.xml", "read_file",   // title, then the tool's name (may be null)
     ToolKind.READ, ToolCallStatus.IN_PROGRESS,
     List.of(),
     List.of(new ToolCallLocation("/abs/path/to/pom.xml", 1)),
