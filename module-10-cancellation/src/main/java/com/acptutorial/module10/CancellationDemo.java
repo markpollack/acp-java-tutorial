@@ -11,7 +11,12 @@
  * 1. Starts a long-running prompt (agent counts 1-10, 500ms each)
  * 2. Runs prompt in background thread
  * 3. After 1.5 seconds, sends cancel
- * 4. Agent stops at current step
+ * 4. Agent stops at current step and answers the prompt with stop reason CANCELLED
+ *
+ * The cancel does not end the turn on its own: the turn ends when the cancelled
+ * prompt answers. Send the next prompt only after that answer; a prompt sent in
+ * between is rejected with -32600 (invalid request), like any prompt sent while
+ * another is still running on the session.
  *
  * Build & run:
  *   ./mvnw package -pl module-10-cancellation -q
@@ -100,7 +105,8 @@ public class CancellationDemo {
             System.out.println("\n[Client] Sending cancel...");
             client.cancel(new CancelNotification(sessionId));
 
-            // Wait for prompt to finish
+            // Wait for the cancelled prompt to answer: that ends the turn, and only
+            // then may the client send another prompt on this session
             promptFuture.join();
             System.out.println("\nStop reason: " + response2Ref.get().stopReason());
 

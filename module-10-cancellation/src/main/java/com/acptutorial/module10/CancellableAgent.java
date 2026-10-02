@@ -7,7 +7,14 @@
  * - cancelHandler() - handles cancel notifications from client
  * - Tracking cancellation state per session
  * - Checking cancellation during long-running operations
- * - Clean shutdown when cancelled
+ * - Answering the cancelled prompt with stop reason CANCELLED
+ *
+ * session/cancel does not end the prompt turn by itself: the turn ends when the
+ * agent answers the cancelled session/prompt, and ACP v1 requires that answer to
+ * carry stop reason "cancelled". Until then the session is still busy, and a new
+ * prompt on it is rejected with -32600 (invalid request). If a handler never
+ * answers, the SDK answers "cancelled" for it after a grace period (60 s by
+ * default, set with cancelGracePeriod on the agent builder).
  *
  * Build & run:
  *   ./mvnw package -pl module-10-cancellation -q
@@ -25,6 +32,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
 
 public class CancellableAgent {
 
@@ -70,7 +78,8 @@ public class CancellableAgent {
                     if (cancelledSessions.getOrDefault(sessionId, false)) {
                         System.err.println("[CancellableAgent] Cancelled at step " + i);
                         context.sendMessage("\n[Operation cancelled at step " + i + "]");
-                        return PromptResponse.endTurn();
+                        // Answer the cancelled prompt with CANCELLED: this ends the turn
+                        return new PromptResponse(StopReason.CANCELLED);
                     }
 
                     // Send progress update
@@ -81,7 +90,7 @@ public class CancellableAgent {
                         Thread.sleep(500);  // 500ms per step
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        return PromptResponse.endTurn();
+                        return new PromptResponse(StopReason.CANCELLED);
                     }
                 }
 
