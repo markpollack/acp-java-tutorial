@@ -5,7 +5,7 @@
  * Key features:
  * - Two-layer validation: deterministic requiredOutput check + AI behavioral validation
  * - Uses mvn exec:java to run modules
- * - Supports both Gemini CLI modules and local agent modules
+ * - Supports both agent-CLI client modules (Grok) and local agent modules
  */
 
 import com.fasterxml.jackson.databind.*;
@@ -29,7 +29,9 @@ public class IntegrationTestUtils {
         String[] requiredEnv,
         String expectedBehavior,
         boolean requiresPackage,  // true for agent modules that need JAR built
-        String[] requiredOutput   // exact substrings that MUST appear in stdout
+        String[] requiredOutput,  // exact substrings that MUST appear in stdout
+        String[] requiredCommands, // executables that must be on the PATH (e.g. the grok agent CLI)
+        String stdin              // optional text fed to the module's standard input
     ) {
         // Provide default for requiresPackage
         public boolean requiresPackage() {
@@ -52,7 +54,7 @@ public class IntegrationTestUtils {
         return mapper.readValue(configPath.toFile(), ExampleInfo.class);
     }
 
-    // Verify required environment variables
+    // Verify required environment variables and commands
     public static void verifyEnvironment(ExampleInfo cfg) {
         if (cfg.requiredEnv() != null) {
             for (String envVar : cfg.requiredEnv()) {
@@ -62,6 +64,27 @@ public class IntegrationTestUtils {
                 }
             }
         }
+        if (cfg.requiredCommands() != null) {
+            for (String command : cfg.requiredCommands()) {
+                if (!onPath(command)) {
+                    err.println("❌ Required command not found on PATH: " + command);
+                    exit(1);
+                }
+            }
+        }
+    }
+
+    private static boolean onPath(String command) {
+        String path = getenv("PATH");
+        if (path == null) {
+            return false;
+        }
+        for (String dir : path.split(java.io.File.pathSeparator)) {
+            if (!dir.isEmpty() && Files.isExecutable(Path.of(dir, command))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Find repository root (contains pom.xml with modules)
@@ -118,13 +141,18 @@ public class IntegrationTestUtils {
     // Run the module using mvn exec:java
     public static ProcessResult runModule(ExampleInfo cfg, Path logFile) throws Exception {
         Path repoRoot = findRepoRoot();
-        return new ProcessExecutor()
+        ProcessExecutor executor = new ProcessExecutor()
             .command("./mvnw", "exec:java", "-pl", cfg.moduleId(), "-q")
             .directory(repoRoot.toFile())
             .timeout(cfg.timeoutSec(), TimeUnit.SECONDS)
             .redirectOutput(Files.newOutputStream(logFile))
-            .redirectErrorStream(true)
-            .execute();
+            .redirectErrorStream(true);
+        if (cfg.stdin() != null) {
+            // Interactive modules (e.g. 08's permission prompt) read their answers from stdin
+            executor.redirectInput(new java.io.ByteArrayInputStream(
+                cfg.stdin().getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+        }
+        return executor.execute();
     }
 
     // Display output preview
