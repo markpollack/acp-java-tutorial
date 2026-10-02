@@ -10,6 +10,6 @@
     "Connected!",
     "Session:",
     "Sending: Hello from Spring Boot client!",
-    "Stop reason: END_TURN"
+    "Stop reason: end_turn"
   ]
 }

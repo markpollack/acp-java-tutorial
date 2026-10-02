@@ -11,7 +11,7 @@
     "1. Initialize: OK",
     "2. New session:",
     "3. Prompt sent:",
-    "4. Stop reason: END_TURN",
+    "4. Stop reason: end_turn",
     "--- Verification ---",
     "Agent received:",
     "Client received:",
