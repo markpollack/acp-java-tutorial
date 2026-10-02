@@ -102,13 +102,23 @@ public class PromptsClient {
     }
 
     private static void explainStopReason(StopReason reason) {
-        String explanation = switch (reason) {
-            case END_TURN -> "Agent completed its response naturally";
-            case MAX_TOKENS -> "Response was truncated due to length";
-            case MAX_TURN_REQUESTS -> "Too many turn requests";
-            case REFUSAL -> "Agent refused the request";
-            case CANCELLED -> "Request was cancelled";
-        };
+        // StopReason is an open value type, not an enum: a newer agent may send a stop
+        // reason this SDK does not know, and it is kept rather than failing the response.
+        // So compare with equals (never ==, never switch) and always have a fallback.
+        String explanation;
+        if (StopReason.END_TURN.equals(reason)) {
+            explanation = "Agent completed its response naturally";
+        } else if (StopReason.MAX_TOKENS.equals(reason)) {
+            explanation = "Response was truncated due to length";
+        } else if (StopReason.MAX_TURN_REQUESTS.equals(reason)) {
+            explanation = "Too many turn requests";
+        } else if (StopReason.REFUSAL.equals(reason)) {
+            explanation = "Agent refused the request";
+        } else if (StopReason.CANCELLED.equals(reason)) {
+            explanation = "Request was cancelled";
+        } else {
+            explanation = "A stop reason this SDK does not know: " + reason;
+        }
         System.out.println("  -> " + explanation);
     }
 
