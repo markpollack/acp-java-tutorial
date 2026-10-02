@@ -191,8 +191,10 @@
              The profile also activates when ACP_SDK_CANDIDATE is set in the environment, so that tools
              which invoke ./mvnw themselves (integration-testing/RunIntegrationTest.java) build the
              candidate too:  ACP_SDK_CANDIDATE=true jbang RunIntegrationTest.java module-12-echo-agent
-             The acp-autoconfig candidate (0.13.0-SNAPSHOT) is not published: install it locally from
-             its sdk-0.80.0-candidate branch with ./mvnw -Psdk-candidate -DskipTests install. -->
+             Both candidates resolve from the Maven Central snapshot repository below: the SDK's
+             com.agentclientprotocol:*:0.19.0-SNAPSHOT and acp-autoconfig main's
+             org.springaicommunity:acp-spring-boot-*:0.13.0-SNAPSHOT. No local install is needed;
+             add -U to pick up a newer snapshot. -->
         <profile>
             <id>sdk-candidate</id>
             <activation>
