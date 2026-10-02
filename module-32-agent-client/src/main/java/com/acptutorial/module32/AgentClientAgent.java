@@ -59,7 +59,7 @@ import io.github.markpollack.agents.client.AgentClientResponse;
 @AcpAgent(name = "agent-client-agent", version = "1.0")
 public class AgentClientAgent {
 
-    private static final String MODEL = "claude-sonnet-4-20250514";
+    private static final String MODEL = "claude-sonnet-5-5";
     private static final int MAX_TURNS = 40;
 
     // The project the IDE has open, per session - that's the agent's working directory.

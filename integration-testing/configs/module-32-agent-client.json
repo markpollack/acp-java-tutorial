@@ -1,0 +1,16 @@
+{
+  "moduleId": "module-32-agent-client",
+  "displayName": "Module 32: Agent-Client Agent",
+  "timeoutSec": 300,
+  "requiredEnv": [],
+  "requiredCommands": ["claude"],
+  "requiresPackage": true,
+  "expectedBehavior": "Run an ACP agent whose @Prompt handler drives a real Claude agent loop (agent-client over the local Claude CLI) instead of a single completion. The demo client launches the agent as a subprocess with a throwaway working directory and gives it an agentic goal: create haiku.txt containing a haiku about AI agents and report the path and the haiku. The agent must actually write the file: the output should show the agent's reply with the path and a haiku, stop reason end_turn (the wire value), 'haiku.txt created? true', and the file's contents read back from disk.",
+  "requiredOutput": [
+    "=== Module 32: Agent-Client Agent Demo ===",
+    "Connected to AgentClientAgent (a real agent, not a chatbot)!",
+    "(stop reason: end_turn)",
+    "haiku.txt created? true",
+    "--- contents ---"
+  ]
+}
