@@ -118,11 +118,6 @@
             </dependency>
             <dependency>
                 <groupId>com.agentclientprotocol</groupId>
-                <artifactId>acp-websocket-jetty</artifactId>
-                <version>${acp-sdk.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.agentclientprotocol</groupId>
                 <artifactId>acp-test</artifactId>
                 <version>${acp-sdk.version}</version>
             </dependency>
@@ -188,4 +183,39 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <!-- Build against the next ACP Java SDK candidate (0.80.0, still 0.19.0-SNAPSHOT on SDK main)
+             and the matching acp-autoconfig candidate:
+                 ./mvnw -Psdk-candidate clean verify
+             The profile also activates when ACP_SDK_CANDIDATE is set in the environment, so that tools
+             which invoke ./mvnw themselves (integration-testing/RunIntegrationTest.java) build the
+             candidate too:  ACP_SDK_CANDIDATE=true jbang RunIntegrationTest.java module-12-echo-agent
+             The acp-autoconfig candidate (0.13.0-SNAPSHOT) is not published: install it locally from
+             its sdk-0.80.0-candidate branch with ./mvnw -Psdk-candidate -DskipTests install. -->
+        <profile>
+            <id>sdk-candidate</id>
+            <activation>
+                <property>
+                    <name>env.ACP_SDK_CANDIDATE</name>
+                </property>
+            </activation>
+            <properties>
+                <acp-sdk.version>0.19.0-SNAPSHOT</acp-sdk.version>
+                <acp-autoconfig.version>0.13.0-SNAPSHOT</acp-autoconfig.version>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>central-snapshots</id>
+                    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>
