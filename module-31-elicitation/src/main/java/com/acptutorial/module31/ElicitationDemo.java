@@ -73,9 +73,12 @@ public class ElicitationDemo {
 
             System.out.println("=== Module 31: Elicitation ===\n");
 
+            // Advertise the elicitation modes this client handles: form only.
+            // The agent may not request a mode the client did not advertise.
             var caps = new ClientCapabilities(
                 new FileSystemCapability(), false,
-                new ElicitationCapabilities(), null);
+                null, null,                          // session, auth
+                ElicitationCapabilities.formOnly(), null);
             client.initialize(new InitializeRequest(1, caps));
             System.out.println("Connected to ElicitationAgent\n");
 

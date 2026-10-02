@@ -65,7 +65,7 @@
         <module>module-21-async-client</module>
         <module>module-22-async-agent</module>
 
-        <!-- Part 9: Unstable Protocol Methods -->
+        <!-- Part 9: Elicitation (stable in ACP v1 since protocol v1.7.0) -->
         <module>module-31-elicitation</module>
 
         <!-- Part 7: Spring Boot Integration (requires Java 21) -->

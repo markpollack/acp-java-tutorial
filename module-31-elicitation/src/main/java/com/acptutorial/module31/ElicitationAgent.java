@@ -7,6 +7,8 @@
  * Elicitation is an agent-to-client request. The agent sends a form
  * schema describing what input it needs, and the client presents it
  * to the user. The user can accept (with values), decline, or cancel.
+ * Elicitation is part of stable ACP v1 (since protocol v1.7.0); the agent
+ * may only request a mode (form or url) the client advertised.
  *
  * This demo exercises all form field types:
  * - Text input (StringPropertySchema)
@@ -81,7 +83,7 @@ public class ElicitationAgent {
                             null, null,
                             new UntitledMultiSelectItems("string",
                                 List.of("testing", "docker", "ci", "docs")),
-                            null, null),
+                            null, null, null),   // minItems, maxItems, _meta
                         "javaVersion", new IntegerPropertySchema("integer",
                             "Java Version", null, 17L, 11L, 21L),
                         "gitInit", new BooleanPropertySchema("boolean",
@@ -95,7 +97,9 @@ public class ElicitationAgent {
                         .createElicitation(CreateElicitationRequest.form(
                             sessionId, "Configure your new project:", schema))
                         .flatMap(response -> {
-                            if (response.action() == ElicitationAction.ACCEPT) {
+                            // ElicitationAction is an open value type, not an enum:
+                            // compare with equals, never ==
+                            if (ElicitationAction.ACCEPT.equals(response.action())) {
                                 var content = response.content();
                                 StringBuilder msg = new StringBuilder();
                                 msg.append("Project configured!\n");
@@ -107,8 +111,9 @@ public class ElicitationAgent {
                                 return context.sendMessage(msg.toString())
                                     .then(Mono.just(PromptResponse.endTurn()));
                             } else {
-                                return context.sendMessage(
-                                    "User " + response.action().name().toLowerCase() + "d the form.\n")
+                                String outcome = ElicitationAction.DECLINE.equals(response.action())
+                                    ? "declined" : "cancelled";
+                                return context.sendMessage("User " + outcome + " the form.\n")
                                     .then(Mono.just(new PromptResponse(StopReason.END_TURN)));
                             }
                         });
@@ -126,7 +131,7 @@ public class ElicitationAgent {
                         .createElicitation(CreateElicitationRequest.form(
                             sessionId, "Quick question:", schema))
                         .flatMap(response -> {
-                            String msg = response.action() == ElicitationAction.ACCEPT
+                            String msg = ElicitationAction.ACCEPT.equals(response.action())
                                 ? "You chose: " + response.content().get("color") + "\n"
                                 : "No selection made.\n";
                             return context.sendMessage(msg)
