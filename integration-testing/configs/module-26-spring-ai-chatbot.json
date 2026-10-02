@@ -4,11 +4,12 @@
   "timeoutSec": 180,
   "requiredEnv": ["ANTHROPIC_API_KEY"],
   "requiresPackage": true,
-  "expectedBehavior": "Run the chatbot agent as a Spring Boot @AcpAgent that calls Claude through Spring AI's ChatClient (provider autoconfigured from spring-ai-starter-model-anthropic, built on the community acp-spring-boot-starter). The demo launches the Spring Boot agent as a subprocess and asks what Spring AI's ChatClient does; the agent should return a genuine, non-echoed AI-generated answer and end with stop reason end_turn (the wire value).",
+  "expectedBehavior": "Run the chatbot agent as a Spring Boot @AcpAgent that calls Claude through Spring AI's ChatClient (provider autoconfigured from spring-ai-starter-model-anthropic, built on the community acp-spring-boot-starter), with conversation memory keyed by the ACP session id. The demo launches the Spring Boot agent as a subprocess, asks it to write a haiku about debugging code, then in the SAME session asks it to turn that haiku into a limerick. The agent should return a genuine, non-echoed AI-generated response to each prompt, the limerick should clearly be derived from the haiku (demonstrating per-session conversation memory), and each turn should end with stop reason end_turn (the wire value).",
   "requiredOutput": [
     "=== Module 26: Spring AI Chatbot Agent Demo ===",
     "Connected to Spring AI ChatbotAgent (powered by Claude)!",
-    "You: In one sentence, what does Spring AI's ChatClient do?",
+    "You: Write a haiku about debugging code.",
+    "You: Now turn that haiku into a limerick.",
     "stop reason: end_turn"
   ]
 }
