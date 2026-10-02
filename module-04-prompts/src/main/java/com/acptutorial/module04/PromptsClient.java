@@ -6,7 +6,7 @@
  * Key APIs exercised:
  * - PromptRequest - session ID, content list
  * - PromptResponse - stop reason
- * - StopReason enum - END_TURN, MAX_TOKENS, REFUSAL, CANCELLED, etc.
+ * - StopReason - END_TURN, MAX_TOKENS, REFUSAL, CANCELLED, etc. (an open value type, not an enum)
  * - Content types - TextContent for text prompts
  *
  * The prompt/response cycle is the core of ACP communication.
@@ -23,6 +23,7 @@ import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
+import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.StopReason;
@@ -39,7 +40,15 @@ public class PromptsClient {
 
         var transport = new StdioAcpClientTransport(params);
 
-        try (AcpSyncClient client = AcpClient.sync(transport).build()) {
+        // Print the agent's streamed answer, so each prompt's response is visible
+        try (AcpSyncClient client = AcpClient.sync(transport)
+                .sessionUpdateConsumer(notification -> {
+                    if (notification.update() instanceof AgentMessageChunk msg
+                            && msg.content() instanceof TextContent text) {
+                        System.out.print(text.text());
+                    }
+                })
+                .build()) {
 
             System.out.println("=== Module 04: Prompts ===\n");
 
@@ -56,6 +65,7 @@ public class PromptsClient {
             System.out.println("Sending: " + ((TextContent) prompt1.prompt().get(0)).text());
 
             var response1 = client.prompt(prompt1);
+            System.out.println();
             System.out.println("Stop reason: " + response1.stopReason());
             explainStopReason(response1.stopReason());
             System.out.println();
@@ -74,6 +84,7 @@ public class PromptsClient {
             System.out.println("Sending multi-part prompt (4 TextContent items)");
 
             var response2 = client.prompt(prompt2);
+            System.out.println();
             System.out.println("Stop reason: " + response2.stopReason());
             System.out.println();
 
@@ -86,6 +97,7 @@ public class PromptsClient {
             System.out.println("Sending follow-up question");
 
             var response3 = client.prompt(prompt3);
+            System.out.println();
             System.out.println("Stop reason: " + response3.stopReason());
             System.out.println();
 
