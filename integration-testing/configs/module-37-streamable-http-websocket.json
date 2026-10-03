@@ -1,0 +1,22 @@
+{
+  "moduleId": "module-37-streamable-http-websocket",
+  "displayName": "Module 37: Streamable HTTP and WebSocket",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": false,
+  "expectedBehavior": "A remote ACP agent runs in-process on the Jetty listener and is reached over the network. (1) The agent listens on port 0 and getPort() returns the bound port (true). (2) A bodiless GET over plain http:// negotiates HTTP_2 (h2c). (3) Two clients connect at the same time, one over Streamable HTTP and one over WebSocket; each connection gets its own agent from the factory, so they report different connection numbers (the numbers 1 and 2 may be assigned in either order). The Streamable HTTP client opens two sessions on its connection and both are served by the same agent; every answer echoes the prompt with stop reason end_turn. The listener closes. (4) An annotated agent is served through AcpAgentSupport buildFactory on a second listener; two separate connections each get an answer, and the shared bean counts prompts #1 and #2 across connections. Ends with '=== Demo Complete ===' and no stack traces.",
+  "requiredOutput": [
+    "=== Module 37: Streamable HTTP and WebSocket ===",
+    "1. agent listening on port 0 -> bound port from getPort(): true",
+    "2. plain http:// negotiates: HTTP_2",
+    "echoes: hello from streamable-http session 1 (end_turn)",
+    "echoes: hello from streamable-http session 2 (end_turn)",
+    "echoes: hello from websocket session 1 (end_turn)",
+    "one agent per connection (different connection numbers): true",
+    "both HTTP sessions served by the same agent: true",
+    "[first connection] annotated agent, prompt #1 across all connections",
+    "[second connection] annotated agent, prompt #2 across all connections",
+    "listener closed",
+    "=== Demo Complete ==="
+  ]
+}
