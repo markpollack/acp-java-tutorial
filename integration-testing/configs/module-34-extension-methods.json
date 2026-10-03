@@ -1,0 +1,26 @@
+{
+  "moduleId": "module-34-extension-methods",
+  "displayName": "Module 34: Extension Methods",
+  "timeoutSec": 90,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "A client exercises custom underscore-prefixed extension methods against a local builder agent and then a local annotated agent, over stdio. For each agent: (1) a typed request _acptutorial/word_count returns WordCountResult[words=5, characters=35]; (2) a raw request _acptutorial/echo returns a map containing the echoed params {numbers=[1, 2, 3]} and the Java type the agent saw (LinkedHashMap); (3) the client sends the notification _acptutorial/log and receives an _acptutorial/ack notification from the agent naming which agent received it; (4) a request to _acptutorial/not_served fails with AcpError code -32601 (method not found), which is expected; (5) a method name without the leading underscore is refused locally with IllegalArgumentException, which is expected; (6) during a prompt the agent calls the client back: the client serves the typed _acptutorial/editor/selection request, receives an _acptutorial/status notification, the agent reports in a thought that the client does not serve _acptutorial/not_served (code -32601), and the agent's answer quotes the selection text 'int total = a + b;'. Stop reason end_turn for both agents. Ends with '=== Demo Complete ===' and no stack traces.",
+  "requiredOutput": [
+    "=== Module 34: Extension Methods ===",
+    "--- builder agent ---",
+    "--- annotated agent ---",
+    "1. typed request _acptutorial/word_count -> WordCountResult[words=5, characters=35]",
+    "2. raw request _acptutorial/echo -> {echoed={numbers=[1, 2, 3]}, agentSawJavaType=LinkedHashMap}",
+    "[client] _acptutorial/ack notification: {received=info: client started, by=builder agent}",
+    "[client] _acptutorial/ack notification: {received=info: client started, by=annotated agent}",
+    "4. _acptutorial/not_served -> AcpError code -32601",
+    "5. 'acptutorial/word_count' refused locally: IllegalArgumentException",
+    "[client] agent asked _acptutorial/editor/selection for src/Main.java",
+    "[client] _acptutorial/status notification: {state=reviewing, file=src/Main.java}",
+    "thought: the client does not serve _acptutorial/not_served (code -32601)",
+    "'int total = a + b;' looks fine (builder agent).",
+    "'int total = a + b;' looks fine (annotated agent).",
+    "stop reason: end_turn",
+    "=== Demo Complete ==="
+  ]
+}

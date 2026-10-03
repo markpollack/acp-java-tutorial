@@ -129,6 +129,7 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 | Module | Title | What you'll learn |
 |--------|-------|-------------------|
 | 33 | [Session Config Options](module-33-session-config-options/) | Model picker, capability-gated boolean, `set_config_option`, `config_option_update`, modes |
+| 34 | [Extension Methods](module-34-extension-methods/) | `_`-prefixed requests and notifications both ways, typed and raw, `@ExtRequest`/`@ExtNotification` |
 
 ## Error handling in handlers
 

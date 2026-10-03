@@ -209,6 +209,7 @@
             <!-- Modules for features new in 0.80.0: they compile only against the candidate. -->
             <modules>
                 <module>module-33-session-config-options</module>
+                <module>module-34-extension-methods</module>
             </modules>
             <repositories>
                 <repository>
