@@ -122,6 +122,14 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | 22 | [Async Agent](module-22-async-agent/) | Build agents with `AcpAgent.async()` |
 | 24 | [Spring Boot Client](module-24-spring-boot-client/) | Autoconfigured `AcpSyncClient` |
 
+### New in SDK 0.80.0 (build with `-Psdk-candidate` until the release)
+
+Every module here runs a Java agent it builds itself, plus a client: no agent CLI, no API key.
+
+| Module | Title | What you'll learn |
+|--------|-------|-------------------|
+| 33 | [Session Config Options](module-33-session-config-options/) | Model picker, capability-gated boolean, `set_config_option`, `config_option_update`, modes |
+
 ## Error handling in handlers
 
 When implementing file or permission handlers, **throw exceptions for errors**. The SDK automatically converts exceptions to proper JSON-RPC error responses.
