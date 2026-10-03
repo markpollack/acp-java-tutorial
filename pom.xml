@@ -210,6 +210,7 @@
             <modules>
                 <module>module-33-session-config-options</module>
                 <module>module-34-extension-methods</module>
+                <module>module-35-cancellation-timeouts</module>
             </modules>
             <repositories>
                 <repository>

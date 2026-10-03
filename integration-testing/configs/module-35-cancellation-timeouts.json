@@ -1,0 +1,25 @@
+{
+  "moduleId": "module-35-cancellation-timeouts",
+  "displayName": "Module 35: Cancellation and Timeouts",
+  "timeoutSec": 90,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "An async client drives a local deterministic agent over stdio through four cancellation scenarios. 1 (session/cancel): the agent streams ticks, the client sends session/cancel, a prompt sent before the cancelled turn answers is rejected with AcpError -32600 (INVALID_REQUEST) with the session id in its data, the agent says it is wrapping up, the cancelled prompt answers with stop reason cancelled, and a following prompt works (pong, end_turn). 2 ($/cancel_request): a prompt cancelled gracefully with RequestCancellation.cancelWhen after two ticks still receives the agent's answer, AcpError -32800 (REQUEST_CANCELLED); a second prompt whose Mono is disposed by a 300 ms timeout returns at once with TimeoutException. 3 (cancelGracePeriod, Java SDK policy, 1000 ms here): a handler that ignores session/cancel is answered by the SDK with stop reason cancelled after the grace period (true). 4 (maxPromptDuration, Java SDK policy, 3000 ms here): a prompt that never answers fails with AcpError -32800 'Prompt exceeded maxPromptDuration of PT3S', data {maxPromptDuration=PT3S}, after the limit (true). The -32600 and -32800 errors and the TimeoutException are the expected, demonstrated outcomes, not failures. Ends with '=== Demo Complete ===' and no stack traces.",
+  "requiredOutput": [
+    "=== Module 35: Cancellation and Timeouts ===",
+    "--- 1. session/cancel ---",
+    "client: sent session/cancel",
+    "client: prompt sent before the cancelled turn answered -> AcpError -32600 (INVALID_REQUEST)",
+    "client: cancelled prompt answered, stop reason cancelled (CANCELLED: true)",
+    "client: the turn is over, the next prompt works: stop reason end_turn",
+    "--- 2. $/cancel_request ---",
+    "client: graceful cancel (cancelWhen) still received the agent's answer -> AcpError -32800 (REQUEST_CANCELLED)",
+    "returns at once: TimeoutException",
+    "--- 3. cancelGracePeriod (Java SDK policy, 1000 ms here) ---",
+    "client: the SDK answered for the handler: stop reason cancelled, after the grace period: true",
+    "--- 4. maxPromptDuration (Java SDK policy, 3000 ms here) ---",
+    "client: AcpError -32800: Prompt exceeded maxPromptDuration of PT3S",
+    "client: data {maxPromptDuration=PT3S}, after the limit: true",
+    "=== Demo Complete ==="
+  ]
+}

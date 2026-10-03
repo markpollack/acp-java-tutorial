@@ -130,6 +130,7 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 |--------|-------|-------------------|
 | 33 | [Session Config Options](module-33-session-config-options/) | Model picker, capability-gated boolean, `set_config_option`, `config_option_update`, modes |
 | 34 | [Extension Methods](module-34-extension-methods/) | `_`-prefixed requests and notifications both ways, typed and raw, `@ExtRequest`/`@ExtNotification` |
+| 35 | [Cancellation and Timeouts](module-35-cancellation-timeouts/) | `session/cancel`, `$/cancel_request` and `cancelWhen`, the SDK's `cancelGracePeriod` and `maxPromptDuration` |
 
 ## Error handling in handlers
 
