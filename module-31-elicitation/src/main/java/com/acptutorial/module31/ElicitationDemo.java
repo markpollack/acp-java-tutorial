@@ -9,6 +9,7 @@
  * - Full multi-field form (accept with all field types)
  * - User declining the form
  * - User cancelling the form
+ * - URL mode: the user agrees to open a URL; the agent later sends elicitation/complete
  *
  * Build & run:
  *   ./mvnw package -pl module-31-elicitation -q
@@ -60,10 +61,11 @@ public class ElicitationDemo {
 
         var transport = new StdioAcpClientTransport(params);
 
-        // Advertise the elicitation modes this client handles: form only.
-        // The agent may not request a mode the client did not advertise.
+        // Advertise the elicitation modes this client handles: form and URL.
+        // The agent may not request a mode the client did not advertise
+        // (formOnly() / urlOnly() / formAndUrl()).
         var caps = ClientCapabilities.builder()
-            .elicitation(ElicitationCapabilities.formOnly())
+            .elicitation(ElicitationCapabilities.formAndUrl())
             .build();
 
         try (AcpSyncClient client = AcpClient.sync(transport)
@@ -74,6 +76,10 @@ public class ElicitationDemo {
                     }
                 })
                 .createElicitationHandler(req -> handleElicitation(req))
+                // URL mode: the agent reports that the external interaction finished.
+                // Ignore ids you do not know or have already completed.
+                .completeElicitationHandler(done ->
+                    System.out.println("  [Elicitation] elicitation/complete for " + done.elicitationId()))
                 .build()) {
 
             System.out.println("=== Module 31: Elicitation ===\n");
@@ -112,6 +118,14 @@ public class ElicitationDemo {
             client.prompt(new PromptRequest(sessionId,
                 List.of(new TextContent("simple"))));
 
+            System.out.println();
+
+            // Demo 5: URL mode, then elicitation/complete
+            System.out.println("--- Demo 5: URL Mode (accept, then complete) ---");
+            nextAction.set("accept");
+            client.prompt(new PromptRequest(sessionId,
+                List.of(new TextContent("url"))));
+
             System.out.println("\n=== Demo Complete ===");
             System.out.println("Elicitation lets agents request structured input from users.");
             System.out.println("The agent handles accept, decline, and cancel responses.");
@@ -127,6 +141,16 @@ public class ElicitationDemo {
 
         System.out.println("  [Elicitation] Agent asks: " + req.message());
         String action = nextAction.get();
+
+        if (AcpSchema.CreateElicitationRequest.MODE_URL.equals(req.mode())) {
+            // A real client shows the URL and opens it in a browser if the user agrees.
+            System.out.println("  [Elicitation] URL mode: open " + req.url() + " (id " + req.elicitationId() + ")");
+            if ("accept".equals(action)) {
+                System.out.println("  [Elicitation] User agrees to open it\n");
+                return CreateElicitationResponse.accept();
+            }
+            return CreateElicitationResponse.decline();
+        }
 
         if ("decline".equals(action)) {
             System.out.println("  [Elicitation] User declines\n");

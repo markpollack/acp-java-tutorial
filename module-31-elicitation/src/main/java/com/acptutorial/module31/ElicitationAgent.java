@@ -10,7 +10,14 @@
  * Elicitation is part of stable ACP v1 (since protocol v1.7.0); the agent
  * may only request a mode (form or url) the client advertised.
  *
- * This demo exercises all form field types:
+ * Two modes:
+ * - form: the agent sends a schema, the client renders a form and returns values
+ * - url:  the agent sends a URL (a sign-in page, a payment page) that the client opens
+ *         out of band with the user's consent. The client's accept means only "the user
+ *         agreed to open it"; when the external interaction finishes, the agent sends
+ *         elicitation/complete with the same elicitationId.
+ *
+ * The form demos exercise all form field types:
  * - Text input (StringPropertySchema)
  * - Single-select dropdown (StringPropertySchema + oneOf)
  * - Multi-select checkboxes (MultiSelectPropertySchema)
@@ -33,6 +40,7 @@ import com.agentclientprotocol.sdk.agent.AcpAsyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.BooleanPropertySchema;
+import com.agentclientprotocol.sdk.spec.AcpSchema.CompleteElicitationNotification;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationAction;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema;
@@ -118,6 +126,26 @@ public class ElicitationAgent {
                             }
                         });
 
+                } else if (text.contains("url")) {
+                    // URL mode: the client opens the URL; no schema, no content in the answer
+                    String elicitationId = "signin-" + UUID.randomUUID();
+                    return agentRef.get()
+                        .createElicitation(CreateElicitationRequest.url(sessionId,
+                            "Sign in to the issue tracker to continue",
+                            elicitationId, "https://tracker.example.com/oauth/authorize?state=" + elicitationId))
+                        .flatMap(response -> {
+                            if (!ElicitationAction.ACCEPT.equals(response.action())) {
+                                return context.sendMessage("User did not open the sign-in page.\n")
+                                    .then(Mono.just(PromptResponse.endTurn()));
+                            }
+                            // ... the user signs in on that page (the agent learns of it out of
+                            // band, e.g. an OAuth callback). Then tell the client it is done:
+                            return agentRef.get()
+                                .completeElicitation(new CompleteElicitationNotification(elicitationId))
+                                .then(context.sendMessage("Signed in; the sign-in page can be closed.\n"))
+                                .then(Mono.just(PromptResponse.endTurn()));
+                        });
+
                 } else if (text.contains("simple")) {
                     // Demo 2: Simple single-field form
                     var schema = new ElicitationSchema(
@@ -139,7 +167,7 @@ public class ElicitationAgent {
                         });
 
                 } else {
-                    return context.sendMessage("Say 'project' for a full form or 'simple' for a quick select.\n")
+                    return context.sendMessage("Say 'project' for a full form, 'simple' for a quick select, or 'url' to sign in.\n")
                         .then(Mono.just(PromptResponse.endTurn()));
                 }
             })

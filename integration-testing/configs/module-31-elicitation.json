@@ -4,13 +4,17 @@
   "timeoutSec": 30,
   "requiredEnv": [],
   "requiresPackage": true,
-  "expectedBehavior": "Demonstrates the elicitation protocol with four scenarios. Demo 1: agent sends a simple single-select form (favorite color), client auto-picks and accepts, agent confirms the choice. Demo 2: agent sends a full project setup form with 5 field types (text input for name, single-select for template, multi-select for features, integer for Java version, boolean for git init), client auto-fills all fields and accepts, agent prints all configured values. Demo 3: agent sends a form but client DECLINES — agent should report the user declined. Demo 4: agent sends a form but client CANCELS — agent should report the user cancelled. All four demos should complete without errors. The key protocol concept: elicitation is agent-to-client (the agent asks the client, not the other way around).",
+  "expectedBehavior": "Demonstrates the elicitation protocol with five scenarios; the client advertises both form and URL modes. Demo 1: agent sends a simple single-select form (favorite color), client auto-picks and accepts, agent confirms the choice. Demo 2: agent sends a full project setup form with 5 field types (text input for name, single-select for template, multi-select for features, integer for Java version, boolean for git init), client auto-fills all fields and accepts, agent prints all configured values. Demo 3: agent sends a form but client DECLINES \u2014 agent should report the user declined. Demo 4: agent sends a form but client CANCELS \u2014 agent should report the user cancelled. Demo 5 (URL mode): the agent asks the user to sign in at a URL (no form schema); the client prints the URL and elicitation id, the user agrees to open it (accept with no content), then the client receives elicitation/complete for the same id and the agent reports it is signed in. All five demos should complete without errors. The key protocol concept: elicitation is agent-to-client (the agent asks the client, not the other way around).",
   "requiredOutput": [
     "=== Module 31: Elicitation ===",
     "--- Demo 1:",
     "--- Demo 2:",
     "--- Demo 3:",
     "--- Demo 4:",
+    "--- Demo 5:",
+    "[Elicitation] URL mode: open https://tracker.example.com/oauth/authorize",
+    "[Elicitation] elicitation/complete for signin-",
+    "Signed in; the sign-in page can be closed.",
     "=== Demo Complete ==="
   ]
 }

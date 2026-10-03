@@ -79,7 +79,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | 14 | [Sending Updates](module-14-sending-updates/) | Stream all update types to clients |
 | 15 | [Agent Requests](module-15-agent-requests/) | Request files / permissions from the client |
 | 18 | [Terminal Operations](module-18-terminal-operations/) | Execute commands via the terminal API |
-| 31 | [Elicitation](module-31-elicitation/) | Ask the user for structured input (forms) |
+| 31 | [Elicitation](module-31-elicitation/) | Ask the user for structured input (forms) or to visit a URL (`elicitation/complete`) |
 | 23 | [Spring Boot Agent](module-23-spring-boot-agent/) | Ship an agent with `@AcpAgent` (Java 21+) |
 
 > **Portability — same chatbot, any provider:** the module-25 agent rebuilt on the
