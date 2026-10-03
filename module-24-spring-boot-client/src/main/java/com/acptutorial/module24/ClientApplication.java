@@ -34,7 +34,10 @@ import org.springframework.context.annotation.Bean;
 public class ClientApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ClientApplication.class, args);
+        // Close the context when the demo finishes, so the ACP client beans shut down
+        // while their classes are still loadable (under exec:java the classloader is
+        // torn down once main returns, before Spring's shutdown hook runs).
+        SpringApplication.run(ClientApplication.class, args).close();
     }
 
     @Bean
