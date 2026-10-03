@@ -134,6 +134,7 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 | 36 | [Terminal Auth and Logout](module-36-terminal-auth-logout/) | `AuthMethodAgent` and `AuthMethodTerminal`, the logout capability, `@Authenticate` and `@Logout` |
 | 37 | [Streamable HTTP and WebSocket](module-37-streamable-http-websocket/) | A remote agent on the Jetty listener, one agent per connection, HTTP and WebSocket clients, h2c |
 | 38 | [Spring Boot over HTTP](module-38-spring-boot-http/) | `spring.acp.agent.transport.type=http`, an HTTP client app, `AcpClientCustomizer` and the fs capability properties (Java 21+) |
+| 39 | [Forward Compatibility and _meta](module-39-forward-compatibility/) | `Unknown*` variants kept, open values with `equals`, `_meta` on messages |
 
 ## Error handling in handlers
 

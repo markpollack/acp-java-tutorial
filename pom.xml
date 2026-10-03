@@ -220,6 +220,7 @@
                 <module>module-36-terminal-auth-logout</module>
                 <module>module-37-streamable-http-websocket</module>
                 <module>module-38-spring-boot-http</module>
+                <module>module-39-forward-compatibility</module>
             </modules>
             <repositories>
                 <repository>

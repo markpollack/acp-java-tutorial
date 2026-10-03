@@ -1,0 +1,20 @@
+{
+  "moduleId": "module-39-forward-compatibility",
+  "displayName": "Module 39: Forward Compatibility and _meta",
+  "timeoutSec": 60,
+  "requiredEnv": [],
+  "requiresPackage": false,
+  "expectedBehavior": "A client talks in memory (InMemoryTransportPair) to an agent that pretends to be a newer ACP version. The client sends a prompt with _meta {acptutorial.dev/traceId=trace-42}; the agent's first message reports the prompt _meta it saw and carries the same _meta on the session update. A session update of the unknown kind 'usage_forecast' is kept as an UnknownSessionUpdate with its fields {tokensLeft=1200}; a message with an unknown content block type 'hologram' is kept with fields {frames=3}. The stop reason 'paused_for_review' is not known (known: false) and does not equal END_TURN; the known stop reasons are listed; the response carries the _meta back. Then raw JSON of a session/update from a newer peer is read as UnknownSessionUpdate and written back unchanged (true). Ends with '=== Demo Complete ===' and no exceptions. The unknown values are the point of the demo, not errors.",
+  "requiredOutput": [
+    "=== Module 39: Forward Compatibility and _meta ===",
+    "message: the agent saw prompt _meta acptutorial.dev/traceId=trace-42   _meta {acptutorial.dev/traceId=trace-42}",
+    "unknown session update kept: 'usage_forecast', fields {tokensLeft=1200}",
+    "message with an unknown content block: type 'hologram', fields {frames=3}",
+    "stop reason: paused_for_review, known: false, equals END_TURN: false",
+    "known stop reasons: [end_turn, max_tokens, max_turn_requests, refusal, cancelled]",
+    "response _meta: {acptutorial.dev/traceId=trace-42}",
+    "read as: UnknownSessionUpdate",
+    "unchanged: true",
+    "=== Demo Complete ==="
+  ]
+}
