@@ -211,6 +211,7 @@
                 <module>module-33-session-config-options</module>
                 <module>module-34-extension-methods</module>
                 <module>module-35-cancellation-timeouts</module>
+                <module>module-36-terminal-auth-logout</module>
             </modules>
             <repositories>
                 <repository>
