@@ -1,0 +1,24 @@
+{
+  "moduleId": "module-33-session-config-options",
+  "displayName": "Module 33: Session Config Options",
+  "timeoutSec": 90,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "A client drives a local config-options agent over stdio in three passes. Passes 1 (builder agent) and 2 (annotated agent) advertise boolean config option support: session/new offers a grouped model select marked as the model picker (Hosted: orbit-1-mini orbit-1 orbit-2-preview; Local: local-7b), a mode select (ask/code) and a boolean verbose option, and also reports legacy modes. Setting model to orbit-1, mode to code and verbose to true each returns the full option list showing the new value. Setting model to gpt-99 is rejected with code -32602. A prompt answers '[orbit-1, mode=code] Hello from the ... agent.' with the verbose explanation, stop reason end_turn. After selecting orbit-2-preview, the next prompt shows a thought that it is rate limited, then a config_option_update from the agent whose model is back to orbit-1, then the answer, stop reason end_turn. Pass 3 (builder agent, no boolean support advertised) offers only model and mode (no verbose), rejects setting verbose with -32602 'Unknown config option', and after a legacy session/set_mode to code the prompt answer shows mode=code. Ends with '=== Demo Complete ===' and no exceptions or stack traces. The -32602 rejections are expected behaviour, not errors.",
+  "requiredOutput": [
+    "=== Module 33: Session Config Options ===",
+    "--- builder agent, boolean options advertised: true ---",
+    "--- annotated agent, boolean options advertised: true ---",
+    "--- builder agent, boolean options advertised: false ---",
+    "select  model = orbit-1-mini   <- model picker",
+    "boolean verbose = true",
+    "rejected: code -32602: Unknown model 'gpt-99'",
+    "[orbit-1, mode=code] Hello from the builder agent. (verbose:",
+    "[orbit-1, mode=code] Hello from the annotated agent. (verbose:",
+    "config_option_update from the agent:",
+    "rejected: code -32602: Unknown config option 'verbose'",
+    "[orbit-1-mini, mode=code] Hello from the builder agent.",
+    "stop reason: end_turn",
+    "=== Demo Complete ==="
+  ]
+}
