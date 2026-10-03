@@ -133,6 +133,7 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 | 35 | [Cancellation and Timeouts](module-35-cancellation-timeouts/) | `session/cancel`, `$/cancel_request` and `cancelWhen`, the SDK's `cancelGracePeriod` and `maxPromptDuration` |
 | 36 | [Terminal Auth and Logout](module-36-terminal-auth-logout/) | `AuthMethodAgent` and `AuthMethodTerminal`, the logout capability, `@Authenticate` and `@Logout` |
 | 37 | [Streamable HTTP and WebSocket](module-37-streamable-http-websocket/) | A remote agent on the Jetty listener, one agent per connection, HTTP and WebSocket clients, h2c |
+| 38 | [Spring Boot over HTTP](module-38-spring-boot-http/) | `spring.acp.agent.transport.type=http`, an HTTP client app, `AcpClientCustomizer` and the fs capability properties (Java 21+) |
 
 ## Error handling in handlers
 

@@ -14,6 +14,11 @@
     <name>Module 37 - Streamable HTTP and WebSocket</name>
     <description>A remote agent on the Jetty listener (one agent per connection), clients over Streamable HTTP and WebSocket, h2c</description>
 
+    <properties>
+        <!-- The demo; override with -Dexec.mainClass=... to run one side on its own -->
+        <exec.mainClass>com.acptutorial.module37.HttpTransportsDemo</exec.mainClass>
+    </properties>
+
     <dependencies>
         <!-- The agent listener: Jetty with HTTP/1.1, h2c and the WebSocket upgrade on /acp.
              Brings acp-core and acp-json-jackson2. The client transports are in acp-core. -->
@@ -36,9 +41,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.acptutorial.module37.HttpTransportsDemo</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>

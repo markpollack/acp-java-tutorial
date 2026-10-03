@@ -219,6 +219,7 @@
                 <module>module-35-cancellation-timeouts</module>
                 <module>module-36-terminal-auth-logout</module>
                 <module>module-37-streamable-http-websocket</module>
+                <module>module-38-spring-boot-http</module>
             </modules>
             <repositories>
                 <repository>

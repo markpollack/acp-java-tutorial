@@ -2,7 +2,7 @@
  * Module 37: Streamable HTTP and WebSocket - the remote agent
  *
  * Run the listener on its own (Ctrl+C to stop):
- *   ./mvnw compile exec:java -pl module-37-streamable-http-websocket \
+ *   ./mvnw exec:java -pl module-37-streamable-http-websocket \
  *       -Dexec.mainClass=com.acptutorial.module37.HttpAgent -Dexec.args=8080
  */
 package com.acptutorial.module37;
