@@ -27,6 +27,11 @@
         <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
         <slf4j.version>2.0.9</slf4j.version>
         <agentworks.version>1.6.0</agentworks.version>
+        <!-- Jackson, as the SDK manages it (its 2.22.3 CVE bump). Imported ahead of agentworks-bom,
+             and ahead of spring-boot-dependencies in the Spring Boot modules, since the first
+             import that manages an artifact wins. Module 41 keeps the Quarkus BOM's Jackson. -->
+        <jackson.version>2.22.3</jackson.version>
+        <jackson3.version>3.1.7</jackson3.version>
     </properties>
 
     <modules>
@@ -148,6 +153,21 @@
                 <groupId>com.anthropic</groupId>
                 <artifactId>anthropic-java</artifactId>
                 <version>${anthropic-sdk.version}</version>
+            </dependency>
+            <!-- Jackson 2 and 3 BOMs (see jackson.version above): before agentworks-bom. -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson3.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!-- agent-client (agentworks): the AgentClient abstraction + Claude model,
                  for the agentic module (32). Versions managed by the BOM. -->
