@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
+import com.agentclientprotocol.sdk.error.AcpErrorCodes;
+import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 import com.agentclientprotocol.sdk.integration.AcpClientCustomizer;
 
@@ -91,7 +93,10 @@ public class HttpClientApplication {
                     System.out.println("   client: agent asked to read " + req.path());
                     String content = WORKSPACE.get(req.path());
                     if (content == null) {
-                        return Mono.error(new IllegalArgumentException("No such file: " + req.path()));
+                        // An AcpProtocolException is the answer the agent sees; any other
+                        // exception is answered -32603 "Internal error", its message withheld.
+                        return Mono.error(new AcpProtocolException(AcpErrorCodes.RESOURCE_NOT_FOUND,
+                                "No such file: " + req.path()));
                     }
                     return Mono.just(new AcpSchema.ReadTextFileResponse(content));
                 });
