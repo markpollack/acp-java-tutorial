@@ -7,7 +7,11 @@
  * - createTerminalHandler() - handle terminal creation, spawn process
  * - terminalOutputHandler() - capture process output
  * - waitForTerminalExitHandler() - wait for process to finish
+ * - killTerminalHandler() - stop the process, keeping the terminal for its output
  * - releaseTerminalHandler() - clean up process resources
+ *
+ * Advertising the terminal capability takes all five handlers: build() fails otherwise,
+ * naming the missing ones.
  *
  * Build & run:
  *   ./mvnw package -pl module-18-terminal-operations -q
@@ -32,6 +36,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateTerminalResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
+import com.agentclientprotocol.sdk.spec.AcpSchema.KillTerminalCommandResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ReleaseTerminalResponse;
@@ -161,6 +166,19 @@ public class TerminalDemo {
 
                     String output = state.output() != null ? state.output().toString() : "";
                     return new TerminalOutputResponse(output, false, null);
+                })
+                // Handler: Kill the command. The terminal stays valid: its output can still be
+                // read, and the agent releases it afterwards.
+                .killTerminalHandler(req -> {
+                    String terminalId = req.terminalId();
+                    System.out.println("[Client] Killing command in terminal: " + terminalId);
+
+                    TerminalState state = terminals.get(terminalId);
+                    if (state != null && state.process() != null) {
+                        state.process().destroyForcibly();
+                    }
+
+                    return new KillTerminalCommandResponse();
                 })
                 // Handler: Release terminal
                 .releaseTerminalHandler(req -> {
