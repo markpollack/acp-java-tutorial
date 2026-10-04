@@ -19,7 +19,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  * <ol>
  *   <li>Agent: {@code HttpAgentApplication} with
- *   {@code spring.acp.agent.transport.http.port=0}; the bound port comes from the
+ *   {@code spring.acp.agent.transport.http.listener.port=0}; the bound port comes from the
  *   {@code StreamableHttpAcpAgentTransport} bean's {@code getPort()}.</li>
  *   <li>Client over Streamable HTTP
  *   ({@code --spring.acp.client.transport.http.uri=http://localhost:<port>/acp}): the agent
@@ -43,7 +43,7 @@ public final class SpringBootHttpDemo {
         System.out.println("=== Module 38: Spring Boot over HTTP ===\n");
 
         ConfigurableApplicationContext agent = HttpAgentApplication.start(
-                "--spring.acp.agent.transport.http.port=0", "--spring.main.keep-alive=false");
+                "--spring.acp.agent.transport.http.listener.port=0", "--spring.main.keep-alive=false");
         try {
             int port = agent.getBean(StreamableHttpAcpAgentTransport.class).getPort();
             System.out.println("agent application listening (port 0 -> a free port): " + (port > 0));

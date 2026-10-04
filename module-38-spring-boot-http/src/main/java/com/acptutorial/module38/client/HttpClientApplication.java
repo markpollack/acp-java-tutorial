@@ -13,7 +13,7 @@ import java.util.Map;
 
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
-import com.agentclientprotocol.sdk.spring.boot.autoconfigure.client.AcpClientCustomizer;
+import com.agentclientprotocol.sdk.integration.AcpClientCustomizer;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -42,8 +42,8 @@ import reactor.core.publisher.Mono;
  * is applied, in order, to the one builder behind both {@code AcpAsyncClient} and
  * {@code AcpSyncClient}. This one registers:
  * <ul>
- *   <li>a session-update consumer that prints the agent's messages. Consumers add up: the
- *   autoconfiguration's own debug-logging consumer stays;</li>
+ *   <li>a session-update consumer that prints the agent's messages. It replaces the
+ *   autoconfiguration's default consumer, which only logs each update at DEBUG;</li>
  *   <li>a handler for {@code fs/read_text_file}, serving files from an in-memory
  *   workspace.</li>
  * </ul>
