@@ -238,6 +238,7 @@
                 <module>module-38-spring-boot-http</module>
                 <module>module-39-forward-compatibility</module>
                 <module>module-40-micronaut</module>
+                <module>module-41-quarkus</module>
             </modules>
             <repositories>
                 <repository>

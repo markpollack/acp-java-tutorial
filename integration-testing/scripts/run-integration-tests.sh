@@ -74,6 +74,7 @@ if [ -n "${ACP_SDK_CANDIDATE:-}" ]; then
         "module-38-spring-boot-http"
         "module-39-forward-compatibility"
         "module-40-micronaut"
+        "module-41-quarkus"
     )
 fi
 

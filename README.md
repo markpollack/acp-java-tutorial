@@ -136,6 +136,7 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 | 38 | [Spring Boot over HTTP](module-38-spring-boot-http/) | `spring.acp.agent.transport.type=http`, an HTTP client app, `AcpClientCustomizer` and the fs capability properties (Java 21+) |
 | 39 | [Forward Compatibility and _meta](module-39-forward-compatibility/) | `Unknown*` variants kept, open values with `equals`, `_meta` on messages |
 | 40 | [Micronaut](module-40-micronaut/) | `acp-micronaut`: a `@Singleton @AcpAgent` bean over stdio and HTTP/WebSocket, Micronaut clients from `acp.client.*`, derived `initialize`, an `@Around` interceptor, a `Publisher` return |
+| 41 | [Quarkus](module-41-quarkus/) | `acp-quarkus`: `@AcpAgent` as a CDI bean on the Quarkus HTTP server (HTTP and WebSocket), `Uni` and cancellable `Multi` returns, a CDI interceptor, derived `initialize` (JVM mode) |
 
 The Spring Boot starter is part of the SDK from 0.80.0: `com.agentclientprotocol:acp-spring-boot-starter`
 replaces `org.springaicommunity:acp-spring-boot-starter` (modules 23, 24, 26 and 38; the `spring.acp.*`

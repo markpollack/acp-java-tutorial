@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.agentclientprotocol</groupId>
+        <artifactId>acp-java-tutorial</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>module-41-quarkus</artifactId>
+    <name>Module 41 - Quarkus</name>
+    <description>An annotated ACP agent on the Quarkus extension (acp-quarkus), served over Streamable HTTP and WebSocket on the Quarkus HTTP server, with Uni and Multi handlers and a CDI interceptor</description>
+
+    <properties>
+        <!-- The Quarkus version acp-quarkus is built on -->
+        <quarkus.version>3.40.1</quarkus.version>
+        <exec.mainClass>com.acptutorial.module41.QuarkusDemo</exec.mainClass>
+    </properties>
+
+    <!-- The Quarkus BOM, in this module only: the other tutorial modules keep the SDK's versions. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.quarkus.platform</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${quarkus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The Quarkus extension: the @AcpAgent bean, stdio or Streamable HTTP + WebSocket on the
+             Quarkus HTTP server, Uni and Multi return values, client beans from quarkus.acp.client.* -->
+        <dependency>
+            <groupId>com.agentclientprotocol</groupId>
+            <artifactId>acp-quarkus</artifactId>
+        </dependency>
+        <!-- Quarkus logs through JBoss Logging: keep the parent's slf4j-simple out of the application -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Builds the application at package time (build-time discovery of the @AcpAgent class,
+                 build-time transport choice): target/quarkus-app/quarkus-run.jar. JVM mode only. -->
+            <plugin>
+                <groupId>io.quarkus.platform</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Run the demo with: ./mvnw -Psdk-candidate exec:java -pl module-41-quarkus
+                 (after package). It starts quarkus-run.jar as a process and connects to it. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

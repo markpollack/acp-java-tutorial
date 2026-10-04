@@ -1,0 +1,30 @@
+{
+  "moduleId": "module-41-quarkus",
+  "displayName": "Module 41: Quarkus",
+  "timeoutSec": 150,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "The packaged Quarkus application (acp-quarkus, JVM mode, quarkus.acp.agent.transport.type=http) is started as a process on a free port and serves an annotated ACP agent (@AcpAgent alone makes it a CDI bean) at /acp on the Quarkus HTTP server. (1) A Streamable HTTP client prints the initialize response JSON it received, with agentInfo name quarkus-streaming-agent, version 1.0.0, title 'Quarkus Streaming Agent', sessionCapabilities.close and promptCapabilities.image true, derived from the annotations (no @Initialize). A greeting prompt shows a thought from a CDI interceptor ('[audit] prompt call #1') and \"Hello from Quarkus: you said 'hi over Streamable HTTP'\" with end_turn. A 'count to ten' prompt streams a Mutiny Multi: chunk 1, chunk 2, chunk 3 arrive, the client sends session/cancel, and the stop reason is cancelled (a fourth chunk may or may not arrive before the cancel takes effect). A 'status' prompt then reports that the last stream was cancelled after some number of the 10 chunks (3 is typical, 4 is acceptable), seen by the Multi's onCancellation, with end_turn; session/close succeeds. (2) A WebSocket client on the same path and server connects (agentInfo quarkus-streaming-agent, protocol version 1) and gets \"Hello from Quarkus: you said 'hi over WebSocket'\" with end_turn; the interceptor count continues across connections (call #4). The application is stopped. Ends with '=== Demo Complete ===' and no exceptions, stack traces, or ERROR log lines.",
+  "requiredOutput": [
+    "=== Module 41: Quarkus ===",
+    "Quarkus agent application started: true",
+    "--- 1. Streamable HTTP on the Quarkus HTTP server ---",
+    "\"agentInfo\":{\"name\":\"quarkus-streaming-agent\",\"version\":\"1.0.0\",\"title\":\"Quarkus Streaming Agent\"}",
+    "agentInfo (from @AcpAgent): quarkus-streaming-agent 1.0.0, title 'Quarkus Streaming Agent'",
+    "sessionCapabilities.close (from @CloseSession): true",
+    "promptCapabilities.image (from @Prompt(image = true)): true",
+    "thought: [audit] prompt call #1, intercepted by a CDI interceptor",
+    "agent: Hello from Quarkus: you said 'hi over Streamable HTTP'",
+    "agent: chunk 3",
+    "client: session/cancel",
+    "stop reason: cancelled",
+    "agent: your last stream was cancelled after",
+    "session/close: OK",
+    "--- 2. WebSocket, the same path on the same server ---",
+    "agent: Hello from Quarkus: you said 'hi over WebSocket'",
+    "thought: [audit] prompt call #4, intercepted by a CDI interceptor",
+    "stop reason: end_turn",
+    "Quarkus agent application stopped",
+    "=== Demo Complete ==="
+  ]
+}
