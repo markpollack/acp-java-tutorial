@@ -23,9 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
+import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 
@@ -42,7 +45,9 @@ public class StatefulAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[StatefulAgent] Initialize");
-                return InitializeResponse.ok();
+                // Advertise loadSession: a client calls session/load only on an agent that does.
+                return InitializeResponse.ok(new AgentCapabilities(
+                    true, new McpCapabilities(), new PromptCapabilities()));
             })
 
             // Create new session with fresh state
