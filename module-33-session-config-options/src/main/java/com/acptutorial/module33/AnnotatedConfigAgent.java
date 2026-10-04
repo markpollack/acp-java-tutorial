@@ -14,6 +14,8 @@ import com.agentclientprotocol.sdk.agent.support.AcpAgentSupport;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.annotation.AcpAgent;
 import com.agentclientprotocol.sdk.annotation.CloseSession;
+import com.agentclientprotocol.sdk.annotation.ConfigId;
+import com.agentclientprotocol.sdk.annotation.ConfigValue;
 import com.agentclientprotocol.sdk.annotation.NewSession;
 import com.agentclientprotocol.sdk.annotation.Prompt;
 import com.agentclientprotocol.sdk.annotation.SessionId;
@@ -33,10 +35,21 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  * pushes the agent-initiated {@code config_option_update} through the connection's agent
  * (it could equally use the {@link SyncPromptContext}).
  *
- * <p>There is no {@code @Initialize} method: the default answer
- * ({@code InitializeResponse.ok()}) is used. There is no session-state annotation either:
- * per-session state lives in {@link SessionSettings}' concurrent map and is dropped in
- * {@code @CloseSession}.
+ * <p>{@code @SetSessionConfigOption} takes the option as typed parameters instead of the
+ * request: {@link ConfigId @ConfigId} {@code String} is the option id and
+ * {@link ConfigValue @ConfigValue} the new value, typed by the parameter ({@code String} for a
+ * select, {@code boolean} for a boolean, {@code Object} for either, as here). A value of the
+ * other kind than the parameter's is answered {@code -32602} without calling the method. The
+ * SDK does not check that the session offered the id or the value: that is the method's job.
+ *
+ * <p>The SDK requires the {@code @NewSession} method: an agent with
+ * {@code @SetSessionMode} or {@code @SetSessionConfigOption} and no {@code @NewSession} fails
+ * to build, since the default {@code session/new} answer offers no modes or options.
+ *
+ * <p>There is no {@code @Initialize} method: the SDK derives the {@code initialize} answer
+ * from the class ({@code agentInfo} from {@code @AcpAgent}, {@code sessionCapabilities.close}
+ * from {@code @CloseSession}). There is no session-state annotation either: per-session state
+ * lives in {@link SessionSettings}' concurrent map and is dropped in {@code @CloseSession}.
  */
 @AcpAgent(name = "config-agent-annotated", version = "1.0.0")
 public class AnnotatedConfigAgent {
@@ -52,8 +65,9 @@ public class AnnotatedConfigAgent {
     }
 
     @SetSessionConfigOption
-    AcpSchema.SetSessionConfigOptionResponse setConfigOption(AcpSchema.SetSessionConfigOptionRequest req) {
-        return new AcpSchema.SetSessionConfigOptionResponse(settings.apply(req));
+    AcpSchema.SetSessionConfigOptionResponse setConfigOption(@SessionId String sessionId, @ConfigId String id,
+            @ConfigValue Object value) {
+        return new AcpSchema.SetSessionConfigOptionResponse(settings.apply(sessionId, id, value));
     }
 
     @SetSessionMode

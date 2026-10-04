@@ -101,9 +101,12 @@ final class SessionSettings {
 
     /** Applies a client's change and returns the full list. Invalid input is answered -32602. */
     List<AcpSchema.SessionConfigOption> apply(AcpSchema.SetSessionConfigOptionRequest req) {
-        State state = state(req.sessionId());
-        Object value = req.value();
-        switch (req.configId()) {
+        return apply(req.sessionId(), req.configId(), req.value());
+    }
+
+    List<AcpSchema.SessionConfigOption> apply(String sessionId, String configId, Object value) {
+        State state = state(sessionId);
+        switch (configId) {
             case MODEL -> {
                 if (!(value instanceof String model) || !MODELS.contains(model)) {
                     throw invalid("Unknown model '" + value + "'; expected one of " + MODELS);
@@ -121,7 +124,7 @@ final class SessionSettings {
                 }
                 state.verbose = on;
             }
-            default -> throw invalid("Unknown config option '" + req.configId() + "'");
+            default -> throw invalid("Unknown config option '" + configId + "'");
         }
         return options(state);
     }
