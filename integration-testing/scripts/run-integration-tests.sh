@@ -73,6 +73,7 @@ if [ -n "${ACP_SDK_CANDIDATE:-}" ]; then
         "module-37-streamable-http-websocket"
         "module-38-spring-boot-http"
         "module-39-forward-compatibility"
+        "module-40-micronaut"
     )
 fi
 

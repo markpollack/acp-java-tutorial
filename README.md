@@ -135,6 +135,12 @@ Every module here runs a Java agent it builds itself, plus a client: no agent CL
 | 37 | [Streamable HTTP and WebSocket](module-37-streamable-http-websocket/) | A remote agent on the Jetty listener, one agent per connection, HTTP and WebSocket clients, h2c |
 | 38 | [Spring Boot over HTTP](module-38-spring-boot-http/) | `spring.acp.agent.transport.type=http`, an HTTP client app, `AcpClientCustomizer` and the fs capability properties (Java 21+) |
 | 39 | [Forward Compatibility and _meta](module-39-forward-compatibility/) | `Unknown*` variants kept, open values with `equals`, `_meta` on messages |
+| 40 | [Micronaut](module-40-micronaut/) | `acp-micronaut`: a `@Singleton @AcpAgent` bean over stdio and HTTP/WebSocket, Micronaut clients from `acp.client.*`, derived `initialize`, an `@Around` interceptor, a `Publisher` return |
+
+The Spring Boot starter is part of the SDK from 0.80.0: `com.agentclientprotocol:acp-spring-boot-starter`
+replaces `org.springaicommunity:acp-spring-boot-starter` (modules 23, 24, 26 and 38; the `spring.acp.*`
+properties are unchanged). Annotated agents need no `@Initialize` method any more: `agentInfo` and the
+capabilities are derived from `@AcpAgent` and the handlers each agent declares.
 
 ## Error handling in handlers
 

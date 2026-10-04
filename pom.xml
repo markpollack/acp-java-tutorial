@@ -131,6 +131,17 @@
                 <artifactId>acp-streamable-http-jetty</artifactId>
                 <version>${acp-sdk.version}</version>
             </dependency>
+            <!-- Framework integrations (0.80.0): Micronaut 4 (module 40) and the Quarkus extension (module 41) -->
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-micronaut</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.agentclientprotocol</groupId>
+                <artifactId>acp-quarkus</artifactId>
+                <version>${acp-sdk.version}</version>
+            </dependency>
             <!-- Anthropic Java SDK (chatbot agent, module 25). Aggregator jar:
                  pulls in anthropic-java-core + anthropic-java-client-okhttp. -->
             <dependency>
@@ -226,6 +237,7 @@
                 <module>module-37-streamable-http-websocket</module>
                 <module>module-38-spring-boot-http</module>
                 <module>module-39-forward-compatibility</module>
+                <module>module-40-micronaut</module>
             </modules>
             <repositories>
                 <repository>

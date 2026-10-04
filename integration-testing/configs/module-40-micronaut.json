@@ -1,0 +1,29 @@
+{
+  "moduleId": "module-40-micronaut",
+  "displayName": "Module 40: Micronaut",
+  "timeoutSec": 120,
+  "requiredEnv": [],
+  "requiresPackage": true,
+  "expectedBehavior": "A Micronaut annotated ACP agent bean (@Singleton + @AcpAgent, acp-micronaut) is run two ways, and Micronaut ACP clients built from acp.client.* talk to it. (1) stdio: a Micronaut client application launches the packaged agent application (java -jar micronaut-agent.jar) as a process. It prints the initialize response JSON it received, with agentInfo name micronaut-greeting-agent, version 1.0.0, title 'Micronaut Greeting Agent', sessionCapabilities list and close, promptCapabilities.embeddedContext true and loadSession false, all derived from the annotations (no @Initialize). A prompt shows a thought from a Micronaut @Around interceptor ('[audit] prompt call #1') and the answer \"Hello from Micronaut: you said 'hi over stdio'\" (returned as a Publisher<String>) with stop reason end_turn; session/list reports 1 session, and after session/close 0 sessions. The client closes and the agent process exits. (2) HTTP: the same application runs in-process with acp.agent.transport.type=http on port 0 (true); a Streamable HTTP client and then a WebSocket client each connect, see agentInfo micronaut-greeting-agent and protocol version 1, and get the greeting with end_turn; the interceptor's count goes on across the connections (call #1 then call #2). The agent application closes. Ends with '=== Demo Complete ===' and no exceptions, stack traces, or ERROR log lines.",
+  "requiredOutput": [
+    "=== Module 40: Micronaut ===",
+    "--- 1. stdio: a Micronaut client launches the Micronaut agent application ---",
+    "\"agentInfo\":{\"name\":\"micronaut-greeting-agent\",\"version\":\"1.0.0\",\"title\":\"Micronaut Greeting Agent\"}",
+    "\"sessionCapabilities\":{\"list\":{},\"close\":{}}",
+    "agentInfo (from @AcpAgent): micronaut-greeting-agent 1.0.0, title 'Micronaut Greeting Agent'",
+    "sessionCapabilities.list (from @ListSessions): true",
+    "sessionCapabilities.close (from @CloseSession): true",
+    "promptCapabilities.embeddedContext (from @Prompt(embeddedContext = true)): true",
+    "thought: [audit] prompt call #1, intercepted by a Micronaut @Around interceptor",
+    "agent: Hello from Micronaut: you said 'hi over stdio'",
+    "session/list: 1 session(s)",
+    "session/close; session/list: 0 session(s)",
+    "agent application listening (port 0 -> a free port): true",
+    "agent: Hello from Micronaut: you said 'hi over Streamable HTTP'",
+    "thought: [audit] prompt call #2, intercepted by a Micronaut @Around interceptor",
+    "agent: Hello from Micronaut: you said 'hi over WebSocket'",
+    "stop reason: end_turn",
+    "agent application closed",
+    "=== Demo Complete ==="
+  ]
+}
