@@ -35,8 +35,10 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  * parameter's type: a record for typed params, {@code Map<String, Object>} for the raw
  * object. Besides it, the method may take the connection's {@link AcpSyncAgent} (or
  * {@code AcpAsyncAgent}) and {@code NegotiatedCapabilities}, which is how
- * {@code @ExtNotification} answers with a notification of its own here. The return value
- * is the result; returning {@code null} answers {@code -32603}.
+ * {@code @ExtNotification} answers with a notification of its own here. An
+ * {@code @ExtRequest}'s return value is the result; returning {@code null} answers
+ * {@code -32603}. An {@code @ExtNotification} gets no answer, so it must return {@code void}:
+ * building the agent rejects one that returns a value.
  */
 @AcpAgent(name = "extension-agent-annotated", version = "1.0.0")
 public class AnnotatedExtensionAgent {
