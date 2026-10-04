@@ -28,7 +28,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  *   ({@code --spring.acp.client.transport.websocket.uri=ws://localhost:<port>/acp}).</li>
  *   <li>Client over Streamable HTTP with
  *   {@code --spring.acp.client.capabilities.read-text-file=false}: the handler is still
- *   registered but not advertised, so the agent does not ask for the file.</li>
+ *   registered but not advertised, so the agent does not ask for the file, and the client
+ *   logs one WARN naming the handler it will not be asked to run.</li>
  * </ol>
  *
  * <p>Only a property changes between the three runs: the client code is the same.
