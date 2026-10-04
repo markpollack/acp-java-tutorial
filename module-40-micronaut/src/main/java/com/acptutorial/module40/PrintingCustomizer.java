@@ -4,7 +4,7 @@
 package com.acptutorial.module40;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
-import com.agentclientprotocol.sdk.micronaut.client.AcpClientCustomizer;
+import com.agentclientprotocol.sdk.integration.AcpClientCustomizer;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
 
 import io.micronaut.context.annotation.Requires;
