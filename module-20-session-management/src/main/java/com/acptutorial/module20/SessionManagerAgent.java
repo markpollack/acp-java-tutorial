@@ -30,12 +30,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
+import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CloseSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ListSessionsResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ResumeSessionResponse;
+import com.agentclientprotocol.sdk.spec.AcpSchema.SessionCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.SessionInfo;
 
 public class SessionManagerAgent {
@@ -55,7 +59,11 @@ public class SessionManagerAgent {
         AcpSyncAgent agent = AcpAgent.sync(transport)
             .initializeHandler(req -> {
                 System.err.println("[SessionManager] Initialize");
-                return InitializeResponse.ok();
+                // Advertise session/list, session/close and session/resume: a client calls
+                // only the session methods the agent's initialize answer names.
+                return InitializeResponse.ok(new AgentCapabilities(false,
+                    new SessionCapabilities(true, true, true),
+                    new McpCapabilities(), new PromptCapabilities(), null));
             })
 
             // Create a new session
