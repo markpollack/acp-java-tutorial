@@ -4,25 +4,19 @@
  * Run on its own against an agent on port 8080:
  *   ./mvnw exec:java -pl module-38-spring-boot-http \
  *       -Dexec.mainClass=com.acptutorial.module38.client.HttpClientApplication \
- *       -Dexec.args=--demo.agent.url=http://localhost:8080/acp
+ *       -Dexec.args=--spring.acp.client.transport.http.uri=http://localhost:8080/acp
  */
 package com.acptutorial.module38.client;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import com.agentclientprotocol.autoconfigure.client.AcpClientCustomizer;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
-import com.agentclientprotocol.sdk.client.transport.StreamableHttpAcpClientTransport;
-import com.agentclientprotocol.sdk.json.AcpJsonMapper;
-import com.agentclientprotocol.sdk.spec.AcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
+import com.agentclientprotocol.sdk.spring.boot.autoconfigure.client.AcpClientCustomizer;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
@@ -32,11 +26,16 @@ import reactor.core.publisher.Mono;
  * A Spring Boot application that talks to a remote ACP agent through the autoconfigured
  * {@link AcpSyncClient}.
  *
- * <p><b>The transport.</b> acp-autoconfig creates the client from whichever
- * {@link AcpClientTransport} bean exists, and backs off its own when the application
- * defines one. Its properties cover stdio and WebSocket
- * ({@code spring.acp.client.transport.websocket.uri}); for Streamable HTTP this application
- * defines the transport bean itself, when {@code demo.agent.url} is set.
+ * <p><b>The transport</b> comes from properties; the application defines no transport bean.
+ * The SDK's Spring Boot starter builds one from whichever of these is set:
+ * <ul>
+ *   <li>{@code spring.acp.client.transport.http.uri=http://host:port/acp}: Streamable HTTP;</li>
+ *   <li>{@code spring.acp.client.transport.websocket.uri=ws://host:port/acp}: WebSocket;</li>
+ *   <li>{@code spring.acp.client.transport.stdio.command}: a local agent process (module 24).</li>
+ * </ul>
+ * With several set, {@code spring.acp.client.transport.type} chooses; an explicit {@code type}
+ * without its property fails at startup, naming the property. An application's own
+ * {@code AcpClientTransport} bean still replaces the autoconfigured one.
  *
  * <p><b>{@link AcpClientCustomizer}</b> is how an application adds to the autoconfigured
  * client builder (an {@code AcpClient.AsyncSpec}) before it is built. Every customizer bean
@@ -50,7 +49,7 @@ import reactor.core.publisher.Mono;
  * </ul>
  * Registering a handler does not advertise it: the client's file capabilities come from
  * {@code spring.acp.client.capabilities.read-text-file} and {@code write-text-file}, which
- * default to {@code false} in acp-autoconfig 0.13.0. So a handler and its capability property
+ * default to {@code false}. So a handler and its capability property
  * go together ({@code client.properties} turns {@code read-text-file} on).
  *
  * <p>{@code main} closes the context when the runner finishes, so the client beans shut
@@ -76,12 +75,6 @@ public class HttpClientApplication {
 
     public static void main(String[] args) {
         run(args);
-    }
-
-    @Bean
-    @ConditionalOnProperty("demo.agent.url")
-    AcpClientTransport streamableHttpTransport(@Value("${demo.agent.url}") URI url) {
-        return new StreamableHttpAcpClientTransport(url, AcpJsonMapper.createDefault());
     }
 
     @Bean

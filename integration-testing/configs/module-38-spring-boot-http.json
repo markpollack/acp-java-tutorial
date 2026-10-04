@@ -4,7 +4,7 @@
   "timeoutSec": 120,
   "requiredEnv": [],
   "requiresPackage": false,
-  "expectedBehavior": "A Spring Boot agent application serves an @AcpAgent bean over Streamable HTTP (acp-autoconfig, spring.acp.agent.transport.type=http) on a free port (port 0, true), and a Spring Boot client application connects to it twice over Streamable HTTP. First run: the client's AcpClientCustomizer serves fs/read_text_file and read-text-file is advertised, so the client prints that the agent asked to read NOTES.md and the agent answers 'NOTES.md has 4 lines and 2 open to-dos.' with stop reason end_turn. Second run, with spring.acp.client.capabilities.read-text-file=false: the agent does not ask for the file and answers that the client did not advertise fs.readTextFile, stop reason end_turn. Then the agent application closes. Ends with '=== Demo Complete ===' and no exceptions, stack traces, or ERROR log lines.",
+  "expectedBehavior": "A Spring Boot agent application serves an @AcpAgent bean over Streamable HTTP (the SDK's com.agentclientprotocol:acp-spring-boot-starter, spring.acp.agent.transport.type=http) on a free port (port 0, true), and a Spring Boot client application, whose transport comes only from properties, connects to it three times. First run, over Streamable HTTP (spring.acp.client.transport.http.uri): the client's AcpClientCustomizer serves fs/read_text_file and read-text-file is advertised, so the client prints that the agent asked to read NOTES.md and the agent answers 'NOTES.md has 4 lines and 2 open to-dos.' with stop reason end_turn. Second run, over WebSocket (spring.acp.client.transport.websocket.uri) to the same listener and path: the same file read and the same answer, end_turn. Third run, over Streamable HTTP with spring.acp.client.capabilities.read-text-file=false: the agent does not ask for the file and answers that the client did not advertise fs.readTextFile, stop reason end_turn. Then the agent application closes. Ends with '=== Demo Complete ===' and no exceptions, stack traces, or ERROR log lines.",
   "requiredOutput": [
     "=== Module 38: Spring Boot over HTTP ===",
     "agent application listening (port 0 -> a free port): true",
@@ -12,6 +12,7 @@
     "connected; protocol version 1",
     "client: agent asked to read NOTES.md",
     "agent: NOTES.md has 4 lines and 2 open to-dos.",
+    "--- client over WebSocket ---",
     "--- client over Streamable HTTP, read-text-file=false ---",
     "agent: This client did not advertise fs.readTextFile, so I will not ask it for NOTES.md.",
     "stop reason: end_turn",

@@ -12,7 +12,7 @@
 
     <artifactId>module-38-spring-boot-http</artifactId>
     <name>Module 38 - Spring Boot over HTTP</name>
-    <description>A Spring Boot @AcpAgent served over Streamable HTTP with acp-autoconfig, and a Spring Boot client with an AcpClientCustomizer</description>
+    <description>A Spring Boot @AcpAgent served over Streamable HTTP with the SDK's Spring Boot starter, and a Spring Boot client with an AcpClientCustomizer</description>
 
     <properties>
         <!-- The demo; override with -Dexec.mainClass=... to run one side on its own -->
@@ -34,7 +34,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springaicommunity</groupId>
+            <groupId>com.agentclientprotocol</groupId>
             <artifactId>acp-spring-boot-starter</artifactId>
         </dependency>
         <!-- spring.acp.agent.transport.type=http needs the SDK's Jetty listener and servlet.

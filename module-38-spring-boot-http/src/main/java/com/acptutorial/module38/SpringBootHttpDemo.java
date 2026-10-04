@@ -15,25 +15,23 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Starts the Spring Boot agent application on a free port, then runs the Spring Boot client
- * application against it twice.
+ * application against it three times.
  *
  * <ol>
  *   <li>Agent: {@code HttpAgentApplication} with
  *   {@code spring.acp.agent.transport.http.port=0}; the bound port comes from the
  *   {@code StreamableHttpAcpAgentTransport} bean's {@code getPort()}.</li>
- *   <li>Client over Streamable HTTP ({@code --demo.agent.url=http://localhost:<port>/acp}):
- *   the agent reads {@code NOTES.md} through the client's file handler.</li>
+ *   <li>Client over Streamable HTTP
+ *   ({@code --spring.acp.client.transport.http.uri=http://localhost:<port>/acp}): the agent
+ *   reads {@code NOTES.md} through the client's file handler.</li>
+ *   <li>Client over WebSocket, to the same listener and path
+ *   ({@code --spring.acp.client.transport.websocket.uri=ws://localhost:<port>/acp}).</li>
  *   <li>Client over Streamable HTTP with
  *   {@code --spring.acp.client.capabilities.read-text-file=false}: the handler is still
  *   registered but not advertised, so the agent does not ask for the file.</li>
  * </ol>
  *
- * <p>The listener also accepts WebSocket on the same path, and acp-autoconfig can create a
- * WebSocket client from {@code spring.acp.client.transport.websocket.uri=ws://host:port/acp}.
- * This demo does not run it: with SDK 0.80.0 candidate 20261003.012658 a WebSocket client
- * logs errors when the Spring context closes it (the client is closed more than once, and
- * the WebSocket transport's close is not idempotent). Module 37 shows WebSocket without
- * Spring.
+ * <p>Only a property changes between the three runs: the client code is the same.
  *
  * <p>Both applications live in this module, in separate packages so that component scanning
  * keeps the {@code @AcpAgent} bean out of the client. In production they are separate
@@ -50,12 +48,16 @@ public final class SpringBootHttpDemo {
             int port = agent.getBean(StreamableHttpAcpAgentTransport.class).getPort();
             System.out.println("agent application listening (port 0 -> a free port): " + (port > 0));
             String http = "http://localhost:" + port + "/acp";
+            String ws = "ws://localhost:" + port + "/acp";
 
             System.out.println("\n--- client over Streamable HTTP ---");
-            HttpClientApplication.run("--demo.agent.url=" + http);
+            HttpClientApplication.run("--spring.acp.client.transport.http.uri=" + http);
+
+            System.out.println("\n--- client over WebSocket ---");
+            HttpClientApplication.run("--spring.acp.client.transport.websocket.uri=" + ws);
 
             System.out.println("\n--- client over Streamable HTTP, read-text-file=false ---");
-            HttpClientApplication.run("--demo.agent.url=" + http,
+            HttpClientApplication.run("--spring.acp.client.transport.http.uri=" + http,
                     "--spring.acp.client.capabilities.read-text-file=false");
         }
         finally {

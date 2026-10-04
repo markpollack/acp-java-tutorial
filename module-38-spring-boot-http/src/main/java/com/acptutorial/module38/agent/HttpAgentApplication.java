@@ -14,7 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * A Spring Boot application that serves its {@code @AcpAgent} bean over the network.
  *
  * <p>Compared with module 23 (stdio), one property changes:
- * {@code spring.acp.agent.transport.type=http}. acp-autoconfig then builds an
+ * {@code spring.acp.agent.transport.type=http}. The SDK's Spring Boot starter then builds an
  * {@code AcpAgentFactory} from the bean ({@code AcpAgentSupport...buildFactory()}: one agent
  * runtime per connection, all dispatching to the one bean) and, because this is not a web
  * application, runs the SDK's {@code StreamableHttpAcpAgentTransport} listener as a bean:
