@@ -40,14 +40,16 @@ public class CapabilityDemo {
     public static void main(String[] args) {
         System.out.println("=== Module 17: Capability Negotiation ===\n");
 
-        // Part 1: Full capabilities client
+        // Part 1: Full file capabilities client. A client advertises only what it serves:
+        // build() fails for an advertised capability without its handler. Terminal needs all
+        // five terminal handlers, so it is left to module 18, which serves them.
         System.out.println("--- Part 1: Full Capabilities Client ---");
         runWithCapabilities(
             new ClientCapabilities(
                 new FileSystemCapability(true, true),  // readTextFile=true, writeTextFile=true
-                true  // terminal=true
+                false  // terminal: no terminal handlers here (module 18)
             ),
-            "Full capabilities client"
+            "Full file capabilities client"
         );
 
         System.out.println();
@@ -91,7 +93,7 @@ public class CapabilityDemo {
 
         var transport = new StdioAcpClientTransport(params);
 
-        try (AcpSyncClient client = AcpClient.sync(transport)
+        AcpClient.SyncSpec spec = AcpClient.sync(transport)
                 .clientCapabilities(clientCaps)  // what initialize() advertises
                 .sessionUpdateConsumer(notification -> {
                     var update = notification.update();
@@ -99,25 +101,32 @@ public class CapabilityDemo {
                         String text = ((TextContent) msg.content()).text();
                         System.out.print("    Agent: " + text);
                     }
-                })
-                // Register handlers if we advertise the capabilities
-                .readTextFileHandler(req -> {
-                    try {
-                        String content = Files.readString(Path.of(req.path()));
-                        return new ReadTextFileResponse(content);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to read file: " + req.path(), e);
-                    }
-                })
-                .writeTextFileHandler(req -> {
-                    try {
-                        Files.writeString(Path.of(req.path()), req.content());
-                        return new WriteTextFileResponse();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to write file: " + req.path(), e);
-                    }
-                })
-                .build()) {
+                });
+        // Register a handler for each capability we advertise, and only those: build() fails for
+        // an advertised capability without its handler, and warns about a handler for one that
+        // is not advertised (the agent will not call it).
+        if (clientCaps.fs() != null && Boolean.TRUE.equals(clientCaps.fs().readTextFile())) {
+            spec.readTextFileHandler(req -> {
+                try {
+                    String content = Files.readString(Path.of(req.path()));
+                    return new ReadTextFileResponse(content);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to read file: " + req.path(), e);
+                }
+            });
+        }
+        if (clientCaps.fs() != null && Boolean.TRUE.equals(clientCaps.fs().writeTextFile())) {
+            spec.writeTextFileHandler(req -> {
+                try {
+                    Files.writeString(Path.of(req.path()), req.content());
+                    return new WriteTextFileResponse();
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to write file: " + req.path(), e);
+                }
+            });
+        }
+
+        try (AcpSyncClient client = spec.build()) {
 
             // Initialize: sends the capabilities set on the builder
             client.initialize();
