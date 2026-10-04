@@ -55,9 +55,12 @@ import reactor.core.publisher.Mono;
  * entry, and starting a prompt without blocking is what lets the demo cancel it. Each
  * scenario uses a fresh session so that one scenario's turn cannot overlap the next.
  *
- * <p>Note a behaviour change from 0.18.0: a client-side request timeout now sends
- * {@code $/cancel_request}, so it cancels the turn at a Java agent. Raise the client's
- * {@code requestTimeout} for long prompts.
+ * <p>Note two behaviour changes from 0.18.0: a client-side request timeout now sends
+ * {@code $/cancel_request}, so it cancels the work at a Java agent; and a prompt is no longer
+ * bounded by the client's {@code requestTimeout} at all, since its answer comes only at the end
+ * of the turn. To bound a turn on the client, set {@code promptTimeout(Duration)} on the client
+ * builder (none by default), or apply {@code timeout(..)} to the prompt's {@code Mono}, as
+ * scenario 2 does.
  */
 public final class CancellationDemo {
 
