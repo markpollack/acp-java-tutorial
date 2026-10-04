@@ -74,7 +74,8 @@ public final class AuthDemo {
 
             AcpSchema.InitializeResponse init = client.initialize();
             AcpSchema.AuthMethodTerminal terminal = null;
-            System.out.println("1. initialize: the agent offers");
+            System.out.println("1. initialize: agentInfo " + init.agentInfo().name() + " " + init.agentInfo().version()
+                    + " (from @AcpAgent); the agent offers");
             for (AcpSchema.AuthMethod method : init.authMethods()) {
                 if (method instanceof AcpSchema.AuthMethodTerminal t) {
                     terminal = t;

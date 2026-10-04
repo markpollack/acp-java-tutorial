@@ -14,21 +14,18 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.SyncPromptContext;
 import com.agentclientprotocol.sdk.agent.support.AcpAgentSupport;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.annotation.AcpAgent;
+import com.agentclientprotocol.sdk.annotation.AuthMethod;
 import com.agentclientprotocol.sdk.annotation.Authenticate;
-import com.agentclientprotocol.sdk.annotation.Initialize;
 import com.agentclientprotocol.sdk.annotation.Logout;
 import com.agentclientprotocol.sdk.annotation.NewSession;
 import com.agentclientprotocol.sdk.annotation.Prompt;
-import com.agentclientprotocol.sdk.capabilities.NegotiatedCapabilities;
 import com.agentclientprotocol.sdk.error.AcpErrorCodes;
 import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
@@ -37,38 +34,48 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  * An agent that requires sign-in, offers two ways to do it, and supports logout, written
  * with annotations.
  *
- * <p><b>Auth methods.</b> The agent lists them in its {@code initialize} answer
- * ({@code authMethods}). {@code AuthMethod} is an open union of two kinds:
+ * <p><b>Everything the client needs to know is declared, not hand-built.</b> There is no
+ * {@code @Initialize} method: the SDK derives the {@code initialize} answer from the class.
  * <ul>
- *   <li>{@link AcpSchema.AuthMethodAgent}: the agent does the work in {@code authenticate}.
- *   The client calls {@code authenticate(new AuthenticateRequest(id))}; the agent's
+ *   <li>{@code @AcpAgent(name, version)} becomes {@code agentInfo}.</li>
+ *   <li>{@code @AcpAgent(authMethods = ...)} becomes {@code authMethods}. A
+ *   {@link AuthMethod.Type#TERMINAL TERMINAL} method is advertised only to a client that
+ *   announced {@code clientCapabilities.auth.terminal}, so the SDK does the per-client check
+ *   this agent used to write by hand.</li>
+ *   <li>The {@link Logout @Logout} method advertises {@code agentCapabilities.auth.logout}.</li>
+ * </ul>
+ *
+ * <p><b>Auth methods.</b> {@code AuthMethod} is an open union of two kinds:
+ * <ul>
+ *   <li>{@link AcpSchema.AuthMethodAgent} (type {@code AGENT}, the default): the agent does the
+ *   work in {@code authenticate}. The client calls
+ *   {@code authenticate(new AuthenticateRequest(id))}; the agent's
  *   {@link Authenticate @Authenticate} method accepts, or rejects by throwing
- *   {@code AcpProtocolException}.</li>
- *   <li>{@link AcpSchema.AuthMethodTerminal}: an interactive login (a TUI). The client runs
- *   the <em>agent program</em> again as a separate process in a terminal, adding the
- *   method's {@code args} and {@code env}, and does <em>not</em> pass this method to
- *   {@code authenticate}. The login stores credentials where the running agent can find
- *   them. Offer it only to a client that advertised {@code auth.terminal}
- *   ({@code NegotiatedCapabilities.supportsTerminalAuth()}).</li>
+ *   {@code AcpProtocolException}. Declaring an agent method without an {@code @Authenticate}
+ *   method fails the build.</li>
+ *   <li>{@link AcpSchema.AuthMethodTerminal} (type {@code TERMINAL}): an interactive login (a
+ *   TUI). The client runs the <em>agent program</em> again as a separate process in a
+ *   terminal, adding the method's {@code args} and {@code env} ({@code NAME=value} in the
+ *   annotation), and does <em>not</em> pass this method to {@code authenticate}. The login
+ *   stores credentials where the running agent can find them.</li>
  * </ul>
  * An unknown auth method type from a newer agent reads as {@code AuthMethodAgent}.
  *
  * <p><b>Requiring auth.</b> Until the user is signed in, {@code session/new} is rejected with
  * {@code AcpErrorCodes.AUTHENTICATION_REQUIRED} ({@code -32000}).
  *
- * <p><b>Logout.</b> The agent advertises {@code AgentCapabilities.auth =
- * AgentAuthCapabilities.withLogout()}; its {@link Logout @Logout} method clears the stored
- * credentials. Clients check {@code supportsLogout()} before calling {@code logout(..)}.
- *
- * <p>{@link Initialize @Initialize} takes the connection's {@link NegotiatedCapabilities}
- * (the client's, already recorded when the handler runs), so the agent can decide which
- * methods to offer.
+ * <p><b>Logout.</b> The {@link Logout @Logout} method clears the stored credentials. Clients
+ * check {@code supportsLogout()} before calling {@code logout(..)}.
  *
  * <p>Run with {@code --login} this same program is the terminal login: it asks for a user
  * name on the terminal and writes the credentials file. In this demo the credentials file
  * is named by the {@code ACP_TUTORIAL_CREDENTIALS} environment variable.
  */
-@AcpAgent(name = "auth-agent", version = "1.0.0")
+@AcpAgent(name = "auth-agent", version = "1.0.0", authMethods = {
+        @AuthMethod(id = AuthAgent.API_KEY_METHOD, name = "API key",
+                description = "Use the key configured for this machine"),
+        @AuthMethod(id = AuthAgent.TERMINAL_METHOD, name = "Log in in a terminal", type = AuthMethod.Type.TERMINAL,
+                args = AuthAgent.LOGIN_ARG, env = "AUTH_AGENT_LOGIN_STYLE=plain") })
 public class AuthAgent {
 
     static final String API_KEY_METHOD = "api-key";
@@ -79,20 +86,6 @@ public class AuthAgent {
 
     /** Set by the agent auth method; lives only as long as this agent process. */
     private volatile String apiKeyUser;
-
-    @Initialize
-    AcpSchema.InitializeResponse initialize(AcpSchema.InitializeRequest req, NegotiatedCapabilities client) {
-        List<AcpSchema.AuthMethod> methods = new ArrayList<>();
-        methods.add(new AcpSchema.AuthMethodAgent(API_KEY_METHOD, "API key", "Use the key configured for this machine"));
-        if (client.supportsTerminalAuth()) {
-            methods.add(new AcpSchema.AuthMethodTerminal(TERMINAL_METHOD, "Log in in a terminal",
-                    List.of(LOGIN_ARG), Map.of("AUTH_AGENT_LOGIN_STYLE", "plain")));
-        }
-        var capabilities = AcpSchema.AgentCapabilities.builder()
-                .auth(AcpSchema.AgentAuthCapabilities.withLogout())
-                .build();
-        return new AcpSchema.InitializeResponse(1, capabilities, methods);
-    }
 
     @Authenticate
     AcpSchema.AuthenticateResponse authenticate(AcpSchema.AuthenticateRequest req) {
