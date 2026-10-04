@@ -37,6 +37,8 @@ import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
+import com.agentclientprotocol.sdk.error.AcpErrorCodes;
+import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
@@ -182,9 +184,12 @@ public class PermissionsClient {
     /**
      * Handles file read requests from the agent.
      *
-     * Error handling: Throws exceptions for errors, which the SDK converts to
-     * JSON-RPC error responses (code -32603). This follows the standard pattern
-     * used by other ACP SDKs (Kotlin, Python).
+     * Error handling: a missing file throws {@code AcpProtocolException} with
+     * {@code RESOURCE_NOT_FOUND} (-32002): its code and message are the answer the
+     * agent gets. Any other exception is answered -32603 "Internal error", its
+     * message withheld from the agent (it can carry paths or secrets) and logged
+     * here at WARN. Either way the agent receives a proper error response, not an
+     * error string masquerading as content.
      */
     private static ReadTextFileResponse handleReadFile(ReadTextFileRequest request) {
         System.out.println("[READ] " + request.path());
@@ -192,7 +197,8 @@ public class PermissionsClient {
 
         if (!Files.exists(path)) {
             System.out.println("[READ] File does not exist: " + request.path());
-            throw new RuntimeException("File not found: " + request.path());
+            throw new AcpProtocolException(AcpErrorCodes.RESOURCE_NOT_FOUND,
+                "File not found: " + request.path());
         }
         try {
             String content = Files.readString(path);
@@ -206,8 +212,8 @@ public class PermissionsClient {
     /**
      * Handles file write requests from the agent.
      *
-     * Error handling: Throws exceptions for errors, which the SDK converts to
-     * JSON-RPC error responses (code -32603). This is consistent with handleReadFile.
+     * Error handling: an I/O failure is answered -32603 "Internal error", its message
+     * withheld from the agent and logged here, as in handleReadFile.
      */
     private static WriteTextFileResponse handleWriteFile(WriteTextFileRequest request) {
         System.out.println("[WRITE] " + request.path() + " (" + request.content().length() + " chars)");
