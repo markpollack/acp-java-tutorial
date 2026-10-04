@@ -71,7 +71,7 @@ public final class ConfigAgent {
                         // The agent changed a setting on its own: tell the client, with the full list.
                         ctx.sendThought(SessionSettings.PREVIEW_MODEL + " is rate limited; falling back to "
                                 + SessionSettings.FALLBACK_MODEL);
-                        ctx.sendUpdate(sessionId, new AcpSchema.ConfigOptionUpdate(changed));
+                        ctx.sendUpdate(new AcpSchema.ConfigOptionUpdate(changed));
                     }
                     ctx.sendMessage(settings.answer(sessionId, "builder agent"));
                     return AcpSchema.PromptResponse.endTurn();

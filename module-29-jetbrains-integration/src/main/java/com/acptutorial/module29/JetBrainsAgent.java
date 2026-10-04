@@ -141,7 +141,7 @@ public class JetBrainsAgent {
             String absolutePath = stop.toAbsolutePath().toString();
 
             // Tool call start: location at line 1 - the editor opens the file
-            context.sendUpdate(sessionId, new ToolCall(
+            context.sendUpdate(new ToolCall(
                 "tool_call", toolCallId,
                 "Visiting " + stop.getFileName(), "read_file",
                 ToolKind.READ, ToolCallStatus.IN_PROGRESS,
@@ -153,7 +153,7 @@ public class JetBrainsAgent {
 
             // Tool call update: location at the middle of the file - the
             // editor scrolls there, demonstrating line-level following
-            context.sendUpdate(sessionId, new ToolCallUpdateNotification(
+            context.sendUpdate(new ToolCallUpdateNotification(
                 "tool_call_update", toolCallId,
                 "Visited " + stop.getFileName(), "read_file",
                 ToolKind.READ, ToolCallStatus.COMPLETED,
