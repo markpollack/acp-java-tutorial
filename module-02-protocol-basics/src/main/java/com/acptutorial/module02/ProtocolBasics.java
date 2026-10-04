@@ -17,6 +17,10 @@
  */
 package com.acptutorial.module02;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
@@ -39,7 +43,9 @@ public class ProtocolBasics {
         var transport = new StdioAcpClientTransport(params);
 
         // The client's capabilities are set on the builder: what the client advertises
-        // in the initialize request is also what its handlers honour.
+        // in the initialize request is also what its handlers honour. build() fails for an
+        // advertised capability without its handler, so file read/write comes with the two
+        // handlers that serve it (module 07 covers them).
         var clientCapabilities = new ClientCapabilities(
             new FileSystemCapability(true, true),  // We can read/write files
             false  // No terminal support
@@ -47,6 +53,21 @@ public class ProtocolBasics {
 
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .clientCapabilities(clientCapabilities)
+                .readTextFileHandler(req -> {
+                    try {
+                        return new AcpSchema.ReadTextFileResponse(Files.readString(Path.of(req.path())));
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .writeTextFileHandler(req -> {
+                    try {
+                        Files.writeString(Path.of(req.path()), req.content());
+                        return new AcpSchema.WriteTextFileResponse();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
                 .build()) {
 
             System.out.println("=== Module 02: Protocol Basics ===\n");
