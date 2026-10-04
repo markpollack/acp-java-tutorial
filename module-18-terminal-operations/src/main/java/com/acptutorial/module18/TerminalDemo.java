@@ -52,12 +52,17 @@ public class TerminalDemo {
     // Track terminal processes
     private static final Map<String, TerminalState> terminals = new ConcurrentHashMap<>();
 
-    record TerminalState(Process process, StringBuilder output, Integer exitCode) {
-        TerminalState withOutput(StringBuilder newOutput) {
-            return new TerminalState(process, newOutput, exitCode);
-        }
+    // One terminal: its process, the thread that drains the process's output into
+    // `output` as it arrives, and the exit code once known. `output` is shared with the
+    // reader thread, so it is read and written under its own lock.
+    record TerminalState(Process process, Thread outputReader, StringBuilder output, Integer exitCode) {
         TerminalState withExitCode(Integer code) {
-            return new TerminalState(process, output, code);
+            return new TerminalState(process, outputReader, output, code);
+        }
+        String outputSoFar() {
+            synchronized (output) {
+                return output.toString();
+            }
         }
     }
 
@@ -106,26 +111,23 @@ public class TerminalDemo {
                         pb.redirectErrorStream(true);
                         Process process = pb.start();
 
-                        terminals.put(terminalId, new TerminalState(process, new StringBuilder(), null));
-
-                        // Start a thread to capture output
+                        // Drain the output as it arrives, so terminal/output can return what
+                        // the command has printed so far
+                        StringBuilder output = new StringBuilder();
                         Thread outputReader = new Thread(() -> {
-                            try {
-                                BufferedReader reader = new BufferedReader(
-                                    new InputStreamReader(process.getInputStream()));
+                            try (BufferedReader reader = new BufferedReader(
+                                    new InputStreamReader(process.getInputStream()))) {
                                 String line;
-                                StringBuilder output = new StringBuilder();
                                 while ((line = reader.readLine()) != null) {
-                                    output.append(line).append("\n");
-                                }
-                                TerminalState state = terminals.get(terminalId);
-                                if (state != null) {
-                                    terminals.put(terminalId, state.withOutput(output));
+                                    synchronized (output) {
+                                        output.append(line).append("\n");
+                                    }
                                 }
                             } catch (Exception e) {
                                 System.err.println("[Client] Output reader error: " + e.getMessage());
                             }
                         });
+                        terminals.put(terminalId, new TerminalState(process, outputReader, output, null));
                         outputReader.start();
 
                         return new CreateTerminalResponse(terminalId);
@@ -146,7 +148,10 @@ public class TerminalDemo {
 
                     try {
                         int exitCode = state.process().waitFor();
-                        terminals.put(terminalId, state.withExitCode(exitCode));
+                        // The process has exited; wait for the reader to drain the last of its
+                        // output, so a terminal/output that follows sees all of it
+                        state.outputReader().join();
+                        terminals.computeIfPresent(terminalId, (id, s) -> s.withExitCode(exitCode));
                         System.out.println("[Client] Process exited with code: " + exitCode);
                         return new WaitForTerminalExitResponse(exitCode, null);
                     } catch (InterruptedException e) {
@@ -164,8 +169,7 @@ public class TerminalDemo {
                         return new TerminalOutputResponse("", false, null);
                     }
 
-                    String output = state.output() != null ? state.output().toString() : "";
-                    return new TerminalOutputResponse(output, false, null);
+                    return new TerminalOutputResponse(state.outputSoFar(), false, null);
                 })
                 // Handler: Kill the command. The terminal stays valid: its output can still be
                 // read, and the agent releases it afterwards.
