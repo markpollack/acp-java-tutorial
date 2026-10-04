@@ -6,7 +6,8 @@ Build an ACP agent as a Spring Boot application using `@AcpAgent` annotations an
 
 ## What You'll Learn
 
-- Using `@AcpAgent`, `@Initialize`, `@NewSession`, `@Prompt` annotations
+- Using `@AcpAgent`, `@NewSession`, `@Prompt` annotations (no `@Initialize`: the SDK answers
+  `initialize`, derived from the class from SDK 0.80.0)
 - Spring Boot autoconfiguration for transport and lifecycle management
 - Redirecting logging to stderr for stdio agents
 

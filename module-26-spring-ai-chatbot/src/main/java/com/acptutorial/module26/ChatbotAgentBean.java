@@ -6,7 +6,7 @@
  *   - This module: Spring AI's ChatClient (multi-provider) in a Spring bean.
  *   - Module 27: LangChain4j's ChatModel.
  *
- * The ACP parts (@Initialize / @NewSession / @Prompt) are identical to module 23's
+ * The ACP parts (@AcpAgent / @NewSession / @Prompt) are identical to module 23's
  * echo bean. The ONLY difference from echo is the body of @Prompt: instead of
  * echoing, it asks the model via ChatClient.
  *
@@ -21,11 +21,8 @@ import java.util.UUID;
 
 import com.agentclientprotocol.sdk.agent.SyncPromptContext;
 import com.agentclientprotocol.sdk.annotation.AcpAgent;
-import com.agentclientprotocol.sdk.annotation.Initialize;
 import com.agentclientprotocol.sdk.annotation.NewSession;
 import com.agentclientprotocol.sdk.annotation.Prompt;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeRequest;
-import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
@@ -55,11 +52,6 @@ public class ChatbotAgentBean {
             .defaultSystem("You are a concise, friendly assistant running as an ACP agent inside an IDE.")
             .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
             .build();
-    }
-
-    @Initialize
-    public InitializeResponse initialize(InitializeRequest request) {
-        return InitializeResponse.ok();
     }
 
     @NewSession
