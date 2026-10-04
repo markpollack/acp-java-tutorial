@@ -19,7 +19,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <acp-sdk.version>0.18.0</acp-sdk.version>
         <spring-boot.version>4.1.0</spring-boot.version>
-        <acp-autoconfig.version>0.12.0</acp-autoconfig.version>
+        <!-- The ACP Spring Boot starter. Released 0.18.0 has it as org.springaicommunity 0.12.0; from
+             SDK 0.80.0 it is part of the SDK, com.agentclientprotocol:acp-spring-boot-starter at the
+             SDK's version (the sdk-candidate profile switches both). -->
+        <acp-spring-boot.groupId>org.springaicommunity</acp-spring-boot.groupId>
+        <acp-spring-boot.version>0.12.0</acp-spring-boot.version>
         <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
         <slf4j.version>2.0.9</slf4j.version>
         <agentworks.version>1.6.0</agentworks.version>
@@ -143,11 +147,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- ACP Spring Boot Starter -->
+            <!-- ACP Spring Boot Starter (see acp-spring-boot.groupId above) -->
             <dependency>
-                <groupId>org.springaicommunity</groupId>
+                <groupId>${acp-spring-boot.groupId}</groupId>
                 <artifactId>acp-spring-boot-starter</artifactId>
-                <version>${acp-autoconfig.version}</version>
+                <version>${acp-spring-boot.version}</version>
             </dependency>
             <!-- SLF4J simple binding for tutorial logging -->
             <dependency>
@@ -191,15 +195,15 @@
     </build>
 
     <profiles>
-        <!-- Build against the next ACP Java SDK candidate (0.80.0, still 0.19.0-SNAPSHOT on SDK main)
-             and the matching acp-autoconfig candidate:
+        <!-- Build against the next ACP Java SDK candidate (0.80.0, still 0.19.0-SNAPSHOT on SDK main),
+             whose Spring Boot starter, Micronaut module and Quarkus extension are part of the SDK:
                  ./mvnw -Psdk-candidate clean verify
              The profile also activates when ACP_SDK_CANDIDATE is set in the environment, so that tools
              which invoke ./mvnw themselves (integration-testing/RunIntegrationTest.java) build the
              candidate too:  ACP_SDK_CANDIDATE=true jbang RunIntegrationTest.java module-12-echo-agent
-             Both candidates resolve from the Maven Central snapshot repository below: the SDK's
-             com.agentclientprotocol:*:0.19.0-SNAPSHOT and acp-autoconfig main's
-             org.springaicommunity:acp-spring-boot-*:0.13.0-SNAPSHOT. No local install is needed;
+             The candidate resolves from the Maven Central snapshot repository below:
+             com.agentclientprotocol:*:0.19.0-SNAPSHOT, including com.agentclientprotocol:acp-spring-boot-starter,
+             which replaces org.springaicommunity:acp-spring-boot-starter. No local install is needed;
              add -U to pick up a newer snapshot. -->
         <profile>
             <id>sdk-candidate</id>
@@ -210,7 +214,8 @@
             </activation>
             <properties>
                 <acp-sdk.version>0.19.0-SNAPSHOT</acp-sdk.version>
-                <acp-autoconfig.version>0.13.0-SNAPSHOT</acp-autoconfig.version>
+                <acp-spring-boot.groupId>com.agentclientprotocol</acp-spring-boot.groupId>
+                <acp-spring-boot.version>${acp-sdk.version}</acp-spring-boot.version>
             </properties>
             <!-- Modules for features new in 0.80.0: they compile only against the candidate. -->
             <modules>

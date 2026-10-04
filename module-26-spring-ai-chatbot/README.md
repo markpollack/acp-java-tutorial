@@ -15,7 +15,7 @@ ACP agent never changes — the model is whatever Spring AI autoconfigures from 
 | **26 (this)** | **Spring AI `ChatClient` — multi-provider** |
 | [27](../module-27-langchain4j-chatbot/) | LangChain4j `ChatModel` |
 
-The ACP handlers (`@Initialize` / `@NewSession` / `@Prompt`) are identical to the
+The ACP handlers (`@NewSession` / `@Prompt`) are identical to the
 [module-23 echo bean](../module-23-spring-boot-agent/). The only difference from
 echo is the body of `@Prompt`:
 
@@ -40,11 +40,14 @@ of Anthropic, swap the dependency and the `spring.ai.<provider>.*` properties �
 <!-- swap for: spring-ai-starter-model-openai / -ollama / ... -->
 ```
 
-## Built on the community ACP Spring Boot starter
+## Built on the ACP Spring Boot starter
 
-This module depends on `org.springaicommunity:acp-spring-boot-starter` (the same
-autoconfig as module 23), starter **0.12.0** on ACP SDK **0.18.0**. Autoconfiguration
-discovers the `@AcpAgent` bean and manages the agent lifecycle.
+This module depends on the ACP Spring Boot starter (the same autoconfiguration as module
+23). From SDK **0.80.0** the starter is part of the SDK,
+`com.agentclientprotocol:acp-spring-boot-starter` at the SDK's version (build with
+`-Psdk-candidate` until the release); on SDK **0.18.0** it is
+`org.springaicommunity:acp-spring-boot-starter` **0.12.0**. Autoconfiguration discovers the
+`@AcpAgent` bean and manages the agent lifecycle.
 
 ## Prerequisites
 - Java 21 (Spring Boot 4)
