@@ -5,10 +5,10 @@
  *
  * Key APIs exercised:
  * - agent.run() - starts agent and blocks until client disconnects
- * - SyncPromptContext.readTextFile() - blocking file read from client
- * - SyncPromptContext.writeTextFile() - blocking file write to client
- * - SyncPromptContext.requestPermission() - blocking permission request
- * - SyncPromptContext.sendUpdate() - blocking update send
+ * - SyncPromptContext.readFile() - blocking file read from client (convenience)
+ * - SyncPromptContext.writeFile() - blocking file write to client (convenience)
+ * - SyncPromptContext.client().requestPermission() - the raw, blocking permission request
+ * - SyncPromptContext.sendSessionUpdate() - blocking update send
  * - ReadTextFileRequest/Response - file read types
  * - WriteTextFileRequest/Response - file write types
  * - RequestPermissionRequest/Response - permission types
@@ -91,7 +91,7 @@ public class FileRequestingAgent {
 
                 context.sendMessage("Requesting permission to create summary.txt...\n");
 
-                var permissionResponse = context.requestPermission(
+                var permissionResponse = context.client().requestPermission(
                     new RequestPermissionRequest(sessionId, toolCall, options));
 
                 context.sendMessage("Permission response: " + permissionResponse.outcome() + "\n");

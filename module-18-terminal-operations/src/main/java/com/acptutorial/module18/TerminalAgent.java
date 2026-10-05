@@ -4,12 +4,12 @@
  * An agent that executes commands on the client via terminal API.
  *
  * Key concepts:
- * - context.createTerminal() - request terminal creation
- * - context.getTerminalOutput() - get command output
- * - context.waitForTerminalExit() - wait for command to finish
- * - context.releaseTerminal() - clean up terminal
+ * - context.client().createTerminal() - request terminal creation
+ * - context.client().getTerminalOutput() - get command output
+ * - context.client().waitForTerminalExit() - wait for command to finish
+ * - context.client().releaseTerminal() - clean up terminal
  *
- * Note: This module uses the low-level terminal API to demonstrate
+ * Note: This module uses the raw terminal requests, under context.client(), to demonstrate
  * each step of the terminal lifecycle. The SDK also provides
  * context.execute() as a convenience method.
  *
@@ -81,7 +81,7 @@ public class TerminalAgent {
                 try {
                     // Step 1: Create terminal
                     System.err.println("[TerminalAgent] Creating terminal for: " + command);
-                    var createResp = context.createTerminal(
+                    var createResp = context.client().createTerminal(
                         new CreateTerminalRequest(
                             context.getSessionId(),
                             "sh",                           // executable
@@ -95,14 +95,14 @@ public class TerminalAgent {
 
                     // Step 2: Wait for command to finish
                     System.err.println("[TerminalAgent] Waiting for exit...");
-                    var exitResp = context.waitForTerminalExit(
+                    var exitResp = context.client().waitForTerminalExit(
                         new WaitForTerminalExitRequest(context.getSessionId(), terminalId));
                     int exitCode = exitResp.exitCode();
                     System.err.println("[TerminalAgent] Exit code: " + exitCode);
 
                     // Step 3: Get output
                     System.err.println("[TerminalAgent] Getting output...");
-                    var outputResp = context.getTerminalOutput(
+                    var outputResp = context.client().getTerminalOutput(
                         new TerminalOutputRequest(context.getSessionId(), terminalId));
                     String output = outputResp.output();
 
@@ -123,7 +123,7 @@ public class TerminalAgent {
                     if (terminalId != null) {
                         try {
                             System.err.println("[TerminalAgent] Releasing terminal: " + terminalId);
-                            context.releaseTerminal(
+                            context.client().releaseTerminal(
                                 new ReleaseTerminalRequest(context.getSessionId(), terminalId));
                             System.err.println("[TerminalAgent] Terminal released");
                         } catch (Exception e) {
