@@ -9,7 +9,6 @@ package com.acptutorial.module33;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
@@ -34,9 +33,9 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  *   a session update.</li>
  * </ol>
  *
- * <p>A builder handler other than the prompt handler receives only its request, so the
- * {@code session/new} handler reaches the client's capabilities through the built agent
- * ({@code self.get().getClientCapabilities()}); compare {@link AnnotatedConfigAgent}, whose
+ * <p>The {@code session/new} handler takes the agent as its second parameter,
+ * {@code (req, self) -> ...}, and reads the client's capabilities from it
+ * ({@code self.getClientCapabilities()}); compare {@link AnnotatedConfigAgent}, whose
  * handler takes {@code NegotiatedCapabilities} as a parameter.
  *
  * <p>Logs go to stderr: stdout carries the protocol.
@@ -45,13 +44,12 @@ public final class ConfigAgent {
 
     public static void main(String[] args) {
         SessionSettings settings = new SessionSettings();
-        AtomicReference<AcpSyncAgent> self = new AtomicReference<>();
 
         AcpSyncAgent agent = AcpAgent.sync(new StdioAcpAgentTransport())
                 .initializeHandler(req -> AcpSchema.InitializeResponse.ok())
-                .newSessionHandler(req -> {
+                .newSessionHandler((req, self) -> {
                     String sessionId = UUID.randomUUID().toString();
-                    boolean booleans = self.get().getClientCapabilities().supportsBooleanConfigOptions();
+                    boolean booleans = self.getClientCapabilities().supportsBooleanConfigOptions();
                     List<AcpSchema.SessionConfigOption> options = settings.open(sessionId, booleans);
                     // (sessionId, modes, configOptions): both, during the modes-to-config-options transition
                     return new AcpSchema.NewSessionResponse(sessionId, settings.modes(sessionId), options);
@@ -77,7 +75,6 @@ public final class ConfigAgent {
                     return AcpSchema.PromptResponse.endTurn();
                 })
                 .build();
-        self.set(agent);
         System.err.println("[ConfigAgent] Ready");
         agent.run();
     }

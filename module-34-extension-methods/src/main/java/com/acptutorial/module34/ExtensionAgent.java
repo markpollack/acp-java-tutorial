@@ -47,9 +47,11 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  *
  * <p><b>Calling</b> (agent to client), on the agent facade: {@code sendExtRequest(name,
  * params, TypeRef)} (typed), {@code sendExtRequest(name, params)} (raw) and
- * {@code sendExtNotification(name, params)}. A builder handler reaches the built agent
- * through an {@code AtomicReference}; compare {@link AnnotatedExtensionAgent}, whose
- * handlers take the connection's {@link AcpSyncAgent} as a parameter.
+ * {@code sendExtNotification(name, params)}. The session handlers can take the built agent
+ * as a second parameter, {@code (req, agent) -> ...}, but the extension handlers and the
+ * prompt handler cannot, so this agent reaches it through an {@code AtomicReference}; compare
+ * {@link AnnotatedExtensionAgent}, whose handlers take the connection's {@link AcpSyncAgent}
+ * as a parameter.
  */
 public final class ExtensionAgent {
 

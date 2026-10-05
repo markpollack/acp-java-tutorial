@@ -17,6 +17,9 @@
  *         agreed to open it"; when the external interaction finishes, the agent sends
  *         elicitation/complete with the same elicitationId.
  *
+ * The prompt handler sends both requests through context.client(), the raw ACP requests of
+ * the prompt's session, so the agent needs no reference to itself.
+ *
  * The form demos exercise all form field types:
  * - Text input (StringPropertySchema)
  * - Single-select dropdown (StringPropertySchema + oneOf)
@@ -33,7 +36,6 @@ package com.acptutorial.module31;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.agent.AcpAgent;
 import com.agentclientprotocol.sdk.agent.AcpAsyncAgent;
@@ -62,7 +64,6 @@ public class ElicitationAgent {
     public static void main(String[] args) {
         System.err.println("[ElicitationAgent] Starting...");
         var transport = new StdioAcpAgentTransport();
-        AtomicReference<AcpAsyncAgent> agentRef = new AtomicReference<>();
 
         AcpAsyncAgent agent = AcpAgent.async(transport)
             .initializeHandler(req -> {
@@ -101,7 +102,7 @@ public class ElicitationAgent {
                     var schema = new ElicitationSchema(fields,
                         List.of("name", "template"));
 
-                    return agentRef.get()
+                    return context.client()
                         .createElicitation(CreateElicitationRequest.form(
                             sessionId, "Configure your new project:", schema))
                         .flatMap(response -> {
@@ -129,7 +130,7 @@ public class ElicitationAgent {
                 } else if (text.contains("url")) {
                     // URL mode: the client opens the URL; no schema, no content in the answer
                     String elicitationId = "signin-" + UUID.randomUUID();
-                    return agentRef.get()
+                    return context.client()
                         .createElicitation(CreateElicitationRequest.url(sessionId,
                             "Sign in to the issue tracker to continue",
                             elicitationId, "https://tracker.example.com/oauth/authorize?state=" + elicitationId))
@@ -140,7 +141,7 @@ public class ElicitationAgent {
                             }
                             // ... the user signs in on that page (the agent learns of it out of
                             // band, e.g. an OAuth callback). Then tell the client it is done:
-                            return agentRef.get()
+                            return context.client()
                                 .completeElicitation(new CompleteElicitationNotification(elicitationId))
                                 .then(context.sendMessage("Signed in; the sign-in page can be closed.\n"))
                                 .then(Mono.just(PromptResponse.endTurn()));
@@ -155,7 +156,7 @@ public class ElicitationAgent {
                                     new EnumOption("green", "Green")))),
                         List.of("color"));
 
-                    return agentRef.get()
+                    return context.client()
                         .createElicitation(CreateElicitationRequest.form(
                             sessionId, "Quick question:", schema))
                         .flatMap(response -> {
@@ -173,7 +174,6 @@ public class ElicitationAgent {
             })
             .build();
 
-        agentRef.set(agent);
         System.err.println("[ElicitationAgent] Ready");
         agent.start().then(agent.awaitTermination()).block();
     }

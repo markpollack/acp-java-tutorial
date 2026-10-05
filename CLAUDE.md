@@ -87,19 +87,25 @@ try (AcpSyncClient client = AcpClient.sync(transport)
 }
 ```
 
-### Agent Self-Reference (AtomicReference Pattern)
-When agent handlers need to call agent methods:
+### Agent Self-Reference
+Request handlers other than the prompt handler can take the built agent as a second
+parameter; the prompt handler reaches the client through its context:
 ```java
-AtomicReference<AcpSyncAgent> agentRef = new AtomicReference<>();
 AcpSyncAgent agent = AcpAgent.sync(transport)
-    .promptHandler((req, updater) -> {
-        String content = agentRef.get().readTextFile(session, path);
+    .loadSessionHandler((req, self) -> {
+        self.sendSessionUpdate(req.sessionId(), update);  // replay history
+        return new LoadSessionResponse(null);
+    })
+    .promptHandler((req, context) -> {
+        String content = context.readFile("pom.xml");             // convenience
+        var perm = context.client().requestPermission(request);   // raw ACP request
         // ...
     })
     .build();
-agentRef.set(agent);
 agent.run();
 ```
+The extension handlers have no agent-aware form; they still need an `AtomicReference`
+(module 34).
 
 ### Robust JAR Path Resolution
 Agent demos should work from repo root OR module directory:
