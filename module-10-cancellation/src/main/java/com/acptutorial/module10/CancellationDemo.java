@@ -4,19 +4,20 @@
  * Demonstrates cancelling an in-progress operation.
  *
  * Key APIs:
- * - client.cancel(CancelNotification) - sends cancel notification to agent
- * - CancelNotification(sessionId) - identifies which session to cancel
+ * - client.prompt(request, stop) - a prompt whose turn a CancellationSignal can stop
+ * - stop.cancel() - from any thread: sends session/cancel for the prompt's session, once
+ * - client.cancel(CancelNotification) - the raw notification, for a session's turn
  *
  * The demo:
  * 1. Starts a long-running prompt (agent counts 1-10, 500ms each)
  * 2. Runs prompt in background thread
- * 3. After 1.5 seconds, sends cancel
+ * 3. After 1.5 seconds, cancels it
  * 4. Agent stops at current step and answers the prompt with stop reason CANCELLED
  *
  * The cancel does not end the turn on its own: the turn ends when the cancelled
- * prompt answers. Send the next prompt only after that answer; a prompt sent in
- * between is rejected with -32600 (invalid request), like any prompt sent while
- * another is still running on the session.
+ * prompt answers, and prompt(request, stop) still returns that answer. Send the next
+ * prompt only after it; a prompt sent in between is rejected with -32600 (invalid
+ * request), like any prompt sent while another is still running on the session.
  *
  * Build & run:
  *   ./mvnw package -pl module-10-cancellation -q
@@ -28,14 +29,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.client.AcpClient;
 import com.agentclientprotocol.sdk.client.AcpSyncClient;
+import com.agentclientprotocol.sdk.client.CancellationSignal;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.CancelNotification;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
@@ -91,24 +91,21 @@ public class CancellationDemo {
             System.out.println("--- Demo 2: Cancelled Operation ---");
             System.out.println("Starting long operation, will cancel after 1.5 seconds...\n");
 
-            // Run prompt in background
-            AtomicReference<PromptResponse> response2Ref = new AtomicReference<>();
-            CompletableFuture<Void> promptFuture = CompletableFuture.runAsync(() -> {
-                var response = client.prompt(new PromptRequest(
+            // Run prompt in background, with a signal that can stop its turn
+            CancellationSignal stop = new CancellationSignal();
+            CompletableFuture<PromptResponse> answer = CompletableFuture.supplyAsync(() ->
+                client.prompt(new PromptRequest(
                     sessionId,
-                    List.of(new TextContent("Do a long task"))));
-                response2Ref.set(response);
-            });
+                    List.of(new TextContent("Do a long task"))), stop));
 
-            // Wait 1.5 seconds then cancel
+            // Wait 1.5 seconds then cancel: the client sends session/cancel
             Thread.sleep(1500);
             System.out.println("\n[Client] Sending cancel...");
-            client.cancel(new CancelNotification(sessionId));
+            stop.cancel();
 
             // Wait for the cancelled prompt to answer: that ends the turn, and only
             // then may the client send another prompt on this session
-            promptFuture.join();
-            System.out.println("\nStop reason: " + response2Ref.get().stopReason());
+            System.out.println("\nStop reason: " + answer.join().stopReason());
 
             System.out.println("\n=== Demo Complete ===");
             System.out.println("Cancellation allows graceful interruption of long operations.");

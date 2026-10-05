@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.agentclientprotocol.sdk.client.AcpAsyncClient;
 import com.agentclientprotocol.sdk.client.AcpClient;
+import com.agentclientprotocol.sdk.client.CancellationSignal;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.error.AcpErrorCodes;
@@ -33,10 +34,14 @@ import reactor.core.publisher.Mono;
  * {@link CancellationAgent}.
  *
  * <ol>
- *   <li><b>{@code session/cancel}</b> ({@code client.cancel(new CancelNotification(sid))}):
- *   asks the agent to end the turn. The turn ends when the cancelled prompt answers
- *   {@code cancelled}; a prompt sent in between is rejected with {@code -32600}
- *   ({@code AcpErrorCodes.INVALID_REQUEST}).</li>
+ *   <li><b>{@code session/cancel}</b> asks the agent to end the turn. Send the prompt with a
+ *   {@link CancellationSignal}, {@code client.prompt(request, stop)}, and call
+ *   {@code stop.cancel()} from any thread: the client sends {@code session/cancel} for the
+ *   prompt's session, once, and the prompt still returns the agent's answer. The turn ends when
+ *   the cancelled prompt answers {@code cancelled}; a prompt sent in between is rejected with
+ *   {@code -32600} ({@code AcpErrorCodes.INVALID_REQUEST}). The raw notification,
+ *   {@code client.cancel(new CancelNotification(sid))}, does the same for whatever turn the
+ *   session is running (scenario 3).</li>
  *   <li><b>{@code $/cancel_request}</b> cancels any one request, in either direction. With
  *   {@code contextWrite(RequestCancellation.cancelWhen(trigger))} it is <em>graceful</em>:
  *   the SDK sends {@code $/cancel_request} when {@code trigger} emits or completes and keeps
@@ -104,11 +109,12 @@ public final class CancellationDemo {
         System.out.println("--- 1. session/cancel ---");
         String sid = newSession(client);
         MESSAGES.set(new CountDownLatch(3));
-        CompletableFuture<AcpSchema.PromptResponse> slow = client.prompt(prompt(sid, "#slow")).toFuture();
+        CancellationSignal stop = new CancellationSignal();
+        CompletableFuture<AcpSchema.PromptResponse> slow = client.prompt(prompt(sid, "#slow"), stop).toFuture();
         MESSAGES.get().await(5, TimeUnit.SECONDS);
 
-        client.cancel(new AcpSchema.CancelNotification(sid)).block();
-        System.out.println("client: sent session/cancel");
+        stop.cancel();
+        System.out.println("client: sent session/cancel (stop.cancel())");
 
         try {
             client.prompt(prompt(sid, "ping")).block();
