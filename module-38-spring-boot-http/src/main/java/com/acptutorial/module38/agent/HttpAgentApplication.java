@@ -20,8 +20,9 @@ import org.springframework.context.ConfigurableApplicationContext;
  * application, runs the SDK's {@code StreamableHttpAcpAgentTransport} listener as a bean:
  * Jetty with HTTP/1.1, h2c and the WebSocket upgrade, on
  * {@code spring.acp.agent.transport.http.listener.port} and {@code ...transport.http.path}.
- * In a servlet web application it would mount {@code StreamableHttpAcpServlet} on the application's own server
- * instead (HTTP/SSE only, no WebSocket).
+ * In a servlet web application (Spring MVC) it would instead mount {@code StreamableHttpAcpServlet}
+ * from {@code acp-http-servlet} on the application's own server: Streamable HTTP, SSE and
+ * WebSocket on {@code server.port}, behind the application's filter chain and Spring Security.
  *
  * <p>Port {@code 0} picks a free port; the bound port is
  * {@code context.getBean(StreamableHttpAcpAgentTransport.class).getPort()}.
