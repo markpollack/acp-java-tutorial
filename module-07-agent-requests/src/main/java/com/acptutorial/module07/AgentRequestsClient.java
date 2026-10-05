@@ -6,7 +6,7 @@
  * Key APIs exercised:
  * - SyncSpec.readTextFileHandler() - handle file read requests
  * - SyncSpec.writeTextFileHandler() - handle file write requests
- * - SyncSpec.clientCapabilities() with FileSystemCapability - advertise capabilities
+ * - The two handlers advertise fs.readTextFile and fs.writeTextFile on their own
  * - ReadTextFileRequest/Response - file read types
  * - WriteTextFileRequest/Response - file write types
  *
@@ -41,8 +41,6 @@ import com.agentclientprotocol.sdk.error.AcpErrorCodes;
 import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ReadTextFileRequest;
@@ -74,15 +72,11 @@ public class AgentRequestsClient {
 
         var transport = new StdioAcpClientTransport(params);
 
-        // Advertise file system capabilities: the builder is where the client sets them
-        var clientCaps = new ClientCapabilities(
-            new FileSystemCapability(true, true),  // read=true, write=true
-            false);
-
-        // Build client with file handlers and session updates
+        // Build client with file handlers and session updates. The file handlers are also what
+        // the client advertises: initialize() sends fs.readTextFile and fs.writeTextFile
+        // because these two handlers are registered.
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .requestTimeout(java.time.Duration.ofSeconds(60))  // Give agent more time
-                .clientCapabilities(clientCaps)
                 .readTextFileHandler(AgentRequestsClient::handleReadFile)
                 .writeTextFileHandler(AgentRequestsClient::handleWriteFile)
                 .sessionUpdateHandler(notification -> {

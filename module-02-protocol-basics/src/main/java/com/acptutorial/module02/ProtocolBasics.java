@@ -4,7 +4,7 @@
  * Deep dive into the ACP initialize handshake and version negotiation.
  *
  * Key APIs exercised:
- * - AcpClient.sync(...).clientCapabilities(...) - the capabilities the client advertises
+ * - AcpClient.sync(...) handlers - the capabilities the client advertises follow from them
  * - initialize() - sends the protocol version and those capabilities
  * - InitializeResponse - agent capabilities, supported features
  * - Version negotiation semantics
@@ -28,8 +28,6 @@ import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
 
 public class ProtocolBasics {
 
@@ -42,17 +40,11 @@ public class ProtocolBasics {
 
         var transport = new StdioAcpClientTransport(params);
 
-        // The client's capabilities are set on the builder: what the client advertises
-        // in the initialize request is also what its handlers honour. build() fails for an
-        // advertised capability without its handler, so file read/write comes with the two
-        // handlers that serve it (module 07 covers them).
-        var clientCapabilities = new ClientCapabilities(
-            new FileSystemCapability(true, true),  // We can read/write files
-            false  // No terminal support
-        );
-
+        // The client advertises the capabilities its handlers serve: registering the two file
+        // handlers below advertises fs.readTextFile and fs.writeTextFile in the initialize
+        // request, and no terminal, since no terminal handlers are registered (module 07 covers
+        // the file handlers; module 17 sets capabilities explicitly with clientCapabilities(..)).
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .clientCapabilities(clientCapabilities)
                 .readTextFileHandler(req -> {
                     try {
                         return new AcpSchema.ReadTextFileResponse(Files.readString(Path.of(req.path())));
@@ -84,7 +76,7 @@ public class ProtocolBasics {
             System.out.println();
 
             // Send the initialize request: the SDK's protocol version plus the
-            // capabilities from the builder
+            // capabilities the handlers imply
             var response = client.initialize();
 
             System.out.println("Received initialize response:");

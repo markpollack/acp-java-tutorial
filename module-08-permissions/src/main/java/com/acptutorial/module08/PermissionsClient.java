@@ -42,8 +42,6 @@ import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentThoughtChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ToolCallUpdateNotification;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionCancelled;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PermissionOption;
@@ -78,15 +76,10 @@ public class PermissionsClient {
         var transport = new StdioAcpClientTransport(params);
         var scanner = new Scanner(System.in);
 
-        // File system capabilities are set on the builder, with the file handlers below
-        var clientCaps = new ClientCapabilities(
-            new FileSystemCapability(true, true),  // read=true, write=true
-            false);
-
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .requestTimeout(Duration.ofMinutes(2))  // User needs time to respond
-                .clientCapabilities(clientCaps)
-                // File handlers - required for agent to actually read/write files
+                // File handlers - required for agent to actually read/write files; registering
+                // them advertises fs.readTextFile and fs.writeTextFile in initialize()
                 .readTextFileHandler(PermissionsClient::handleReadFile)
                 .writeTextFileHandler(PermissionsClient::handleWriteFile)
                 // Session updates - log agent's progress with readable formatting

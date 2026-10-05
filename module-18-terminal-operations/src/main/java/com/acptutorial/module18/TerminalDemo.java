@@ -10,8 +10,8 @@
  * - killTerminalHandler() - stop the process, keeping the terminal for its output
  * - releaseTerminalHandler() - clean up process resources
  *
- * Advertising the terminal capability takes all five handlers: build() fails otherwise,
- * naming the missing ones.
+ * The client advertises the terminal capability once all five handlers are registered;
+ * with only some of them it logs a warning naming the missing ones and advertises none.
  *
  * Build & run:
  *   ./mvnw package -pl module-18-terminal-operations -q
@@ -33,9 +33,7 @@ import com.agentclientprotocol.sdk.client.AcpSyncClient;
 import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateTerminalResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
 import com.agentclientprotocol.sdk.spec.AcpSchema.KillTerminalCommandResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
@@ -76,14 +74,10 @@ public class TerminalDemo {
 
         var transport = new StdioAcpClientTransport(params);
 
-        // Configure client with terminal capability
-        var clientCaps = new ClientCapabilities(
-            new FileSystemCapability(false, false),  // no file access
-            true  // terminal enabled
-        );
-
+        // The client advertises the terminal capability once all five terminal handlers below
+        // are registered (create, output, wait for exit, kill, release); with only some of them
+        // it logs a warning naming the missing ones and advertises no terminal
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .clientCapabilities(clientCaps)
                 .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
