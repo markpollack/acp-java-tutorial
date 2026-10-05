@@ -104,8 +104,9 @@ AcpSyncAgent agent = AcpAgent.sync(transport)
     .build();
 agent.run();
 ```
-The extension handlers have no agent-aware form; they still need an `AtomicReference`
-(module 34).
+Extension handlers have agent-aware forms too: `extRequestHandler(method, [TypeRef,] (params, self) -> ...)`
+and `extNotificationHandler(...)`. A prompt handler calls the client's extension methods with
+`context.client().sendExtRequest(...)` / `sendExtNotification(...)` (module 34).
 
 ### Robust JAR Path Resolution
 Agent demos should work from repo root OR module directory:
