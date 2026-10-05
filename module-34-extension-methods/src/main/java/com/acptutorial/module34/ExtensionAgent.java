@@ -9,7 +9,6 @@ package com.acptutorial.module34;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.acptutorial.module34.Extensions.LogEvent;
 import com.acptutorial.module34.Extensions.Selection;
@@ -45,19 +44,18 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  * return an empty map when there is nothing to say. A request nobody serves is answered
  * {@code -32601}; a notification nobody handles is ignored, as the protocol asks.
  *
- * <p><b>Calling</b> (agent to client), on the agent facade: {@code sendExtRequest(name,
- * params, TypeRef)} (typed), {@code sendExtRequest(name, params)} (raw) and
- * {@code sendExtNotification(name, params)}. The session handlers can take the built agent
- * as a second parameter, {@code (req, agent) -> ...}, but the extension handlers and the
- * prompt handler cannot, so this agent reaches it through an {@code AtomicReference}; compare
+ * <p><b>Calling</b> (agent to client): {@code sendExtRequest(name, params, TypeRef)}
+ * (typed), {@code sendExtRequest(name, params)} (raw) and
+ * {@code sendExtNotification(name, params)}. A prompt handler calls them on
+ * {@code context.client()}; an extension handler that needs the agent takes it as a second
+ * parameter, {@code (params, self) -> ...}, the agent {@code build()} returned. Name it
+ * {@code self}: a lambda parameter cannot shadow the variable the agent is assigned to. Compare
  * {@link AnnotatedExtensionAgent}, whose handlers take the connection's {@link AcpSyncAgent}
  * as a parameter.
  */
 public final class ExtensionAgent {
 
     public static void main(String[] args) {
-        AtomicReference<AcpSyncAgent> self = new AtomicReference<>();
-
         AcpSyncAgent agent = AcpAgent.sync(new StdioAcpAgentTransport())
                 .initializeHandler(req -> AcpSchema.InitializeResponse.ok())
                 .newSessionHandler(req -> new AcpSchema.NewSessionResponse(UUID.randomUUID().toString(), null, null))
@@ -71,22 +69,23 @@ public final class ExtensionAgent {
                         "echoed", params,
                         "agentSawJavaType", params.getClass().getSimpleName()))
 
-                // Typed notification: no answer, so the agent acknowledges with a notification of its own.
+                // Typed notification: no answer, so the agent acknowledges with a notification of its
+                // own, through the agent the handler receives as its second parameter.
                 .extNotificationHandler(Extensions.LOG, new TypeRef<LogEvent>() {
-                }, event -> self.get().sendExtNotification(Extensions.ACK,
+                }, (event, self) -> self.sendExtNotification(Extensions.ACK,
                         Extensions.ordered("received", event.level() + ": " + event.message(), "by", "builder agent")))
 
                 .promptHandler((req, ctx) -> {
-                    AcpSyncAgent me = self.get();
+                    var client = ctx.client();
                     // Agent -> client, typed request.
-                    Selection selection = me.sendExtRequest(Extensions.SELECTION,
+                    Selection selection = client.sendExtRequest(Extensions.SELECTION,
                             new SelectionQuery("src/Main.java"), new TypeRef<Selection>() {
                             });
                     // Agent -> client, raw notification.
-                    me.sendExtNotification(Extensions.STATUS, Extensions.ordered("state", "reviewing", "file", selection.file()));
+                    client.sendExtNotification(Extensions.STATUS, Extensions.ordered("state", "reviewing", "file", selection.file()));
                     // Agent -> client, a method the client does not serve.
                     try {
-                        me.sendExtRequest(Extensions.NOT_SERVED, Map.of());
+                        client.sendExtRequest(Extensions.NOT_SERVED, Map.of());
                     }
                     catch (AcpError e) {
                         ctx.sendThought("the client does not serve " + Extensions.NOT_SERVED
@@ -97,7 +96,6 @@ public final class ExtensionAgent {
                     return AcpSchema.PromptResponse.endTurn();
                 })
                 .build();
-        self.set(agent);
         System.err.println("[ExtensionAgent] Ready");
         agent.run();
     }
