@@ -22,7 +22,9 @@ import io.micronaut.runtime.Micronaut;
  *   banner is off and every log line goes to standard error. When the client closes the
  *   agent's input and every answer is written, the context closes and the process exits 0.</li>
  *   <li>{@code http} (or {@code websocket}, the same listener): the SDK's Jetty listener, on
- *   {@code acp.agent.transport.http.port}, serving Streamable HTTP and WebSocket on one path.
+ *   {@code acp.agent.transport.http.listener.port} (on 127.0.0.1 unless
+ *   {@code acp.agent.transport.http.listener.host} says otherwise), serving Streamable HTTP and
+ *   WebSocket on one path, {@code acp.agent.transport.http.path}.
  *   It runs on its own port, next to Micronaut's HTTP server if the application has one.</li>
  * </ul>
  */

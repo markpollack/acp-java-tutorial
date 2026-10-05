@@ -72,7 +72,7 @@ public final class MicronautDemo {
         System.out.println("\n--- 2. HTTP: the same agent application on the SDK's listener ---");
         try (ApplicationContext agent = context(Map.of(
                 "acp.agent.transport.type", "http",
-                "acp.agent.transport.http.port", 0))) {
+                "acp.agent.transport.http.listener.port", 0))) {
             int port = agent.getBean(AcpAgentRuntime.class).port().orElseThrow();
             System.out.println("agent application listening (port 0 -> a free port): " + (port > 0));
 
