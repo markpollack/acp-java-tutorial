@@ -13,7 +13,7 @@
  * - All methods return Mono<T> instead of T
  * - Use flatMap to chain dependent operations
  * - Use subscribe() for fire-and-forget, block() to wait
- * - Session update consumer returns Mono<Void>
+ * - Session update handler returns Mono<Void>
  *
  * When to use async:
  * - High-throughput scenarios
@@ -66,9 +66,9 @@ public class AsyncClient {
         var transport = new StdioAcpClientTransport(params);
 
         // 3. Build ASYNC client - note the different builder and return type
-        //    Key difference: sessionUpdateConsumer returns Mono<Void>
+        //    Key difference: sessionUpdateHandler returns Mono<Void>
         AcpAsyncClient client = AcpClient.async(transport)
-            .sessionUpdateConsumer(notification -> {
+            .sessionUpdateHandler(notification -> {
                 // Async consumer - must return Mono<Void>
                 var update = notification.update();
                 if (update instanceof AgentMessageChunk msg) {

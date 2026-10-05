@@ -4,7 +4,7 @@
  * Demonstrates receiving real-time session updates from agents during prompt processing.
  *
  * Key APIs exercised:
- * - SyncSpec.sessionUpdateConsumer() - register update handler
+ * - SyncSpec.sessionUpdateHandler() - register update handler
  * - SessionNotification - wrapper containing sessionId and update
  * - SessionUpdate interface and its implementations:
  *   - AgentMessageChunk - incremental response text
@@ -59,11 +59,11 @@ public class StreamingUpdatesClient {
         // Counter to track updates received
         AtomicInteger updateCount = new AtomicInteger(0);
 
-        // Build client with session update consumer
+        // Build client with session update handler
         try (AcpSyncClient client = AcpClient.sync(transport)
                 // Register handler for streaming updates
-                // Note: Uses plain Consumer (no Mono) - this is a sync consumer!
-                .sessionUpdateConsumer(notification -> handleSessionUpdate(notification, updateCount))
+                // Note: Uses plain Consumer (no Mono) - this is a sync handler!
+                .sessionUpdateHandler(notification -> handleSessionUpdate(notification, updateCount))
                 .build()) {
 
             // Initialize with defaults (protocol version 1, default capabilities)

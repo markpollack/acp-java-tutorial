@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
 import reactor.core.publisher.Mono;
 
 /**
- * Adds a session-update consumer to the client acp-micronaut builds from
+ * Adds a session-update handler to the client acp-micronaut builds from
  * {@code acp.client.*}. Every {@link AcpClientCustomizer} bean is applied, in order, to the one
  * builder behind the {@code AcpAsyncClient} and {@code AcpSyncClient} beans. Only present when
  * a client is configured, so the agent application never has it.
@@ -23,7 +23,7 @@ public class PrintingCustomizer implements AcpClientCustomizer {
 
     @Override
     public void customize(AcpClient.AsyncSpec spec) {
-        spec.sessionUpdateConsumer(notification -> {
+        spec.sessionUpdateHandler(notification -> {
             if (notification.update() instanceof AcpSchema.AgentThoughtChunk thought
                     && thought.content() instanceof AcpSchema.TextContent text) {
                 System.out.println("   thought: " + text.text());

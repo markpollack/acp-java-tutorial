@@ -40,7 +40,7 @@ import com.agentclientprotocol.sdk.spec.AcpSchema;
  *   <li><b>{@code setSessionConfigOption} returns the full list</b>: print it, replace your
  *   copy. {@code SetSessionConfigOptionRequest.select(..)} sends a {@code String},
  *   {@code .bool(..)} a {@code Boolean} with {@code type: "boolean"}.</li>
- *   <li><b>{@code config_option_update}</b> arrives through the session-update consumer
+ *   <li><b>{@code config_option_update}</b> arrives through the session-update handler
  *   when the agent changes a value itself; it also carries the full list.</li>
  *   <li><b>Updates are handled before {@code prompt()} returns.</b> The SDK completes a
  *   response only after every notification received before it has been handled by the
@@ -76,7 +76,7 @@ public final class ConfigOptionsDemo {
 
         try (AcpSyncClient client = AcpClient.sync(new StdioAcpClientTransport(params))
                 .clientCapabilities(capabilities)
-                .sessionUpdateConsumer(ConfigOptionsDemo::printUpdate)
+                .sessionUpdateHandler(ConfigOptionsDemo::printUpdate)
                 .build()) {
 
             client.initialize();
@@ -139,7 +139,7 @@ public final class ConfigOptionsDemo {
         System.out.println("--- builder agent, boolean options advertised: false ---");
         try (AcpSyncClient client = AcpClient.sync(new StdioAcpClientTransport(params))
                 .clientCapabilities(new AcpSchema.ClientCapabilities())
-                .sessionUpdateConsumer(ConfigOptionsDemo::printUpdate)
+                .sessionUpdateHandler(ConfigOptionsDemo::printUpdate)
                 .build()) {
             client.initialize();
             var session = client.newSession(new AcpSchema.NewSessionRequest(

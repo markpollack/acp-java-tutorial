@@ -5,7 +5,7 @@ Serve a Spring Boot `@AcpAgent` over Streamable HTTP with the SDK's Spring Boot 
 the SDK's Jetty listener in a non-web application, port 0 supported), and talk to it from a
 Spring Boot client over Streamable HTTP (`spring.acp.client.transport.http.uri`) and WebSocket
 (`spring.acp.client.transport.websocket.uri`). The client's `AcpClientCustomizer` registers a
-session-update consumer and a file handler, with the matching
+session-update handler and a file handler, with the matching
 `spring.acp.client.capabilities.read-text-file` property. No API key required.
 
 **Requires Java 21+** (Spring Boot 4.x).

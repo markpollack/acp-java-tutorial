@@ -43,7 +43,7 @@ public class SpringAiChatbotDemo {
         var transport = new StdioAcpClientTransport(params);
 
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
                         System.out.print(((TextContent) msg.content()).text());

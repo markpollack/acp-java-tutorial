@@ -94,7 +94,7 @@ navigate to each location as it arrives. The spec calls this
 Each location is an absolute `path` plus an optional 1-based `line`:
 
 ```java
-context.sendUpdate(sessionId, new ToolCall(
+context.sendSessionUpdate(new ToolCall(
     "tool_call", toolCallId,
     "Visiting pom.xml", "read_file",   // title, then the tool's name (may be null)
     ToolKind.READ, ToolCallStatus.IN_PROGRESS,

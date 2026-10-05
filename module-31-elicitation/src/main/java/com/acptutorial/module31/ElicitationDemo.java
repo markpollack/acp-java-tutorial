@@ -70,7 +70,7 @@ public class ElicitationDemo {
 
         try (AcpSyncClient client = AcpClient.sync(transport)
                 .clientCapabilities(caps)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AgentMessageChunk msg) {
                         System.out.print(((TextContent) msg.content()).text());
                     }

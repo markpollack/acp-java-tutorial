@@ -42,7 +42,7 @@ public class PromptsClient {
 
         // Print the agent's streamed answer, so each prompt's response is visible
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AgentMessageChunk msg
                             && msg.content() instanceof TextContent text) {
                         System.out.print(text.text());

@@ -69,7 +69,7 @@ public final class AuthDemo {
                 .build();
         try (AcpSyncClient client = AcpClient.sync(new StdioAcpClientTransport(agent))
                 .clientCapabilities(terminalCapable)
-                .sessionUpdateConsumer(AuthDemo::printUpdate)
+                .sessionUpdateHandler(AuthDemo::printUpdate)
                 .build()) {
 
             AcpSchema.InitializeResponse init = client.initialize();

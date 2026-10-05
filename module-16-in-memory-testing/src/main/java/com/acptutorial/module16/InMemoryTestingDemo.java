@@ -89,7 +89,7 @@ public class InMemoryTestingDemo {
         AtomicReference<String> receivedMessage = new AtomicReference<>();
 
         try (AcpSyncClient client = AcpClient.sync(transportPair.clientTransport())
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
                         receivedMessage.set(((TextContent) msg.content()).text());

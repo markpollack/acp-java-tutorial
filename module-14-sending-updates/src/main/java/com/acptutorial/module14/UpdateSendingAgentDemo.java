@@ -43,7 +43,7 @@ public class UpdateSendingAgentDemo {
         var transport = new StdioAcpClientTransport(params);
 
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentThoughtChunk thought) {
                         String text = ((TextContent) thought.content()).text();

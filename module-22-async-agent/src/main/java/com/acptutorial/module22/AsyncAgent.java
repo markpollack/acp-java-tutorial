@@ -6,14 +6,14 @@
  * This module demonstrates:
  * - AcpAgent.async() instead of AcpAgent.sync()
  * - Handlers returning Mono<T> instead of T
- * - Reactive sendUpdate() returning Mono<Void>
+ * - Reactive sendSessionUpdate() returning Mono<Void>
  * - Chaining async operations with flatMap/then
  *
  * Key differences from sync agent (Module 12):
  * - initializeHandler returns Mono<InitializeResponse>
  * - newSessionHandler returns Mono<NewSessionResponse>
  * - promptHandler returns Mono<PromptResponse>
- * - context.sendUpdate() returns Mono<Void> (must subscribe!)
+ * - context.sendSessionUpdate() returns Mono<Void> (must subscribe!)
  * - Use agent.start().block() + awaitTermination().block()
  *
  * When to use async agent:

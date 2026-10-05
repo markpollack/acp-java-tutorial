@@ -90,7 +90,7 @@ public class PermissionsClient {
                 .readTextFileHandler(PermissionsClient::handleReadFile)
                 .writeTextFileHandler(PermissionsClient::handleWriteFile)
                 // Session updates - log agent's progress with readable formatting
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentThoughtChunk thought) {
                         String text = ((TextContent) thought.content()).text();

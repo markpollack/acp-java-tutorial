@@ -55,7 +55,7 @@ public class CancellationDemo {
         var transport = new StdioAcpClientTransport(params);
 
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
                         String text = ((TextContent) msg.content()).text();

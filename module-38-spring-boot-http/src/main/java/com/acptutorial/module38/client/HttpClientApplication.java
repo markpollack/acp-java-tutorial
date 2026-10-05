@@ -44,8 +44,8 @@ import reactor.core.publisher.Mono;
  * is applied, in order, to the one builder behind both {@code AcpAsyncClient} and
  * {@code AcpSyncClient}. This one registers:
  * <ul>
- *   <li>a session-update consumer that prints the agent's messages. It replaces the
- *   autoconfiguration's default consumer, which only logs each update at DEBUG;</li>
+ *   <li>a session-update handler that prints the agent's messages. It replaces the
+ *   autoconfiguration's default handler, which only logs each update at DEBUG;</li>
  *   <li>a handler for {@code fs/read_text_file}, serving files from an in-memory
  *   workspace.</li>
  * </ul>
@@ -82,7 +82,7 @@ public class HttpClientApplication {
     @Bean
     AcpClientCustomizer printAndServeFiles() {
         return spec -> spec
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AcpSchema.AgentMessageChunk msg
                             && msg.content() instanceof AcpSchema.TextContent text) {
                         System.out.println("   agent: " + text.text());

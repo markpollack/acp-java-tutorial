@@ -85,7 +85,7 @@ public class AgentRequestsClient {
                 .clientCapabilities(clientCaps)
                 .readTextFileHandler(AgentRequestsClient::handleReadFile)
                 .writeTextFileHandler(AgentRequestsClient::handleWriteFile)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentThoughtChunk thought) {
                         String text = ((TextContent) thought.content()).text();

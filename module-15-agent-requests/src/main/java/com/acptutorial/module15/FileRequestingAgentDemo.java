@@ -92,7 +92,7 @@ public class FileRequestingAgentDemo {
                         new PermissionSelected(req.options().get(0).optionId()));
                 })
                 // Handle session updates
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
                         String text = ((TextContent) msg.content()).text();

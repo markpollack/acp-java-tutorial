@@ -43,7 +43,7 @@ public class AgentClientAgentDemo {
         var transport = new StdioAcpClientTransport(params);
 
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AgentMessageChunk msg) {
                         System.out.print(((TextContent) msg.content()).text());
                         System.out.flush();

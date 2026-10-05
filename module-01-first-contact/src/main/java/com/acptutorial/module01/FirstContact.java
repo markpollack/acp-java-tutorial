@@ -48,9 +48,9 @@ public class FirstContact {
         // 2. Create transport (launches subprocess when client connects)
         var transport = new StdioAcpClientTransport(params);
 
-        // 3. Build sync client with an update consumer that prints the agent's response
+        // 3. Build sync client with an update handler that prints the agent's response
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AgentMessageChunk msg) {
                         System.out.print(((TextContent) msg.content()).text());
                     }

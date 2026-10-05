@@ -113,7 +113,7 @@ public final class HttpTransportsDemo {
         List<String> answers = new CopyOnWriteArrayList<>();
         Map<String, String> bySession = new ConcurrentHashMap<>();
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(n -> {
+                .sessionUpdateHandler(n -> {
                     if (n.update() instanceof AcpSchema.AgentMessageChunk msg
                             && msg.content() instanceof AcpSchema.TextContent text) {
                         bySession.put(n.sessionId(), text.text());

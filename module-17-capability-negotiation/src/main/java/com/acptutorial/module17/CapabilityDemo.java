@@ -95,7 +95,7 @@ public class CapabilityDemo {
 
         AcpClient.SyncSpec spec = AcpClient.sync(transport)
                 .clientCapabilities(clientCaps)  // what initialize() advertises
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {
                         String text = ((TextContent) msg.content()).text();

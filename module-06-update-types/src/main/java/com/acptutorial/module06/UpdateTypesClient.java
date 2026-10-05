@@ -117,7 +117,7 @@ public class UpdateTypesClient {
         var stats = new UpdateStats();
 
         try (AcpSyncClient client = AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     stats.handleUpdate(update);
                 })

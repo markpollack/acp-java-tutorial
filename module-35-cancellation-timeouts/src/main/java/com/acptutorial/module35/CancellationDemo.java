@@ -74,7 +74,7 @@ public final class CancellationDemo {
         var params = AgentParameters.builder("java").arg("-jar").arg(findAgentJar()).build();
 
         AcpAsyncClient client = AcpClient.async(new StdioAcpClientTransport(params))
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AcpSchema.AgentMessageChunk msg
                             && msg.content() instanceof AcpSchema.TextContent text) {
                         System.out.println("  agent: " + text.text());

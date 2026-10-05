@@ -79,7 +79,7 @@ agent.run();  // blocks until client disconnects
 ### Sync Client
 ```java
 try (AcpSyncClient client = AcpClient.sync(transport)
-        .sessionUpdateConsumer(notification -> { /* handle */ })
+        .sessionUpdateHandler(notification -> { /* handle */ })
         .build()) {
     client.initialize();
     var session = client.newSession(new NewSessionRequest(cwd, List.of()));

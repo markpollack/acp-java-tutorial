@@ -70,7 +70,7 @@ public final class ExtensionMethodsDemo {
     private static void run(String variant, AgentParameters params) throws InterruptedException {
         System.out.println("--- " + variant + " agent ---");
         try (AcpSyncClient client = AcpClient.sync(new StdioAcpClientTransport(params))
-                .sessionUpdateConsumer(ExtensionMethodsDemo::printUpdate)
+                .sessionUpdateHandler(ExtensionMethodsDemo::printUpdate)
                 // Agent -> client, typed request: params read as SelectionQuery.
                 .extRequestHandler(Extensions.SELECTION, new TypeRef<SelectionQuery>() {
                 }, query -> {

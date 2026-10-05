@@ -109,7 +109,7 @@ public final class QuarkusDemo {
     /** A client that prints thoughts and messages, and runs the given action on "chunk 3". */
     private static AcpSyncClient client(AcpClientTransport transport, AtomicReference<Runnable> onThirdChunk) {
         return AcpClient.sync(transport)
-                .sessionUpdateConsumer(notification -> {
+                .sessionUpdateHandler(notification -> {
                     if (notification.update() instanceof AcpSchema.AgentThoughtChunk thought
                             && thought.content() instanceof AcpSchema.TextContent text) {
                         System.out.println("   thought: " + text.text());

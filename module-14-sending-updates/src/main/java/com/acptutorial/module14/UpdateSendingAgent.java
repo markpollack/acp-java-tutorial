@@ -5,7 +5,7 @@
  *
  * Key APIs exercised:
  * - agent.run() - starts agent and blocks until client disconnects
- * - SyncPromptContext.sendUpdate(update) - blocking void method; the context knows its session
+ * - SyncPromptContext.sendSessionUpdate(update) - blocking void method; the context knows its session
  * - All SessionUpdate types:
  *   - AgentThoughtChunk - share thinking process
  *   - AgentMessageChunk - send response incrementally
@@ -62,14 +62,14 @@ public class UpdateSendingAgent {
                 context.sendThought("Let me analyze this request...");
 
                 // 2. Send plan update - show what we're going to do (full API for complex types)
-                context.sendUpdate(new Plan(List.of(
+                context.sendSessionUpdate(new Plan(List.of(
                         new PlanEntry("Analyze the prompt", PlanEntryPriority.HIGH, PlanEntryStatus.IN_PROGRESS),
                         new PlanEntry("Generate response", PlanEntryPriority.HIGH, PlanEntryStatus.PENDING),
                         new PlanEntry("Format output", PlanEntryPriority.MEDIUM, PlanEntryStatus.PENDING)
                     )));
 
                 // 3. Send tool call - show tool execution starting
-                context.sendUpdate(new ToolCall("tool_call",
+                context.sendSessionUpdate(new ToolCall("tool_call",
                         "tool-1",
                         "Analyzing prompt",     // title: what the user sees
                         "analyze_prompt",       // name: the tool's own identifier (may be null)
@@ -79,7 +79,7 @@ public class UpdateSendingAgent {
                         null, null, null, null));
 
                 // 4. Send tool call update - show progress
-                context.sendUpdate(new ToolCallUpdateNotification("tool_call_update",
+                context.sendSessionUpdate(new ToolCallUpdateNotification("tool_call_update",
                         "tool-1",
                         "Analyzing prompt",
                         "analyze_prompt",
@@ -89,17 +89,17 @@ public class UpdateSendingAgent {
                         null, null, null, null));
 
                 // 5. Send available commands update
-                context.sendUpdate(new AvailableCommandsUpdate(List.of(
+                context.sendSessionUpdate(new AvailableCommandsUpdate(List.of(
                         new AvailableCommand("help", "Show help",
                             new AvailableCommandInput("topic")),
                         new AvailableCommand("clear", "Clear context", null)
                     )));
 
                 // 6. Send mode update
-                context.sendUpdate(new CurrentModeUpdate("default"));
+                context.sendSessionUpdate(new CurrentModeUpdate("default"));
 
                 // 7. Send usage update - report token usage (unstable)
-                context.sendUpdate(new UsageUpdate(53000L, 200000L));
+                context.sendSessionUpdate(new UsageUpdate(53000L, 200000L));
 
                 // 8. Send message chunks - the actual response (convenience method)
                 context.sendMessage("Here is my response ");
