@@ -23,9 +23,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.capabilities.NegotiatedCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 
@@ -49,11 +47,10 @@ public class CapabilityAgent {
                 System.err.println("  - terminal: " + (clientCaps != null ? clientCaps.terminal() : false));
 
                 // Advertise our capabilities
-                var agentCaps = new AgentCapabilities(
-                    true,  // loadSession - we support session resume
-                    new McpCapabilities(false, false),  // no MCP support
-                    new PromptCapabilities(false, false, true)  // only embeddedContext
-                );
+                var agentCaps = AgentCapabilities.builder()
+                    .loadSession()            // we support session resume
+                    .promptEmbeddedContext()  // only embeddedContext; no MCP, image or audio
+                    .build();
 
                 return InitializeResponse.ok(agentCaps);
             })

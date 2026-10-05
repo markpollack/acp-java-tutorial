@@ -33,7 +33,6 @@ import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.BooleanPropertySchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.CreateElicitationResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationPropertySchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ElicitationSchema;
 import com.agentclientprotocol.sdk.spec.AcpSchema.IntegerPropertySchema;
@@ -62,10 +61,12 @@ public class ElicitationDemo {
         var transport = new StdioAcpClientTransport(params);
 
         // Advertise the elicitation modes this client handles: form and URL.
-        // The agent may not request a mode the client did not advertise
-        // (formOnly() / urlOnly() / formAndUrl()).
+        // The agent may not request a mode the client did not advertise. A
+        // createElicitationHandler on its own advertises form mode; URL mode has to be
+        // set explicitly, and explicit capabilities are sent as they are.
         var caps = ClientCapabilities.builder()
-            .elicitation(ElicitationCapabilities.formAndUrl())
+            .elicitationForm()
+            .elicitationUrl()
             .build();
 
         try (AcpSyncClient client = AcpClient.sync(transport)

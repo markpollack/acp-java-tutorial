@@ -26,9 +26,7 @@ import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.LoadSessionResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 
@@ -46,8 +44,7 @@ public class StatefulAgent {
             .initializeHandler(req -> {
                 System.err.println("[StatefulAgent] Initialize");
                 // Advertise loadSession: a client calls session/load only on an agent that does.
-                return InitializeResponse.ok(new AgentCapabilities(
-                    true, new McpCapabilities(), new PromptCapabilities()));
+                return InitializeResponse.ok(AgentCapabilities.builder().loadSession().build());
             })
 
             // Create new session with fresh state

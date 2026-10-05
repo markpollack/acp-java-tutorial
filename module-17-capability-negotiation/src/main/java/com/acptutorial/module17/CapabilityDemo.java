@@ -27,7 +27,6 @@ import com.agentclientprotocol.sdk.client.transport.AgentParameters;
 import com.agentclientprotocol.sdk.client.transport.StdioAcpClientTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentMessageChunk;
 import com.agentclientprotocol.sdk.spec.AcpSchema.ClientCapabilities;
-import com.agentclientprotocol.sdk.spec.AcpSchema.FileSystemCapability;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptRequest;
 import com.agentclientprotocol.sdk.spec.AcpSchema.TextContent;
@@ -45,10 +44,10 @@ public class CapabilityDemo {
         // five terminal handlers, so it is left to module 18, which serves them.
         System.out.println("--- Part 1: Full Capabilities Client ---");
         runWithCapabilities(
-            new ClientCapabilities(
-                new FileSystemCapability(true, true),  // readTextFile=true, writeTextFile=true
-                false  // terminal: no terminal handlers here (module 18)
-            ),
+            ClientCapabilities.builder()
+                .readTextFile()
+                .writeTextFile()   // no .terminal(): no terminal handlers here (module 18)
+                .build(),
             "Full file capabilities client"
         );
 
@@ -57,10 +56,9 @@ public class CapabilityDemo {
         // Part 2: Limited capabilities client (read-only)
         System.out.println("--- Part 2: Limited Capabilities Client (Read-Only) ---");
         runWithCapabilities(
-            new ClientCapabilities(
-                new FileSystemCapability(true, false),  // readTextFile=true, writeTextFile=false
-                false  // terminal=false
-            ),
+            ClientCapabilities.builder()
+                .readTextFile()   // readTextFile only: writeTextFile stays false
+                .build(),
             "Read-only client"
         );
 
@@ -69,10 +67,7 @@ public class CapabilityDemo {
         // Part 3: Minimal capabilities client
         System.out.println("--- Part 3: Minimal Capabilities Client ---");
         runWithCapabilities(
-            new ClientCapabilities(
-                new FileSystemCapability(false, false),  // no file access
-                false  // no terminal
-            ),
+            ClientCapabilities.builder().build(),  // no file access, no terminal
             "Minimal client"
         );
 
@@ -94,7 +89,9 @@ public class CapabilityDemo {
         var transport = new StdioAcpClientTransport(params);
 
         AcpClient.SyncSpec spec = AcpClient.sync(transport)
-                .clientCapabilities(clientCaps)  // what initialize() advertises
+                // what initialize() advertises. Without this call the client would advertise
+                // what its handlers serve (module 02); set explicitly, it is sent as it is
+                .clientCapabilities(clientCaps)
                 .sessionUpdateHandler(notification -> {
                     var update = notification.update();
                     if (update instanceof AgentMessageChunk msg) {

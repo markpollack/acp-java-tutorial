@@ -25,9 +25,7 @@ import com.agentclientprotocol.sdk.error.AcpErrorCodes;
 import com.agentclientprotocol.sdk.error.AcpProtocolException;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 
@@ -43,8 +41,7 @@ public class ErrorProneAgent {
             .initializeHandler(req -> {
                 System.err.println("[ErrorProneAgent] Initialize");
                 // Advertise loadSession, so the client sends session/load (Test 5) at all.
-                return InitializeResponse.ok(new AgentCapabilities(
-                    true, new McpCapabilities(), new PromptCapabilities()));
+                return InitializeResponse.ok(AgentCapabilities.builder().loadSession().build());
             })
 
             .newSessionHandler(req -> {

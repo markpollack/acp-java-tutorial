@@ -25,13 +25,11 @@ import com.agentclientprotocol.sdk.agent.AcpSyncAgent;
 import com.agentclientprotocol.sdk.agent.transport.StdioAcpAgentTransport;
 import com.agentclientprotocol.sdk.spec.AcpSchema.AgentCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.InitializeResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.McpCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpServer;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpServerHttp;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpServerSse;
 import com.agentclientprotocol.sdk.spec.AcpSchema.McpServerStdio;
 import com.agentclientprotocol.sdk.spec.AcpSchema.NewSessionResponse;
-import com.agentclientprotocol.sdk.spec.AcpSchema.PromptCapabilities;
 import com.agentclientprotocol.sdk.spec.AcpSchema.PromptResponse;
 
 
@@ -49,12 +47,11 @@ public class McpAgent {
                 System.err.println("[McpAgent] Initialize");
 
                 // Advertise MCP capabilities (we support HTTP and SSE)
-                var mcpCaps = new McpCapabilities(true, true);
-                var agentCaps = new AgentCapabilities(
-                    true,  // loadSession
-                    mcpCaps,
-                    new PromptCapabilities()
-                );
+                var agentCaps = AgentCapabilities.builder()
+                    .loadSession()
+                    .mcpHttp()
+                    .mcpSse()
+                    .build();
 
                 return InitializeResponse.ok(agentCaps);
             })
