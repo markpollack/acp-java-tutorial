@@ -12,6 +12,6 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/35-cancellation
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-35-cancellation-timeouts -q
-./mvnw -Psdk-candidate exec:java -pl module-35-cancellation-timeouts
+./mvnw package -pl module-35-cancellation-timeouts -q
+./mvnw exec:java -pl module-35-cancellation-timeouts
 ```

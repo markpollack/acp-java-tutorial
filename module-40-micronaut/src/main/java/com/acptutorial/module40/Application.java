@@ -2,7 +2,7 @@
  * Module 40: Micronaut - the agent application
  *
  * Run on its own over stdio (an editor or client launches it):
- *   ./mvnw -Psdk-candidate package -pl module-40-micronaut -q
+ *   ./mvnw package -pl module-40-micronaut -q
  *   java -jar module-40-micronaut/target/micronaut-agent.jar
  * Or over Streamable HTTP and WebSocket on port 8080 (Ctrl+C to stop):
  *   java -jar module-40-micronaut/target/micronaut-agent.jar --acp.agent.transport.type=http

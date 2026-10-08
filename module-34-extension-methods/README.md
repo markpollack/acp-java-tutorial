@@ -12,6 +12,6 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/34-extension-me
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-34-extension-methods -q
-./mvnw -Psdk-candidate exec:java -pl module-34-extension-methods
+./mvnw package -pl module-34-extension-methods -q
+./mvnw exec:java -pl module-34-extension-methods
 ```

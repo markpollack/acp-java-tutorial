@@ -2,8 +2,8 @@
  * Module 40: Micronaut - the demo
  *
  * Build & run:
- *   ./mvnw -Psdk-candidate package -pl module-40-micronaut -q
- *   ./mvnw -Psdk-candidate exec:java -pl module-40-micronaut
+ *   ./mvnw package -pl module-40-micronaut -q
+ *   ./mvnw exec:java -pl module-40-micronaut
  */
 package com.acptutorial.module40;
 
@@ -138,6 +138,6 @@ public final class MicronautDemo {
         if (Files.exists(fromRoot)) {
             return fromRoot.toAbsolutePath().toString();
         }
-        throw new RuntimeException("Agent JAR not found. Run: ./mvnw -Psdk-candidate package -pl " + MODULE_NAME + " -q");
+        throw new RuntimeException("Agent JAR not found. Run: ./mvnw package -pl " + MODULE_NAME + " -q");
     }
 }

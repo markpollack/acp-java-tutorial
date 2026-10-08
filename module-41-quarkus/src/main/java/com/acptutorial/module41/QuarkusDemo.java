@@ -2,8 +2,8 @@
  * Module 41: Quarkus - the demo client
  *
  * Build & run:
- *   ./mvnw -Psdk-candidate package -pl module-41-quarkus -q
- *   ./mvnw -Psdk-candidate exec:java -pl module-41-quarkus
+ *   ./mvnw package -pl module-41-quarkus -q
+ *   ./mvnw exec:java -pl module-41-quarkus
  */
 package com.acptutorial.module41;
 
@@ -181,6 +181,6 @@ public final class QuarkusDemo {
         if (Files.exists(fromRoot)) {
             return fromRoot.toAbsolutePath();
         }
-        throw new RuntimeException("Quarkus application not found. Run: ./mvnw -Psdk-candidate package -pl " + MODULE_NAME + " -q");
+        throw new RuntimeException("Quarkus application not found. Run: ./mvnw package -pl " + MODULE_NAME + " -q");
     }
 }

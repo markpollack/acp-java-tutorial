@@ -122,7 +122,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | 22 | [Async Agent](module-22-async-agent/) | Build agents with `AcpAgent.async()` |
 | 24 | [Spring Boot Client](module-24-spring-boot-client/) | Autoconfigured `AcpSyncClient` |
 
-### New in SDK 0.80.0 (build with `-Psdk-candidate` until the release)
+### New in SDK 0.80.0
 
 Every module here runs a Java agent it builds itself, plus a client: no agent CLI, no API key.
 

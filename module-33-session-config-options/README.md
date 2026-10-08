@@ -12,6 +12,6 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/33-session-conf
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-33-session-config-options -q
-./mvnw -Psdk-candidate exec:java -pl module-33-session-config-options
+./mvnw package -pl module-33-session-config-options -q
+./mvnw exec:java -pl module-33-session-config-options
 ```

@@ -17,13 +17,13 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/38-spring-boot-
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate compile -pl module-38-spring-boot-http -q
-./mvnw -Psdk-candidate exec:java -pl module-38-spring-boot-http
+./mvnw compile -pl module-38-spring-boot-http -q
+./mvnw exec:java -pl module-38-spring-boot-http
 
 # Or each side on its own: the agent on port 8080, then the client against it
-./mvnw -Psdk-candidate exec:java -pl module-38-spring-boot-http \
+./mvnw exec:java -pl module-38-spring-boot-http \
     -Dexec.mainClass=com.acptutorial.module38.agent.HttpAgentApplication
-./mvnw -Psdk-candidate exec:java -pl module-38-spring-boot-http \
+./mvnw exec:java -pl module-38-spring-boot-http \
     -Dexec.mainClass=com.acptutorial.module38.client.HttpClientApplication \
     -Dexec.args=--spring.acp.client.transport.http.uri=http://localhost:8080/acp
 ```

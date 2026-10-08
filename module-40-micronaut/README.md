@@ -16,8 +16,8 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/40-micronaut
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-40-micronaut -q
-./mvnw -Psdk-candidate exec:java -pl module-40-micronaut
+./mvnw package -pl module-40-micronaut -q
+./mvnw exec:java -pl module-40-micronaut
 
 # The agent application on its own, over stdio or on port 8080:
 java -jar module-40-micronaut/target/micronaut-agent.jar

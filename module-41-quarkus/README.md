@@ -19,8 +19,8 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/41-quarkus
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-41-quarkus -q
-./mvnw -Psdk-candidate exec:java -pl module-41-quarkus
+./mvnw package -pl module-41-quarkus -q
+./mvnw exec:java -pl module-41-quarkus
 
 # The Quarkus application on its own, on port 8080:
 java -jar module-41-quarkus/target/quarkus-app/quarkus-run.jar

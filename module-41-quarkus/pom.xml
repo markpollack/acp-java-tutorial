@@ -65,7 +65,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Run the demo with: ./mvnw -Psdk-candidate exec:java -pl module-41-quarkus
+            <!-- Run the demo with: ./mvnw exec:java -pl module-41-quarkus
                  (after package). It starts quarkus-run.jar as a process and connects to it. -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -44,9 +44,8 @@ of Anthropic, swap the dependency and the `spring.ai.<provider>.*` properties â€
 
 This module depends on the ACP Spring Boot starter (the same autoconfiguration as module
 23). From SDK **0.80.0** the starter is part of the SDK,
-`com.agentclientprotocol:acp-spring-boot-starter` at the SDK's version (build with
-`-Psdk-candidate` until the release); on SDK **0.18.0** it is
-`org.springaicommunity:acp-spring-boot-starter` **0.12.0**. Autoconfiguration discovers the
+`com.agentclientprotocol:acp-spring-boot-starter` at the SDK's version; through SDK **0.18.0**
+it was `org.springaicommunity:acp-spring-boot-starter` **0.12.0**. Autoconfiguration discovers the
 `@AcpAgent` bean and manages the agent lifecycle.
 
 ## Prerequisites

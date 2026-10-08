@@ -62,21 +62,18 @@ LOCAL_MODULES=(
     "module-24-spring-boot-client"
 )
 
-# SDK 0.80.0 feature modules: local agents, no API key, but they build only against the
-# candidate SDK, so they run only when ACP_SDK_CANDIDATE is set (it activates the sdk-candidate profile)
-if [ -n "${ACP_SDK_CANDIDATE:-}" ]; then
-    LOCAL_MODULES+=(
-        "module-33-session-config-options"
-        "module-34-extension-methods"
-        "module-35-cancellation-timeouts"
-        "module-36-terminal-auth-logout"
-        "module-37-streamable-http-websocket"
-        "module-38-spring-boot-http"
-        "module-39-forward-compatibility"
-        "module-40-micronaut"
-        "module-41-quarkus"
-    )
-fi
+# SDK 0.80.0 feature modules: local agents, no API key
+LOCAL_MODULES+=(
+    "module-33-session-config-options"
+    "module-34-extension-methods"
+    "module-35-cancellation-timeouts"
+    "module-36-terminal-auth-logout"
+    "module-37-streamable-http-websocket"
+    "module-38-spring-boot-http"
+    "module-39-forward-compatibility"
+    "module-40-micronaut"
+    "module-41-quarkus"
+)
 
 # Grok client modules (launch `grok agent stdio`; require the grok CLI, signed in)
 GROK_MODULES=(

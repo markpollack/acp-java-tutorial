@@ -12,6 +12,6 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/39-forward-comp
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate compile -pl module-39-forward-compatibility -q
-./mvnw -Psdk-candidate exec:java -pl module-39-forward-compatibility
+./mvnw compile -pl module-39-forward-compatibility -q
+./mvnw exec:java -pl module-39-forward-compatibility
 ```

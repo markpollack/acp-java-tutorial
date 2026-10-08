@@ -11,6 +11,6 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/36-terminal-aut
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate package -pl module-36-terminal-auth-logout -q
-./mvnw -Psdk-candidate exec:java -pl module-36-terminal-auth-logout
+./mvnw package -pl module-36-terminal-auth-logout -q
+./mvnw exec:java -pl module-36-terminal-auth-logout
 ```

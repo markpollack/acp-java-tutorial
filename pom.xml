@@ -17,13 +17,13 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <acp-sdk.version>0.18.0</acp-sdk.version>
+        <acp-sdk.version>0.80.0</acp-sdk.version>
         <spring-boot.version>4.1.0</spring-boot.version>
-        <!-- The ACP Spring Boot starter. Released 0.18.0 has it as org.springaicommunity 0.12.0; from
-             SDK 0.80.0 it is part of the SDK, com.agentclientprotocol:acp-spring-boot-starter at the
-             SDK's version (the sdk-candidate profile switches both). -->
-        <acp-spring-boot.groupId>org.springaicommunity</acp-spring-boot.groupId>
-        <acp-spring-boot.version>0.12.0</acp-spring-boot.version>
+        <!-- The ACP Spring Boot starter. From SDK 0.80.0 it is part of the SDK,
+             com.agentclientprotocol:acp-spring-boot-starter at the SDK's version (through 0.18.0 it was
+             org.springaicommunity:acp-spring-boot-starter 0.12.0). -->
+        <acp-spring-boot.groupId>com.agentclientprotocol</acp-spring-boot.groupId>
+        <acp-spring-boot.version>${acp-sdk.version}</acp-spring-boot.version>
         <anthropic-sdk.version>2.34.0</anthropic-sdk.version>
         <slf4j.version>2.0.9</slf4j.version>
         <agentworks.version>1.6.0</agentworks.version>
@@ -90,6 +90,17 @@
 
         <!-- Part 8: IDE Integration (one module covers JetBrains, Zed, VS Code) -->
         <module>module-29-jetbrains-integration</module>
+
+        <!-- Part 10: New in SDK 0.80.0 -->
+        <module>module-33-session-config-options</module>
+        <module>module-34-extension-methods</module>
+        <module>module-35-cancellation-timeouts</module>
+        <module>module-36-terminal-auth-logout</module>
+        <module>module-37-streamable-http-websocket</module>
+        <module>module-38-spring-boot-http</module>
+        <module>module-39-forward-compatibility</module>
+        <module>module-40-micronaut</module>
+        <module>module-41-quarkus</module>
     </modules>
 
     <dependencyManagement>
@@ -226,16 +237,13 @@
     </build>
 
     <profiles>
-        <!-- Build against the next ACP Java SDK candidate (0.80.0, still 0.19.0-SNAPSHOT on SDK main),
-             whose Spring Boot starter, Micronaut module and Quarkus extension are part of the SDK:
+        <!-- Build against the next ACP Java SDK snapshot (0.81.0-SNAPSHOT on SDK main):
                  ./mvnw -Psdk-candidate clean verify
              The profile also activates when ACP_SDK_CANDIDATE is set in the environment, so that tools
              which invoke ./mvnw themselves (integration-testing/RunIntegrationTest.java) build the
-             candidate too:  ACP_SDK_CANDIDATE=true jbang RunIntegrationTest.java module-12-echo-agent
-             The candidate resolves from the Maven Central snapshot repository below:
-             com.agentclientprotocol:*:0.19.0-SNAPSHOT, including com.agentclientprotocol:acp-spring-boot-starter,
-             which replaces org.springaicommunity:acp-spring-boot-starter. No local install is needed;
-             add -U to pick up a newer snapshot. -->
+             snapshot too:  ACP_SDK_CANDIDATE=true jbang RunIntegrationTest.java module-12-echo-agent
+             The snapshot resolves from the Maven Central snapshot repository below; add -U to pick up
+             a newer one. A plain build uses the released SDK above. -->
         <profile>
             <id>sdk-candidate</id>
             <activation>
@@ -244,22 +252,8 @@
                 </property>
             </activation>
             <properties>
-                <acp-sdk.version>0.19.0-SNAPSHOT</acp-sdk.version>
-                <acp-spring-boot.groupId>com.agentclientprotocol</acp-spring-boot.groupId>
-                <acp-spring-boot.version>${acp-sdk.version}</acp-spring-boot.version>
+                <acp-sdk.version>0.81.0-SNAPSHOT</acp-sdk.version>
             </properties>
-            <!-- Modules for features new in 0.80.0: they compile only against the candidate. -->
-            <modules>
-                <module>module-33-session-config-options</module>
-                <module>module-34-extension-methods</module>
-                <module>module-35-cancellation-timeouts</module>
-                <module>module-36-terminal-auth-logout</module>
-                <module>module-37-streamable-http-websocket</module>
-                <module>module-38-spring-boot-http</module>
-                <module>module-39-forward-compatibility</module>
-                <module>module-40-micronaut</module>
-                <module>module-41-quarkus</module>
-            </modules>
             <repositories>
                 <repository>
                     <id>central-snapshots</id>

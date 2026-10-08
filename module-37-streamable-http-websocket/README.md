@@ -13,10 +13,10 @@ Full tutorial: https://lab.pollack.ai/docs/acp-java-sdk/tutorial/37-streamable-h
 ## Running
 
 ```bash
-./mvnw -Psdk-candidate compile -pl module-37-streamable-http-websocket -q
-./mvnw -Psdk-candidate exec:java -pl module-37-streamable-http-websocket
+./mvnw compile -pl module-37-streamable-http-websocket -q
+./mvnw exec:java -pl module-37-streamable-http-websocket
 
 # The listener on its own, on port 8080:
-./mvnw -Psdk-candidate exec:java -pl module-37-streamable-http-websocket \
+./mvnw exec:java -pl module-37-streamable-http-websocket \
     -Dexec.mainClass=com.acptutorial.module37.HttpAgent -Dexec.args=8080
 ```
